@@ -1,0 +1,28 @@
+[01-Aug-2024 13:35:13 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 50
+[01-Aug-2024 13:35:44 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 50
+[01-Aug-2024 13:41:56 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 50
+[01-Aug-2024 13:44:10 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 50
+[01-Aug-2024 13:54:50 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 60
+[01-Aug-2024 13:58:32 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 60
+[01-Aug-2024 13:59:35 America/Mexico_City] PHP Warning:  Undefined array key "ID_Cuenta" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 60
+[12-Sep-2024 09:54:35 America/Mexico_City] PHP Fatal error:  Redefinition of parameter $contrasena in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 6
+[12-Sep-2024 10:32:12 America/Mexico_City] PHP Fatal error:  Redefinition of parameter $contrasena in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 6
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "id" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 50
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "nombre" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 51
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "apellido_paterno" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 52
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "apellido_materno" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 53
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "num_tel" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 54
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "correo_electronico" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 55
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "num_contacto_sos" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 56
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "Opcion" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 57
+[12-Sep-2024 10:32:55 America/Mexico_City] PHP Warning:  Undefined array key "contrasena" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Usuario.php on line 58
+[23-Sep-2024 20:02:25 America/Mexico_City] PHP Warning:  Undefined variable $CuentasPend in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 39
+[23-Sep-2024 20:02:25 America/Mexico_City] PHP Fatal error:  Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php:39
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 39
+[23-Sep-2024 20:21:59 America/Mexico_City] PHP Warning:  Undefined variable $id_Usuario in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 29
+[24-Sep-2024 08:56:51 America/Mexico_City] PHP Warning:  Undefined array key "ID_Tipo" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 13
+[24-Sep-2024 11:37:40 America/Mexico_City] PHP Warning:  Undefined array key "ID_Tipo" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 13
+[25-Sep-2024 09:01:40 America/Mexico_City] PHP Warning:  Undefined array key "ID_Tipo" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 13
+[25-Sep-2024 09:01:53 America/Mexico_City] PHP Warning:  Undefined array key "ID_Tipo" in /home3/grupova9/grupopryse.mx/Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php on line 13

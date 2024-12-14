@@ -1,0 +1,74 @@
+.accordion {
+  margin-bottom: 10px;
+
+  .accordion-btn {
+    position: relative;
+    background-color: #b0f2c2;
+    background-image: linear-gradient(122deg, #b0f2c2, #b0f2c2);
+    border: none;
+    padding: 15px 20px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
+    list-style-image: none;
+
+    &::-webkit-details-marker {
+      background: none;
+      color: transparent;
+    }
+
+    &::after {
+      content: "›";
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      font-size: 35px;
+      font-family: monospace;
+      width: 35px;
+      height: 35px;
+      text-align: center;
+      border-radius: 50%;
+      color: #000000;
+      border: 2px solid #000000;
+      transform: translate(0%, -50%) rotate(0deg);
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      padding-bottom: 4px;
+      padding-left: 2px;
+      justify-content: center;
+      font-weight: normal;
+      transition: all 0.3s ease;z
+    }
+  }
+
+  .accordion-content {
+    background-color: #e0bbe4;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
+
+    > * {
+      padding: 10px 20px;
+    }
+  }
+
+  &[open] {
+    .accordion-btn::after {
+      transform: translate(0%, -50%) rotate(90deg);
+    }
+
+    summary ~ * {
+      overflow: hidden;
+      animation: heightUp 1s ease-in-out;
+    }
+  }
+}
+
+@keyframes heightUp {
+  0% {
+    max-height: 0;
+  }
+  100% {
+    max-height: 2000px;
+  }
+}

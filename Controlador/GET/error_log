@@ -1,0 +1,50 @@
+[11-Sep-2024 13:08:55 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:10:28 America/Mexico_City] PHP Warning:  include(../../../Modelo/Conexion.php): Failed to open stream: No such file or directory in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 3
+[11-Sep-2024 13:10:28 America/Mexico_City] PHP Warning:  include(): Failed opening '../../../Modelo/Conexion.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 3
+[11-Sep-2024 13:10:28 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class "Conectar" not found in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:6
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 6
+[11-Sep-2024 13:13:47 America/Mexico_City] PHP Warning:  include(../../../Modelo/Conexion.php): Failed to open stream: No such file or directory in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 3
+[11-Sep-2024 13:13:47 America/Mexico_City] PHP Warning:  include(): Failed opening '../../../Modelo/Conexion.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 3
+[11-Sep-2024 13:13:47 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class "Conectar" not found in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:6
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 6
+[11-Sep-2024 13:14:16 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:15:21 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:17:46 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:18:43 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:19:16 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:19:22 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[11-Sep-2024 13:29:28 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::fetchAll() in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/getSelectCuenta.php on line 17
+[19-Sep-2024 17:46:02 America/Mexico_City] PHP Warning:  include(../../../Modelo/Conexion.php): Failed to open stream: No such file or directory in /home3/grupova9/grupopryse.mx/Controlador/GET/ObtenerRequisicionesPendientes.php on line 2
+[19-Sep-2024 17:46:02 America/Mexico_City] PHP Warning:  include(): Failed opening '../../../Modelo/Conexion.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home3/grupova9/grupopryse.mx/Controlador/GET/ObtenerRequisicionesPendientes.php on line 2
+[19-Sep-2024 17:46:02 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class "Conectar" not found in /home3/grupova9/grupopryse.mx/Controlador/GET/ObtenerRequisicionesPendientes.php:8
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/GET/ObtenerRequisicionesPendientes.php on line 8

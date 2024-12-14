@@ -1,0 +1,137 @@
+.formulario-panel {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.formulario-izquierdo {
+    background-color: #fadc9b;
+}
+
+.formulario-derecho {
+    background-color: #ffca99;
+}
+
+/* Estilo com«ân para el bot«Ñn base */
+.btn-custom {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0.8em 1.2em;
+    border: 3px solid;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 3px 4px 0px black;
+    transition: box-shadow 250ms, transform 250ms, filter 50ms;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* Estilo para el bot«Ñn de PDF */
+#btnGenerarPDF {
+    background-color: #e74c3c; /* Rojo para el bot«Ñn de PDF */
+    border-color: #c0392b;
+    color: white;
+}
+
+#btnGenerarPDF .arrowContainer {
+    background-color: #c0392b; /* Color m«¡s oscuro para la flecha */
+}
+
+/* Estilo para el bot«Ñn de Excel */
+#btnGenerarExcel {
+    background-color: #27ae60; /* Verde para el bot«Ñn de Excel */
+    border-color: #229954;
+    color: white;
+}
+
+#btnGenerarExcel .arrowContainer {
+    background-color: #229954; /* Color m«¡s oscuro para la flecha */
+}
+
+/* Efecto hover en botones */
+.btn-custom:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 3px 0px black;
+}
+
+.btn-custom:hover .arrowContainer::after {
+    transform: translateX(0);
+}
+
+.btn-custom:hover .arrowContainer {
+    transform: translateX(3px);
+}
+
+/* Efecto activo en botones */
+.btn-custom:active {
+    filter: saturate(0.75);
+}
+
+.btn-custom:active .arrowContainer {
+    transform: translateX(5px);
+}
+
+/* Contenedor y animaci«Ñn del texto */
+.bgContainer {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.bgContainer > span {
+    display: block;
+    position: relative;
+    z-index: 1;
+    transform: translateX(-100%);
+    transition: transform 250ms;
+}
+
+.btn-custom:hover .bgContainer > span {
+    transform: translateX(0);
+}
+
+/* Contenedor de la flecha */
+.arrowContainer {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.3em;
+    padding: 0.5em;
+    border: 3px solid;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 250ms, background-color 250ms;
+    z-index: 100;
+}
+
+/* Efecto en la flecha */
+.arrowContainer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: yellow;
+    transform: translateX(-100%);
+    z-index: -1;
+    transition: transform 250ms ease-in-out;
+}
+
+.arrowContainer svg {
+    vertical-align: middle;
+}
+
+/* Efectos adicionales */
+#btnGenerarPDF:hover {
+    background-color: #c0392b;
+    border-color: #a93226;
+}
+
+#btnGenerarExcel:hover {
+    background-color: #229954;
+    border-color: #1e8449;
+}

@@ -1,0 +1,2 @@
+[21-Oct-2024 17:44:18 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/grupopryse.mx/Controlador/ALMACENISTA/INSERT/Funcion_Insert_Entrada_Almacen.php on line 87
+[21-Oct-2024 17:44:18 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/ALMACENISTA/INSERT/Funcion_Insert_Entrada_Almacen.php on line 19

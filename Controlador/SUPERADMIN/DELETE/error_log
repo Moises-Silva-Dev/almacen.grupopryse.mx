@@ -1,0 +1,7 @@
+[27-Aug-2024 17:55:26 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined function obtenerUltimoID() in /home3/grupova9/grupopryse.mx/Controlador/SUPERADMIN/DELETE/Funcion_Delete_Solicitud.php:41
+Stack trace:
+#0 {main}
+  thrown in /home3/grupova9/grupopryse.mx/Controlador/SUPERADMIN/DELETE/Funcion_Delete_Solicitud.php on line 41
+[27-Aug-2024 18:00:29 America/Mexico_City] PHP Warning:  Undefined array key "BIdCProd" in /home3/grupova9/grupopryse.mx/Controlador/SUPERADMIN/DELETE/Funcion_Delete_Solicitud.php on line 188
+[27-Aug-2024 18:00:29 America/Mexico_City] PHP Warning:  Undefined array key "BIdTalla" in /home3/grupova9/grupopryse.mx/Controlador/SUPERADMIN/DELETE/Funcion_Delete_Solicitud.php on line 189
+[27-Aug-2024 18:00:29 America/Mexico_City] PHP Warning:  Undefined array key "BCantidad" in /home3/grupova9/grupopryse.mx/Controlador/SUPERADMIN/DELETE/Funcion_Delete_Solicitud.php on line 190

@@ -1,0 +1,26 @@
+[01-Oct-2024 15:55:37 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:37 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:37 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:37 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:37 America/Mexico_City] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::setCellValue(), 1 passed in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86 and at least 2 expected in /home3/grupova9/grupopryse.mx/librerias/PhpSpreadsheet/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Worksheet/Worksheet.php:1114
+Stack trace:
+#0 /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php(86): PhpOffice\PhpSpreadsheet\Worksheet\Worksheet->setCellValue('C ')
+#1 {main}
+  thrown in /home3/grupova9/grupopryse.mx/librerias/PhpSpreadsheet/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Worksheet/Worksheet.php on line 1114
+[01-Oct-2024 15:55:57 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:57 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:57 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:57 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:55:57 America/Mexico_City] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::setCellValue(), 1 passed in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86 and at least 2 expected in /home3/grupova9/grupopryse.mx/librerias/PhpSpreadsheet/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Worksheet/Worksheet.php:1114
+Stack trace:
+#0 /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php(86): PhpOffice\PhpSpreadsheet\Worksheet\Worksheet->setCellValue('C ')
+#1 {main}
+  thrown in /home3/grupova9/grupopryse.mx/librerias/PhpSpreadsheet/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Worksheet/Worksheet.php on line 1114
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Undefined variable $filaD in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
+[01-Oct-2024 15:57:12 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/grupopryse.mx/Controlador/EXCEL/Excel_Solicitud_Por_Fechas.php on line 86
