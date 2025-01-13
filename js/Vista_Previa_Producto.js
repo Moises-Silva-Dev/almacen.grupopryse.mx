@@ -1,27 +1,27 @@
-// Espera a que el DOM est¨¦ completamente cargado antes de ejecutar el c¨®digo.
+// Espera a que el DOM estï¿½ï¿½ completamente cargado antes de ejecutar el cï¿½ï¿½digo.
 $(document).ready(function() {
-    // A0Š9ade un listener al bot¨®n con la clase 'btnVisualizarImagen' que ejecuta una funci¨®n al hacer clic.
+    // Aï¿½0ï¿½9ade un listener al botï¿½ï¿½n con la clase 'btnVisualizarImagen' que ejecuta una funciï¿½ï¿½n al hacer clic.
     $('.btnVisualizarImagen').click(function() {
-        // Obtiene los valores de los atributos `data-*` del bot¨®n que se clicke¨®.
+        // Obtiene los valores de los atributos `data-*` del botï¿½ï¿½n que se clickeï¿½ï¿½.
         var empresa = $(this).data('empresa'); // Recupera el nombre de la empresa.
-        var descripcion = $(this).data('descripcion'); // Recupera la descripci¨®n del producto.
-        var especificacion = $(this).data('especificacion'); // Recupera la especificaci¨®n del producto.
-        var categoria = $(this).data('categoria'); // Recupera la categor¨ªa del producto.
+        var descripcion = $(this).data('descripcion'); // Recupera la descripciï¿½ï¿½n del producto.
+        var especificacion = $(this).data('especificacion'); // Recupera la especificaciï¿½ï¿½n del producto.
+        var categoria = $(this).data('categoria'); // Recupera la categorï¿½ï¿½a del producto.
         var talla = $(this).data('talla'); // Recupera la talla del producto.
         var cantidad = $(this).data('cantidad'); // Recupera la cantidad solicitada.
         var salida = $(this).data('salida'); // Recupera la cantidad entregada.
         var img = $(this).data('img'); // Recupera la URL de la imagen.
 
-        // Construye el contenido HTML que se mostrar¨¢ en el modal.
+        // Construye el contenido HTML que se mostrarï¿½ï¿½ en el modal.
         var modalBody = '<ul>';
         modalBody += '<li><strong>Empresa:</strong> ' + empresa + '</li>'; // Muestra la empresa.
-        modalBody += '<li><strong>Descripci¨®n:</strong> ' + descripcion + '</li>'; // Muestra la descripci¨®n.
-        modalBody += '<li><strong>Especificaci¨®n:</strong> ' + especificacion + '</li>'; // Muestra la especificaci¨®n.
-        modalBody += '<li><strong>Categor¨ªa:</strong> ' + categoria + '</li>'; // Muestra la categor¨ªa.
+        modalBody += '<li><strong>DescripciÃ³n:</strong> ' + descripcion + '</li>'; // Muestra la descripciï¿½ï¿½n.
+        modalBody += '<li><strong>EspecificaciÃ³n:</strong> ' + especificacion + '</li>'; // Muestra la especificaciï¿½ï¿½n.
+        modalBody += '<li><strong>CategorÃ­a:</strong> ' + categoria + '</li>'; // Muestra la categorï¿½ï¿½a.
         modalBody += '<li><strong>Talla:</strong> ' + talla + '</li>'; // Muestra la talla.
         modalBody += '<li><strong>Cantidad Solicitada:</strong> ' + cantidad + '</li>'; // Muestra la cantidad solicitada.
         modalBody += '<li><strong>Cantidad Entregada:</strong> ' + salida + '</li>'; // Muestra la cantidad entregada.
-        modalBody += '<center><img src="' + img + '" alt="Imagen" width="250" height="300"></center>'; // Muestra la imagen con un tama0Š9o fijo.
+        modalBody += '<center><img src="' + img + '" alt="Imagen" width="250" height="300"></center>'; // Muestra la imagen con un tamaï¿½0ï¿½9o fijo.
         modalBody += '</ul>';
 
         // Inserta el contenido HTML generado en el cuerpo del modal (dentro del elemento con la clase 'modal-body').

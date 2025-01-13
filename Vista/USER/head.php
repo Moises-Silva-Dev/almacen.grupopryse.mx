@@ -24,7 +24,7 @@ if(isset($_GET['cerrar_sesion'])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <!-- Tu hoja de estilos personalizada -->
-    <link rel="shortcut icon" href="img/2.png">
+    <link rel="shortcut icon" href="../../img/2.png">
     <link href="../../css/reporte.css" rel="stylesheet">
     
 </head>

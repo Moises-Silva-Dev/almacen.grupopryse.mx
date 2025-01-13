@@ -103,7 +103,9 @@ try {
         INNER JOIN
             CTallas ct ON sd.IdTallas = ct.IdCTallas
         WHERE
-            se.Id_SalE = ?;");
+            se.Id_SalE = ?
+        ORDER BY 
+            p.Descripcion;");
     
     if (!$stmtProductos) {
         throw new Exception("Error en la preparación de la consulta de productos: " . $conexion->error);
@@ -189,23 +191,23 @@ try {
     $address_parts = array();
 
     // Verificar y agregar partes de la dirección si no están vacías o NULL
-    if (!empty($filaE['Nombre_estado'])) {
-        $address_parts[] = $filaE['Nombre_estado'];
-    }
-    if (!empty($filaE['Mpio'])) {
-        $address_parts[] = $filaE['Mpio'];
-    }
-    if (!empty($filaE['Colonia'])) {
-        $address_parts[] = $filaE['Colonia'];
-    }
     if (!empty($filaE['Calle'])) {
         $address_parts[] = $filaE['Calle'];
     }
     if (!empty($filaE['Nro'])) {
-        $address_parts[] = $filaE['Nro'];
+        $address_parts[] = "No. " . $filaE['Nro'];
+    }
+    if (!empty($filaE['Colonia'])) {
+        $address_parts[] = $filaE['Colonia'];
+    }
+    if (!empty($filaE['Mpio'])) {
+        $address_parts[] = $filaE['Mpio']; // Ciudad o municipio
+    }
+    if (!empty($filaE['Nombre_estado'])) {
+        $address_parts[] = $filaE['Nombre_estado']; // Estado
     }
     if (!empty($filaE['CP'])) {
-        $address_parts[] = $filaE['CP'];
+        $address_parts[] = $filaE['CP']; // Código postal
     }
     
     // Unir todas las partes de la dirección con una coma y espacio

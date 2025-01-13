@@ -31,13 +31,13 @@
                             RE.Estatus AS Estado,
                             RE.Receptor, 
                             RE.CentroTrabajo, 
-                            RE.FchCreacion
+                            RE.FchAutoriza
                         FROM 
                             RequisicionE RE
                         WHERE 
-                            RE.Estatus = 'Autorizado' OR RE.Estatus = 'Parcial'
+                            RE.Estatus = 'Autorizado'
                         ORDER BY 
-                            RE.FchAutoriza DESC
+                            FchAutoriza DESC
                         LIMIT 
                             $records_per_page OFFSET $offset;";
                 
@@ -51,7 +51,7 @@
                             INNER JOIN 
                                 RequisicionE RE on RD.IdReqE = RE.IDRequisicionE
                             WHERE 
-                                RE.Estatus = 'Autorizado' OR RE.Estatus = 'Parcial';";
+                                RE.Estatus = 'Autorizado';";
                 
                 $result_total = mysqli_query($conexion, $sql_total);
                 $total_rows = mysqli_fetch_array($result_total)['total'];
@@ -64,7 +64,7 @@
                         <td><?php echo $row['Estado']; ?></td>
                         <td><?php echo $row['Receptor']; ?></td>
                         <td><?php echo $row['CentroTrabajo']; ?></td>
-                        <td><?php echo $row['FchCreacion']; ?></td>
+                        <td><?php echo $row['FchAutoriza']; ?></td>
                         <td><a class="btn btn-primary" href="INSERT/Insert_Salida_ALMACENISTA.php?id=<?php echo $row['IDRequisicionE']; ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-ballpen" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>

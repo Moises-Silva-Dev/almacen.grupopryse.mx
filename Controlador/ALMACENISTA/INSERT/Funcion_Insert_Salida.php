@@ -43,7 +43,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         for ($i = 0; $i < $numFilas; $i++) {
             $IdCProd = $datosTabla[$i]['IdCProd'];
             $Id_Talla = $datosTabla[$i]['Id_Talla'];
-            $Cant = $datosTabla[$i]['Cant'];
+            
+            // Asegurarse de que Cant sea un número válido
+            $Cant = isset($datosTabla[$i]['Cant']) && is_numeric($datosTabla[$i]['Cant']) 
+            ? (int)$datosTabla[$i]['Cant'] 
+            : 0;
+
+            // Si la cantidad es 0, se ignora esta iteración
+            if ($Cant === 0) {
+                continue;
+            }
 
             insertarSalidaD($conexion, $idSalidaE, $IdCProd, $Id_Talla, $Cant);
             actualizarInventario($conexion, $Cant, $IdCProd, $Id_Talla);

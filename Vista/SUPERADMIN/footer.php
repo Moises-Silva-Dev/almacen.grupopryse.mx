@@ -24,10 +24,12 @@
     <script src="../../js/GenerarPDFInventario.js"></script>
     <script src="../../js/GenerarPDFSolicitudID.js"></script>
     <script src="../../js/GenerarPDFSolicitudFechas.js"></script>
+    <script src="../../js/GenerarPDFConteoSalidasSolicitudFechas.js"></script>
     <script src="../../js/GenerarExcelEntradasFechas.js"></script>
     <script src="../../js/GenerarExcelSalidasFechas.js"></script>
     <script src="../../js/GenerarExcelSolicitudFechas.js"></script>
     <script src="../../js/GenerarExcelInventario.js"></script>
+    <script src="../../js/GenerarExcelConteoSalidasSolicitudFechas.js"></script>
 
     <!-- Tu script personalizado -->
     <script>

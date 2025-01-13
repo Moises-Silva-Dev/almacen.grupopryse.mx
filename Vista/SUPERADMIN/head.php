@@ -22,7 +22,7 @@ if(isset($_GET['cerrar_sesion'])) {
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tu hoja de estilos personalizada -->
-    <link rel="shortcut icon" href="img/2.png">
+    <link rel="shortcut icon" href="../../img/2.png">
     <link href="../../css/reporte.css" rel="stylesheet">
     <link href="../../css/boton.css" rel="stylesheet">
     

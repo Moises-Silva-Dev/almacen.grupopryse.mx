@@ -203,7 +203,7 @@
 
     <!-- Formulario de Solicitud -->
     <details class="accordion">
-        <summary class="accordion-btn">Reporte Solicitud</summary>
+        <summary class="accordion-btn">Reporte Requisiciones</summary>
         <div class="accordion-content">
             <div class="row">
                 <div class="col-md-6">
@@ -274,6 +274,61 @@
                                     </svg>
                                 </span>
                             </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </details>
+
+    <!-- Formulario de Solicitud -->
+    <details class="accordion">
+        <summary class="accordion-btn">Reporte Conteo Salidas de Requisiciones</summary>
+        <div class="accordion-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="formulario-panel formulario-izquierdo">
+                        <form id="conteoSalidaSolicitudFormFechas" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="Fecha_Inicio" class="form-label">Fecha de Inicio:</label>
+                                <input class="form-control" type="date" id="Fecha_Inicio" name="Fecha_Inicio" required>
+                                <div class="invalid-feedback">Por favor, selecciona una opción.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="Fecha_Fin" class="form-label">Fecha de Fin:</label>
+                                <input class="form-control" type="date" id="Fecha_Fin" name="Fecha_Fin" required>
+                                <div class="invalid-feedback">Por favor, selecciona una opción.</div>
+                            </div>
+                            <center>
+                                <button type="button" id="btnGenerarPDF" class="btn-custom" onclick="Generar_PDF_Conteo_Salidas_Solicitud_Fechas(event)">
+                                    <span class="bgContainer"><span>Generar PDF</span></span>
+                                    <span class="arrowContainer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-pdf" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                            <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
+                                            <path d="M17 18h2" />
+                                            <path d="M20 15h-3v6" />
+                                            <path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z" />
+                                        </svg>
+                                    </span>
+                                </button>
+                                <button type="button" id="btnGenerarExcel" class="btn-custom" onclick="Generar_Excel_Conteo_Salidas_Solicitud_Fechas(event)">
+                                    <span class="bgContainer"><span>Generar Excel</span></span>
+                                    <span class="arrowContainer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-xls" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                            <path d="M4 15l4 6" />
+                                            <path d="M4 21l4 -6" />
+                                            <path d="M17 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75" />
+                                            <path d="M11 15v6h3" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </center>
                         </form>
                     </div>
                 </div>
@@ -366,7 +421,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Solicitudes por Fechas</h5>
+                    <h5 class="modal-title" id="pdfModalLabel">Reporte Requisiciones por Fechas</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -380,13 +435,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de conteo de salidas solicitud fechas -->
+    <div class="modal fade" id="pdfModalConteoSalidasSolicitudFechas" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalLabel">Reporte Conteo de Salidas de Requisiciones por Fechas</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="pdfIframeConteoSalidasSolicitudFechas" width="100%" height="500px"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Modal de solicitud ID -->
     <div class="modal fade" id="pdfModalSolicitudID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Solicitudes por ID</h5>
+                    <h5 class="modal-title" id="pdfModalLabel">Reporte Requisición por ID</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -401,7 +476,7 @@
         </div>
     </div>
     
-        <!-- Modal de Entrada ID -->
+    <!-- Modal de Entrada ID -->
     <div class="modal fade" id="pdfModalEntradaID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -421,7 +496,7 @@
         </div>
     </div>
     
-        <!-- Modal de Salida ID -->
+    <!-- Modal de Salida ID -->
     <div class="modal fade" id="pdfModalSalidaID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

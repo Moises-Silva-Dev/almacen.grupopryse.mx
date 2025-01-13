@@ -11,7 +11,7 @@
     <script src="../../../js/ValidarCampo.js"></script>
     <script src="../../../js/Form_Envio.js"></script>
     <script src="../../../js/Solicitud_Carga_CueRegEst.js"></script>
-    <script src="../../../js/Update_Producto_datosTabla.js"></script>
+    <script type="module" src="../../../js/Update_Producto_datosTabla.js"></script>
     <script src="../../../js/VistaTablaProductos.js"></script>
 </body>
 </html>

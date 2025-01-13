@@ -2,7 +2,7 @@
 
 <center><div class="container">
     <h2>Archivos de respaldo</h2>
-    <a class="btn btn-primary" href="../../Modelo/Respaldo.php">
+    <a id="BtnRespaldoDB" class="btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-sql" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
             <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -59,7 +59,7 @@
             <tr>
                 <td><?php echo $archivo . ' - ' . date("F d Y H:i:s.", filemtime($carpeta_backups . '/' . $archivo)); ?></td>
                 <td>
-                    <a href="../../Modelo/Restauracion.php?archivo=<?php echo urlencode($archivo); ?>" class="btn btn-success btn-sm">
+                    <a onclick="confirmarRestauracion('<?php echo urlencode($archivo); ?>')" class="btn btn-success btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-restore" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M3.06 13a9 9 0 1 0 .49 -4.087" />
@@ -69,7 +69,7 @@
                     </a>
                 </td>
                 <td>
-                    <a onclick="return eliminar()" href="../../Controlador/ADMIN/DELETE/Funcion_Delete_SQL.php?archivo=<?php echo urlencode($archivo); ?>" class="btn btn-danger btn-sm">
+                    <a onclick="confirmarEliminacion('<?php echo urlencode($archivo); ?>')" class="btn btn-danger btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M4 7h16" />

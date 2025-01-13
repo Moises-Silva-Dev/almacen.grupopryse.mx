@@ -101,3 +101,21 @@ Stack trace:
 #1 /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud_Original.php(47): insertarRequisicionE(Object(mysqli), '2024-12-09 00:1...', Array)
 #2 {main}
   thrown in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud_Original.php on line 175
+[14-Dec-2024 10:44:46 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[14-Dec-2024 10:44:46 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[14-Dec-2024 11:41:47 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[14-Dec-2024 11:41:47 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[18-Dec-2024 17:25:15 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[18-Dec-2024 17:25:15 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[19-Dec-2024 10:49:51 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[19-Dec-2024 10:49:51 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[20-Dec-2024 13:21:40 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[20-Dec-2024 13:21:40 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[20-Dec-2024 13:27:32 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[20-Dec-2024 13:27:32 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[20-Dec-2024 13:27:36 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[20-Dec-2024 13:27:36 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[20-Dec-2024 17:04:40 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[20-Dec-2024 17:04:40 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111
+[27-Dec-2024 11:48:46 America/Mexico_City] PHP Warning:  Undefined array key "usuario" in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 22
+[27-Dec-2024 11:48:46 America/Mexico_City] PHP Warning:  Trying to access array offset on value of type null in /home3/grupova9/almacen.grupopryse.mx/Controlador/ADMIN/INSERT/Funcion_Insert_Solicitud.php on line 111

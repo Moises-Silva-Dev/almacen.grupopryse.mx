@@ -6,6 +6,8 @@
     <title>LOGIN</title>
     <!-- Enlace a Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Enlace a tu archivo CSS personalizado -->
     <link rel="shortcut icon" href="img/2.png">
     <link rel="stylesheet" href="css/login.css">
@@ -29,7 +31,7 @@
       </div>
       <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
         <h1>Bienvenido</h1>
-        <form method="POST" action="Controlador/Login/Login_V.php" class="needs-validation" novalidate >
+        <form id="loginForm" method="POST" action="Controlador/Login/Login_V.php" class="needs-validation" novalidate>
           <br>
           <div class="form-group">
             <label for="validationCustom01" class="form-label">Correo Electrónico: </label>
@@ -59,5 +61,6 @@
 
 <!-- Custom Bootstrap validation script -->
 <script src="js/ValidarCampo.js"></script>
+<script src="js/Notificacion_SweetAlert_Login.js"></script>
 </body>
 </html>

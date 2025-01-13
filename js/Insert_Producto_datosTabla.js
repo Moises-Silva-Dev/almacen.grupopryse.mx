@@ -1,3 +1,11 @@
+// Importar el diccionario de datos para la restricciones de tallas
+import { diccionarioTallas } from './DiccionarioTallasRestriccion.js';
+console.log(diccionarioTallas);
+
+// Importar el diccionario de datos para la Baja de productos
+import { productosExcluidos } from './DiccionarioProductosBaja.js';
+console.log(productosExcluidos);
+
 // Función que se ejecuta cuando el documento está listo
 $(document).ready(function() {
     // Evento de cambio para el campo con ID 'ID_Producto'
@@ -25,11 +33,33 @@ $(document).ready(function() {
 
                 // Vacía el select de tallas y agrega una opción por defecto
                 $('#ID_Talla').empty();
+                
+                // Validar el producto en el diccionario 
+                if(productosExcluidos.includes(parseInt(producto_id))){
+                    // Si el producto está excluido, no mostrar opciones
+                    $('#ID_Talla').append('<option value="" disabled>Producto no disponible</option>');
+                } else {
+                    // Validar y agregar las tallas permitidas según el diccionario
+                    const tallasPermitidas = diccionarioTallas[producto_id] || [];
+                    if (tallasPermitidas.length > 0) {
+                        // Filtrar tallas obtenidas en la respuesta según las permitidas
+                        const tallasFiltradas = response.tallas.filter(talla =>
+                            tallasPermitidas.includes(talla.nombre)
+                        );
 
-                // Itera sobre cada talla en la respuesta y agrega una opción al select de tallas
-                $.each(response.tallas, function(index, talla) {
-                    $('#ID_Talla').append('<option value="' + talla.id + '" data-nombre="' + talla.nombre + '">' + talla.nombre + '</option>');
-                });
+                        // Agregar al select las tallas filtradas
+                        $.each(tallasFiltradas, function (index, talla) {
+                            $('#ID_Talla').append(
+                                '<option value="' + talla.id + '" data-nombre="' + talla.nombre + '">' + talla.nombre + '</option>'
+                            );
+                        });
+                    } else {
+                        // Itera sobre cada talla en la respuesta y agrega una opción al select de tallas
+                        $.each(response.tallas, function(index, talla) {
+                            $('#ID_Talla').append('<option value="' + talla.id + '" data-nombre="' + talla.nombre + '">' + talla.nombre + '</option>');
+                        });
+                    }
+                }
             }
         });
     });

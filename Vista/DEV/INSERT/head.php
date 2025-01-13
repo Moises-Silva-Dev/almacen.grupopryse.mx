@@ -25,6 +25,8 @@ if(isset($_GET['cerrar_sesion'])) {
     <!-- Tu hoja de estilos personalizada -->
     <link href="../../../css/producto.css" rel="stylesheet">
     <link href="../../../css/solicitud.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../../img/2.png">
+    
 </head>
 <style>
     body {

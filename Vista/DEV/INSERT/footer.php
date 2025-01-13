@@ -18,7 +18,7 @@
     <script src="../../../js/Form_Envio.js"></script>
     <script src="../../../js/SelectorRegionEstado.js"></script>
     <script src="../../../js/Solicitud_Carga_CueRegEst.js"></script>
-    <script src="../../../js/Insert_Producto_datosTabla.js"></script>
+    <script src="../../../js/Insert_Entrada_Producto_datosTabla.js"></script>
     <script src="../../../js/VistaTablaProductos.js"></script>
     <script src="../../../js/Vista_Previa_Producto.js"></script>
     <script src="../../../js/Insert_Salida_Soli.js"></script>

@@ -75,6 +75,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tu hoja de estilos personalizada -->
     <link href="#" rel="stylesheet">
+    <link rel="shortcut icon" href="../../img/2.png">
 
 <style>
     body {

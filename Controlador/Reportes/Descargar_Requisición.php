@@ -249,11 +249,11 @@ try {
     
     // Construir dirección
     $address_parts = [];
-    if (!empty($filaE['Nombre_estado'])) $address_parts[] = $filaE['Nombre_estado'];
-    if (!empty($filaE['Mpio'])) $address_parts[] = $filaE['Mpio'];
-    if (!empty($filaE['Colonia'])) $address_parts[] = $filaE['Colonia'];
     if (!empty($filaE['Calle'])) $address_parts[] = $filaE['Calle'];
-    if (!empty($filaE['Nro'])) $address_parts[] = $filaE['Nro'];
+    if (!empty($filaE['Nro'])) $address_parts[] = "No. " . $filaE['Nro'];
+    if (!empty($filaE['Colonia'])) $address_parts[] = $filaE['Colonia'];
+    if (!empty($filaE['Mpio'])) $address_parts[] = $filaE['Mpio'];
+    if (!empty($filaE['Nombre_estado'])) $address_parts[] = $filaE['Nombre_estado'];
     if (!empty($filaE['CP'])) $address_parts[] = $filaE['CP'];
     
     // Imprimir dirección

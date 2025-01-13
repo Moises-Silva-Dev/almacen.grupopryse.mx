@@ -219,59 +219,46 @@ function enviarCorreo($FchEnvio, $ID_RequisionE, $conexion) {
         
         $rutaPDF = "../../../pdfs/" . $nombrePDF;
         
-        // Configurar PHPMailer para enviar correo
+        // Configurar PHPMailer
         $mail = new PHPMailer(true);
+        $mail->SMTPDebug = 0;
         $mail->isSMTP();
+        $mail->Host = 'mail.grupopryse.mx';
         $mail->SMTPAuth = true;
-        $mail->SMTPSecure = 'tls';
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 587;
-        // Dirección de correo electrónico de Gmail
-        $mail->Username = 'SGMO201792@upemor.edu.mx';
-        // Contraseña de Gmail o App Password
-        $mail->Password = 'SIGM071001'; 
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-
-        // Configurar el remitente y el destinatario del correo
-        $mail->setFrom('SGMO201792@upemor.edu.mx', 'Moises Silva Gonzalez');
-        $mail->addAddress('mochito619@gmail.com');
-        $mail->addAttachment($rutaPDF); // Adjuntar el archivo PDF generado
+        $mail->Username = 'tecnico.ti@grupopryse.mx';
+        $mail->Password = 'vi3ORwd,E-TE'; // Usar variable de entorno para la contraseña
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
+        $mail->CharSet = 'UTF-8';
+    
+        // Configurar remitente y destinatario
+        $mail->setFrom('tecnico.ti@grupopryse.mx', 'Tecnico Pryse');
+        $mail->addAddress('karen.lopez.pryse@gmail.com');
+    
+        // Adjuntar archivo si existe
+        if (file_exists($rutaPDF)) {
+            $mail->addAttachment($rutaPDF);
+        } else {
+            throw new Exception("El archivo PDF no existe: $rutaPDF");
+        }
+    
+        // Configurar correo
         $mail->isHTML(true);
-
-        // Configurar el asunto del correo
-        $mail->Subject = utf8_encode('Nueva Requisición');
-
-        // Configurar el asunto del correo
         $mail->Subject = 'Nueva Requisición';
-        
-        // Construir el cuerpo del correo con HTML
-        $mensaje = '<html lang="es">';
-        $mensaje .= '<head><meta charset="UTF-8">';
-        $mensaje .= '<style>';
-        $mensaje .= 'body { font-family: Arial, sans-serif; }';
-        $mensaje .= 'h1 { color: #3498db; }';
-        $mensaje .= 'p { font-size: 14px; color: #333; }';
-        $mensaje .= '.logo { display: block; margin: 20px auto; width: 150px; }';
-        $mensaje .= 'a { color: #3498db; text-decoration: none; }';
-        $mensaje .= 'a:hover { text-decoration: underline; }';
-        $mensaje .= '</style>';
-        $mensaje .= '</head>';
-        $mensaje .= '<body>';
+        $mensaje = '<html lang="es"><head><meta charset="UTF-8">';
+        $mensaje .= '<style>body { font-family: Arial, sans-serif; }</style></head><body>';
         $mensaje .= '<h1>Grupo Pryse Seguridad Privada S.A. de C.V.</h1>';
         $mensaje .= '<p>Hola,</p>';
-        $mensaje .= '<p>Se ha hecho una nueva requisición a las: ' . $FchEnvio . '</p>';
-        $mensaje .= '<p>Número de la Requisición: ' . $ID_RequisionE . '</p>';
-        $mensaje .= '<p>Puedes descargar el PDF <a href="https://grupopryse.mx/pdfs/' . basename($nombrePDF) . '">aquí</a>.</p>';
-        $mensaje .= '<img src="https://i.gifer.com/GzPz.gif" alt="Logo de la empresa" class="logo">';
+        $mensaje .= '<p>Se ha hecho una nueva requisición a las: ' . htmlspecialchars($FchEnvio) . '</p>';
+        $mensaje .= '<p>Número de la Requisición: ' . htmlspecialchars($ID_RequisionE) . '</p>';
+        $mensaje .= '<p>Puedes descargar el PDF <a href="https://almacen.grupopryse.mx/pdfs/' . htmlspecialchars(basename($nombrePDF)) . '">aquí</a>.</p>';
         $mensaje .= '</body></html>';
-        
-        // Establecer el cuerpo del correo
         $mail->Body = $mensaje;
-        $mail->AltBody = 'Número de la Requisición: ' . $ID_RequisionE . '. Puedes descargar el PDF aquí: https://grupopryse.mx/pdfs/' . basename($nombrePDF);
-        
+        $mail->AltBody = 'Número de la Requisición: ' . $ID_RequisionE . '. Puedes descargar el PDF aquí: https://almacen.grupopryse.mx/pdfs/' . basename($nombrePDF);
+    
         // Enviar el correo
         $mail->send();
+        echo 'Correo enviado exitosamente.';
 
         return true;
     } catch (Exception $e) {

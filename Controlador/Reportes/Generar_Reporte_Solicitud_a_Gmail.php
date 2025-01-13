@@ -177,24 +177,24 @@ function generarPDF($conexion, $ID_RequisionE) {
             //Variable en Arreglo
             $address_parts = array();
 
-            // Verificar y agregar partes de la dirección si no están vacías o NULL
-            if (!empty($filaE['Nombre_estado'])) {
-                $address_parts[] = $filaE['Nombre_estado'];
-            }
-            if (!empty($filaE['Mpio'])) {
-                $address_parts[] = $filaE['Mpio'];
-            }
-            if (!empty($filaE['Colonia'])) {
-                $address_parts[] = $filaE['Colonia'];
-            }
+            // Verificar y agregar partes de la dirección si no están vacías o NULL en el orden especificado
             if (!empty($filaE['Calle'])) {
                 $address_parts[] = $filaE['Calle'];
             }
             if (!empty($filaE['Nro'])) {
-                $address_parts[] = $filaE['Nro'];
+                $address_parts[] = "No. " . $filaE['Nro'];
+            }
+            if (!empty($filaE['Colonia'])) {
+                $address_parts[] = $filaE['Colonia'];
+            }
+            if (!empty($filaE['Mpio'])) {
+                $address_parts[] = $filaE['Mpio']; // Ciudad o Municipio
+            }
+            if (!empty($filaE['Nombre_estado'])) {
+                $address_parts[] = $filaE['Nombre_estado']; // Estado
             }
             if (!empty($filaE['CP'])) {
-                $address_parts[] = $filaE['CP'];
+                $address_parts[] = $filaE['CP']; // Código postal
             }
             
             // Unir todas las partes de la dirección con una coma y espacio

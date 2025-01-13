@@ -5,9 +5,9 @@
 			//nombre del servidor de la base de datos
 			$servidor = "localhost"; 
 			//nombre del usuario de la base de datos
-			$usuario = "grupova9_TecPryse";
+			$usuario = "root";
 			//contraseña de usuario de la base de datos 
-			$password = "M0ch1t*_619"; 
+			$password = ""; 
 			//nombre de la base de datos
 			$base = "grupova9_Pryse";  
 
