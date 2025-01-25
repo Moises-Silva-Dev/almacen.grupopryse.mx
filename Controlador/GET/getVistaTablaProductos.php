@@ -12,15 +12,9 @@ $sql = "SELECT
             CCA.Descrp AS Categoria, 
             CTT.Descrip AS Tipo, 
             P.Descripcion AS Descripcion, 
-            P.Especificacion AS Especificacion, 
-            T.Talla AS Talla, 
-            I.Cantidad AS Existencias
+            P.Especificacion AS Especificacion
         FROM 
-            Inventario I 
-        INNER JOIN 
-            Producto P ON I.IdCPro = P.IdCProducto 
-        INNER JOIN 
-            CTallas T ON I.IdCTal = T.IdCTallas 
+            Producto P
         INNER JOIN 
             CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa 
         INNER JOIN 
@@ -28,7 +22,7 @@ $sql = "SELECT
         INNER JOIN 
             CTipoTallas CTT ON P.IdCTipTal = CTT.IdCTipTall 
         GROUP BY 
-            CE.Nombre_Empresa, P.IdCProducto, P.Descripcion, T.Talla;"; 
+            CE.Nombre_Empresa, P.IdCProducto, P.Descripcion"; 
         // Ordena los resultados por el campo 'IdCProducto'.
 
 // Ejecuta la consulta SQL en la conexión establecida.
@@ -56,12 +50,6 @@ while ($row = mysqli_fetch_array($query)) {
     
     // Agrega una celda con la especificación del producto (de la tabla Producto).
     echo '<td>' . $row['Especificacion'] . '</td>';
-
-    // Agrega una celda con la talla producto (de la tabla CTallas).
-    echo '<td>' . $row['Talla'] . '</td>';
-
-    // Agrega una celda con las existencias del producto en el inventario (de la tabla Inventario).
-    echo '<td>' . $row['Existencias'] . '</td>';
     
     // Cierra la fila HTML.
     echo '</tr>';

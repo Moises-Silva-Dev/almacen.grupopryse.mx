@@ -516,4 +516,19 @@
         </div>
     </div>
 
+<script src="../../js/ConfigurarValidacionFechas.js"></script>
+<script src="../../js/PDF/GenerarPDFEntradasFechas.js"></script>
+<script src="../../js/PDF/GenerarPDFEntradasID.js"></script>
+<script src="../../js/PDF/GenerarPDFSalidasFechas.js"></script>
+<script src="../../js/PDF/GenerarPDFSalidasID.js"></script>
+<script src="../../js/PDF/GenerarPDFInventario.js"></script>
+<script src="../../js/PDF/GenerarPDFSolicitudID.js"></script>
+<script src="../../js/PDF/GenerarPDFSolicitudFechas.js"></script>
+<script src="../../js/PDF/GenerarPDFConteoSalidasSolicitudFechas.js"></script>
+<script src="../../js/EXCEL/GenerarExcelEntradasFechas.js"></script>
+<script src="../../js/EXCEL/GenerarExcelSalidasFechas.js"></script>
+<script src="../../js/EXCEL/GenerarExcelSolicitudFechas.js"></script>
+<script src="../../js/EXCEL/GenerarExcelInventario.js"></script>
+<script src="../../js/EXCEL/GenerarExcelConteoSalidasSolicitudFechas.js"></script>
+    
 <?php include('footer.php'); ?>

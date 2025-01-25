@@ -61,6 +61,6 @@
 
 <!-- Custom Bootstrap validation script -->
 <script src="js/ValidarCampo.js"></script>
-<script src="js/Notificacion_SweetAlert_Login.js"></script>
+<script src="js/SweetAlertNotificaciones/Notificacion_SweetAlert_Login.js"></script>
 </body>
 </html>

@@ -88,7 +88,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tu hoja de estilos personalizada -->
     <link href="#" rel="stylesheet">
-    <link rel="shortcut icon" href="../../img/2.png">
+    <link rel="shortcut icon" href="../../../img/2.png">
 
 <style>
     body {
@@ -101,7 +101,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="../index_ADMIN.php">Inicio
+            <a class="navbar-brand" href="../index_SUPERADMIN.php">Inicio
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-assembly" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <path d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" />
@@ -127,177 +127,168 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     </nav>
 
 <div class="container mt-5">
-<center><h2>Requisición Borrador</h2></center>
+    <center><h2>Requisición Borrador</h2></center>
     <!-- Formulario -->
-<form action="../../../Controlador/GET/Autorizar_SUPERADMIN.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-
-<input type="hidden" id="Id" name="Id" value="<?php echo $row['IDRequisicionE'] ?>">
-
-<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header " id="headingOne">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Información General
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-
-            <div class="mb-3">
-                <label for="Supervisor" class="form-label">Supervisor:</label>
-                <input type="text" class="form-control" value="<?php echo $row['Supervisor'] ?>" disabled>
-            </div>
-            
-            <div class="mb-3">
-                <label for="Region" class="form-label">Cuenta:</label>
-                <input type="text" class="form-control" value="<?php echo $row['NombreCuenta'] ?>" disabled>
-            </div>
-            
-            <div class="mb-3">
-                <label for="Region" class="form-label">Región:</label>
-                <input type="text" class="form-control" value="<?php echo $row['Nombre_Region'] ?>" disabled>
-            </div>
-
-            <div class="mb-3">
-                <label for="CentroTrabajo" class="form-label">Centro de Trabajo:</label>
-                <input type="text" class="form-control" value="<?php echo $row['CentroTrabajo'] ?>" disabled>
-            </div>
-            
-            <div class="mb-3">
-                <label for="NroElementos" class="form-label">Numero de Elementos:</label>
-                <input type="text" class="form-control" value="<?php echo $row['NroElementos']  ?>" disabled>
-            </div>
-
-            <div class="mb-3">
-                <label for="Receptor" class="form-label">Nombre del Receptor:</label>
-                <input type="text" class="form-control" value="<?php echo $row['Receptor'] ?>" disabled>
-            </div>
-
-            <div class="mb-3">
-                <label for="num_tel" class="form-label">Número de Teléfono del Receptor:</label>
-                <input type="tel" class="form-control" value="<?php echo $row['TelReceptor'] ?>" disabled>
-            </div>
-
-            <div class="mb-3">
-                <label for="RFC" class="form-label">RFC del Receptor:</label>
-                <input type="text" class="form-control" value="<?php echo $row['RfcReceptor'] ?>" disabled>
-            </div>
-
-            <div class="mb-3">
-                <label for="RFC" class="form-label">Justificación:</label>
-                <input type="text" class="form-control" value="<?php echo $row['Justificacion'] ?>" disabled>
-            </div>
-            
-            <div class="mb-3">
-                <label for="RFC" class="form-label">Dirección:</label>
-                <?php
-                $direccion = "";
-                
-                // Concatenar los valores si están definidos y no están vacíos
-                if (!empty(trim($row['Mpio']))) {
-                    $direccion .= "{$row['Mpio']}, ";
-                }
-                if (!empty(trim($row['Colonia']))) {
-                    $direccion .= "{$row['Colonia']}, ";
-                }
-                if (!empty(trim($row['Calle']))) {
-                    $direccion .= "{$row['Calle']} {$row['Nro']}, ";
-                }
-                if (!empty(trim($row['CP']))) {
-                    $direccion .= "{$row['CP']}, ";
-                }
-                if (!empty(trim($row['Nombre_estado']))) {
-                    $direccion .= "{$row['Nombre_estado']}";
-                }
-                
-                // Eliminar la última coma y espacios si están presentes
-                $direccion = rtrim($direccion, ', ');
-            
-                // Mostrar la dirección si hay información
-                if (!empty(trim($direccion))) {
-                    echo '<input type="text" class="form-control" value="' . htmlspecialchars($direccion) . '" disabled>';
-                } else {
-                    echo '<input type="text" class="form-control" value="No disponible" disabled>';
-                }
-                ?>
+    <form id="FormularioAutorizarRequisicion" action="../../../Controlador/GET/Autorizar_Requisicion.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <input type="hidden" id="Id" name="Id" value="<?php echo $row['IDRequisicionE'] ?>">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header " id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Información General
+                </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <label for="Supervisor" class="form-label">Supervisor:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['Supervisor'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Region" class="form-label">Cuenta:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['NombreCuenta'] ?>" disabled>
+                        </div>   
+                        <div class="mb-3">
+                            <label for="Region" class="form-label">Región:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['Nombre_Region'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="CentroTrabajo" class="form-label">Centro de Trabajo:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['CentroTrabajo'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="NroElementos" class="form-label">Numero de Elementos:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['NroElementos']  ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Receptor" class="form-label">Nombre del Receptor:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['Receptor'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="num_tel" class="form-label">Número de Teléfono del Receptor:</label>
+                            <input type="tel" class="form-control" value="<?php echo $row['TelReceptor'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="RFC" class="form-label">RFC del Receptor:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['RfcReceptor'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="RFC" class="form-label">Justificación:</label>
+                            <input type="text" class="form-control" value="<?php echo $row['Justificacion'] ?>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="RFC" class="form-label">Dirección:</label>
+                            <?php
+                                // Declarar la variable
+                                $direccion = "";
+                                
+                                // Concatenar los valores si están definidos y no están vacíos
+                                if (!empty(trim($row['Mpio']))) {
+                                    $direccion .= "{$row['Mpio']}, ";
+                                }
+                                if (!empty(trim($row['Colonia']))) {
+                                    $direccion .= "{$row['Colonia']}, ";
+                                }
+                                if (!empty(trim($row['Calle']))) {
+                                    $direccion .= "{$row['Calle']} {$row['Nro']}, ";
+                                }
+                                if (!empty(trim($row['CP']))) {
+                                    $direccion .= "{$row['CP']}, ";
+                                }
+                                if (!empty(trim($row['Nombre_estado']))) {
+                                    $direccion .= "{$row['Nombre_estado']}";
+                                }
+                            
+                                // Eliminar la última coma y espacios si están presentes
+                                $direccion = rtrim($direccion, ', ');
+                            
+                                // Mostrar la dirección si hay información
+                                if (!empty(trim($direccion))) {
+                                    // Mostrar la dirección
+                                    echo '<input type="text" class="form-control" value="' . htmlspecialchars($direccion) . '" disabled>';
+                                } else {
+                                    // Mostrar un mensaje si no hay información
+                                    echo '<input type="text" class="form-control" value="No disponible" disabled>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="container mt-5">
-    <div class="table-responsive">
-        <table class="table table-sm table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">Empresa</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Especificación</th>
-                    <th scope="col">Categoría</th>
-                    <th scope="col">Talla</th>
-                    <th scope="col">Cantidad Solicitada</th>
-                    <th scope="col">IMG</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    // Comprobar si hay resultados antes de continuar
-                    if ($resultadoConsulta->num_rows > 0) {
-                        // Iterar sobre cada fila de resultados
-                        while ($row1 = $resultadoConsulta->fetch_assoc()) {
-                ?>
-                    <tr>
-                        <td><?php echo $row1['Nombre_Empresa']; ?></td>
-                        <td><?php echo $row1['Descripcion']; ?></td>
-                        <td><?php echo $row1['Especificacion']; ?></td>
-                        <td><?php echo $row1['Descrp']; ?></td>
-                        <td><?php echo $row1['Talla']; ?></td>
-                        <td><?php echo $row1['Cantidad']; ?></td>
-                        <td><img src="<?php echo $row1['IMG']; ?>" alt="Imagen" width="20" height="20"></td>
-                        <td>
-                            <button type="button" class="btn btn-info btnVisualizarImagen" data-toggle="modal" data-target="#infoModal" data-empresa="<?php echo $row1['Nombre_Empresa']; ?>" data-descripcion="<?php echo $row1['Descripcion']; ?>" data-especificacion="<?php echo $row1['Especificacion']; ?>" data-categoria="<?php echo $row1['Descrp']; ?>" data-talla="<?php echo $row1['Talla']; ?>" data-cantidad="<?php echo $row1['BCantidad']; ?>" data-img="<?php echo $row1['IMG']; ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFFFFF" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                    <path d="M11.102 17.957c-3.204 -.307 -5.904 -2.294 -8.102 -5.957c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a19.5 19.5 0 0 1 -.663 1.032" />
-                                    <path d="M15 19l2 2l4 -4" />
-                                </svg>
-                                Visualizar
-                            </button>
-                        </td>
-                    </tr>
-                <?php
-                        }
-                    } else {
-                        // Mostrar un mensaje si no hay resultados
-                        echo "<tr><td colspan='8'>No se encontraron productos.</td></tr>";
-                    }
-                ?>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-            <!-- Botones -->
-            <div class="mb-3">                
-                <button type="submit" class="btn btn-success">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail-forward" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M12 18h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
-                        <path d="M3 6l9 6l9 -6" />
-                        <path d="M15 18h6" />
-                        <path d="M18 15l3 3l-3 3" />
-                    </svg>Enviar</button>
-                <a href="../Solicitud_SUPERADMIN.php" class="btn btn-danger">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-receipt-refund" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
-                        <path d="M15 14v-2a2 2 0 0 0 -2 -2h-4l2 -2m0 4l-2 -2" />
-                    </svg>Regresar
-                </a>
+        <div class="container mt-5">
+            <div class="table-responsive">
+                <table class="table table-sm table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Empresa</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Especificación</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Talla</th>
+                            <th scope="col">Cantidad Solicitada</th>
+                            <th scope="col">IMG</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            // Comprobar si hay resultados antes de continuar
+                            if ($resultadoConsulta->num_rows > 0) {
+                                // Iterar sobre cada fila de resultados
+                                while ($row1 = $resultadoConsulta->fetch_assoc()) {
+                        ?>
+                            <tr>
+                                <td><?php echo $row1['Nombre_Empresa']; ?></td>
+                                <td><?php echo $row1['Descripcion']; ?></td>
+                                <td><?php echo $row1['Especificacion']; ?></td>
+                                <td><?php echo $row1['Descrp']; ?></td>
+                                <td><?php echo $row1['Talla']; ?></td>
+                                <td><?php echo $row1['Cantidad']; ?></td>
+                                <td><img src="<?php echo $row1['IMG']; ?>" alt="Imagen" width="20" height="20"></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btnVisualizarImagen" data-toggle="modal" data-target="#infoModal" data-empresa="<?php echo $row1['Nombre_Empresa']; ?>" data-descripcion="<?php echo $row1['Descripcion']; ?>" data-especificacion="<?php echo $row1['Especificacion']; ?>" data-categoria="<?php echo $row1['Descrp']; ?>" data-talla="<?php echo $row1['Talla']; ?>" data-cantidad="<?php echo $row1['BCantidad']; ?>" data-img="<?php echo $row1['IMG']; ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFFFFF" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                            <path d="M11.102 17.957c-3.204 -.307 -5.904 -2.294 -8.102 -5.957c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a19.5 19.5 0 0 1 -.663 1.032" />
+                                            <path d="M15 19l2 2l4 -4" />
+                                        </svg>
+                                        Visualizar
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php
+                                }
+                            } else {
+                                // Mostrar un mensaje si no hay resultados
+                                echo "<tr><td colspan='8'>No se encontraron productos.</td></tr>";
+                            }
+                        ?>
+                    </tbody>
+                </table>
             </div>
-    </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="mb-3">                
+            <button type="submit" class="btn btn-success">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail-forward" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 18h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
+                    <path d="M3 6l9 6l9 -6" />
+                    <path d="M15 18h6" />
+                    <path d="M18 15l3 3l-3 3" />
+                </svg>Enviar
+            </button>
+            <a href="../Solicitud_SUPERADMIN.php" class="btn btn-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-receipt-refund" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
+                    <path d="M15 14v-2a2 2 0 0 0 -2 -2h-4l2 -2m0 4l-2 -2" />
+                </svg>Regresar
+            </a>
+        </div>
     </form>
 </div>
 
@@ -321,18 +312,21 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     </div>
 </div>
 
-    <!-- Pie de página -->
-    <footer class="bg-dark text-white text-center p-3 mt-4">
-        <p>&copy; 2023 Tu Sitio. Todos los derechos reservados.</p>
-    </footer>
+<!-- Pie de página -->
+<footer class="bg-dark text-white text-center p-3 mt-4">
+    <p>&copy; 2023 Tu Sitio. Todos los derechos reservados.</p>
+</footer>
 
-    <!-- Scripts de Bootstrap (Requiere Popper.js y jQuery) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    <!-- Bootstrap Bundle (incluye Popper.js) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="../../../js/Vista_Previa_Producto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="../../../js/Vista_Previa_Producto.js" defer></script>    
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Requisicion.js"></script>
 </body>
 </html>

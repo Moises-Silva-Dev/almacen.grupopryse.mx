@@ -1,22 +1,21 @@
 <?php include('head.php'); ?>
 
 <center><div class="table-responsive">
-        <h2 class="mb-4">Salidas</h2>
-
-        <!-- Tabla para mostrar los registros -->
-        <table id="requisicionesTable" class="table table-hover table-striped mt-4" class="table">
-            <thead>
-                <tr class="table-primary"> 
-                    <th scope="col">Nmr.</th>
-                    <th scope="col">Estatus</th>
-                    <th scope="col">Solicitante</th>
-                    <th scope="col">Centro de Trabajo</th>
-                    <th scope="col">Fecha de Solicitud</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
+    <h2 class="mb-4">Salidas</h2>
+    <!-- Tabla para mostrar los registros -->
+    <table id="requisicionesTable" class="table table-hover table-striped mt-4" class="table">
+        <thead>
+            <tr class="table-primary"> 
+                <th scope="col">Nmr.</th>
+                <th scope="col">Estatus</th>
+                <th scope="col">Solicitante</th>
+                <th scope="col">Centro de Trabajo</th>
+                <th scope="col">Fecha de Solicitud</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
                 // Asegúrate de tener el resultado de la consulta asignado a $query antes de este bloque
                 include('../../Modelo/Conexion.php'); 
                 $conexion = (new Conectar())->conexion();
@@ -40,7 +39,7 @@
                             FchAutoriza DESC
                         LIMIT 
                             $records_per_page OFFSET $offset;";
-                
+                    
                 $query = mysqli_query($conexion, $sql);
                 
                 // Consulta para contar el total de registros con los mismos filtros
@@ -58,7 +57,7 @@
                 $total_pages = ceil($total_rows / $records_per_page);
 
                 while ($row = mysqli_fetch_array($query)) {
-                    ?>
+            ?>
                     <tr>
                         <td><?php echo $row['IDRequisicionE']; ?></td>
                         <td><?php echo $row['Estado']; ?></td>
@@ -74,34 +73,36 @@
                             </svg>Salida</a>
                         </td>
                     </tr>
-                <?php
+            <?php
                 }
-                ?>
-            </tbody>
-        </table>
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        <?php if ($page > 1): ?>
-            <li class="page-item">
-                <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        <?php endif; ?>
+            ?>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            <?php endif; ?>
 
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
-        <?php endfor; ?>
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+            <?php endfor; ?>
 
-        <?php if ($page < $total_pages): ?>
-            <li class="page-item">
-                <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        <?php endif; ?>
-    </ul>
-</nav>
-    </div>
+            <?php if ($page < $total_pages): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+</div>
+
+<script src="../../js/Ocultar_Estatus.js"></script>
 
 <?php include('footer.php'); ?>

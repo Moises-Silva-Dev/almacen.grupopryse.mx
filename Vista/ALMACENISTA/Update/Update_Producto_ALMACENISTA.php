@@ -38,7 +38,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <div class="container mt-5">
 <center><h2>Modificar Registro Producto</h2></center>
     <!-- Formulario -->
-    <form class="needs-validation" action="../../../Controlador/ALMACENISTA/UPDATE/Funcion_Update_Producto.php" method="post" enctype="multipart/form-data" novalidate>
+    <form id="FormUpdateProducto" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Producto.php" method="post" enctype="multipart/form-data" novalidate>
         <!-- ID (para edición) -->
         <input type="hidden" name="id" id="id" value="<?php echo $row['IdCProducto']; ?>">
 
@@ -48,7 +48,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php
                 $sql_tipos_colaborador = $conexion->query("SELECT * FROM CEmpresas");
                 while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['ID_Empresas'] == $resultado_tipo_colaborador['IdCEmpresa']) ? 'selected' : '';
+                    $selected = ($row['IdCEmp'] == $resultado_tipo_colaborador['IdCEmpresa']) ? 'selected' : '';
                     echo "<option value='".$resultado_tipo_colaborador['IdCEmpresa']."' $selected>".$resultado_tipo_colaborador['Nombre_Empresa']."</option>";
                 }
                 ?>
@@ -64,7 +64,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php
                 $sql_tipos_colaborador = $conexion->query("SELECT * FROM CCategorias");
                 while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['Id_cate'] == $resultado_tipo_colaborador['IdCCate']) ? 'selected' : '';
+                    $selected = ($row['IdCCat'] == $resultado_tipo_colaborador['IdCCate']) ? 'selected' : '';
                     echo "<option value='".$resultado_tipo_colaborador['IdCCate']."' $selected>".$resultado_tipo_colaborador['Descrp']."</option>";
                 }
                 ?>
@@ -80,7 +80,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php
                 $sql_tipos_colaborador = $conexion->query("SELECT * FROM CTipoTallas");
                 while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['Id_TipTall'] == $resultado_tipo_colaborador['IdCTipTall']) ? 'selected' : '';
+                    $selected = ($row['IdCTipTal'] == $resultado_tipo_colaborador['IdCTipTall']) ? 'selected' : '';
                     echo "<option value='".$resultado_tipo_colaborador['IdCTipTall']."' $selected>".$resultado_tipo_colaborador['Descrip']."</option>";
                 }
                 ?>
@@ -92,7 +92,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
         <div class="mb-3">
             <label for="Descripción" class="form-label">Descripción:</label>
-            <textarea id="Descripción" name="Descripción" class="form-control" placeholder="Ingresa la Descripción" required><?php echo $row['Descripcion']; ?></textarea>
+            <textarea id="Descripcion" name="Descripcion" class="form-control" placeholder="Ingresa la Descripción" required><?php echo $row['Descripcion']; ?></textarea>
             <div class="invalid-feedback">
                 Por favor, ingresa la Descripción.
             </div>
@@ -138,7 +138,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <path d="M19 16v6" />
                     <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
                 </svg>Guardar</button>
-            <a href="../Producto_ALMACENISTA.php" class="btn btn-danger">
+            <a href="../Producto_Dev.php" class="btn btn-danger">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <path d="M4 7l16 0" />
@@ -150,5 +150,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         </div>
     </form>
 </div>
+
+<script src="../../../js/Form_Producto_Update.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Producto.js"></script>
 
 <?php include('footer.php'); ?>

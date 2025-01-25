@@ -117,8 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function manejarEliminacionFila(fila, cuentaId) {
         // Eliminar la fila de la tabla
         fila.remove();
+            
         // Remover la cuenta de la lista de cuentas seleccionadas para actualización
         cuentasSeleccionadasUpdate = cuentasSeleccionadasUpdate.filter(cuenta => cuenta.cuentaId !== cuentaId);
+            
         // Actualizar el input oculto con los datos actualizados
         actualizarDatosTablaCuentaUpdate();
     }
@@ -128,8 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('#cuentaUpdateTable tbody tr').forEach(row => {
             // Obtener el ID de la cuenta desde la primera celda de la fila
             const cuentaId = row.querySelector('td:nth-child(1)').textContent;
+
             // Obtener el nombre de la cuenta desde la segunda celda de la fila
             const cuentaNombre = row.querySelector('td:nth-child(2)').textContent;
+
             // Añadir la cuenta a la lista de cuentas seleccionadas para actualización
             cuentasSeleccionadasUpdate.push({ cuentaId, cuentaNombre });
 
@@ -148,53 +152,58 @@ document.addEventListener('DOMContentLoaded', function() {
     tipoSelect.addEventListener('change', async () => {
         // Convertir el valor seleccionado en un número
         const tipo = parseInt(tipoSelect.value);
-        
+            
         // Verificar si el tipo de usuario seleccionado no requiere cuenta
         if (noCuentaRequired.includes(tipo)) {
             // Ocultar el contenedor de cuentas si el tipo de usuario no requiere una
             cuentaContainer.style.display = 'none';
+                
             // El campo de selección de cuenta ya no es obligatorio
             cuentaSelect.required = false;
         } else {
             // Mostrar el contenedor de cuentas si se requiere una cuenta
             cuentaContainer.style.display = 'block';
+                
             // Hacer que el campo de cuenta sea obligatorio
             cuentaSelect.required = true;
-    
+        
             // Intentar realizar una solicitud para obtener las cuentas
             try {
-                // Establecer la URL de la solicitud en función del tipo de usuario
-                let direccion = tipo === 3 
-                    ? '../../../Controlador/GET/getSelectCuentaAdmin.php'
-                    : '../../../Controlador/GET/getSelectCuenta.php';
-                
-                // Realizar una solicitud fetch para obtener las cuentas
-                const response = await fetch(direccion);
-                
-                // Verificar si la respuesta es válida
-                if (!response.ok) {
-                    // Si no es válida, lanzar un error con el estado HTTP
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                // Obtener la respuesta como texto
-                const text = await response.text();
-                
-                // Intentar convertir el texto de la respuesta a JSON
-                try {
-                    // Parsear el texto a JSON
-                    const data = JSON.parse(text);
-                    // Reiniciar las opciones del select de cuentas con una opción por defecto
-                    cuentaSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Cuenta --</option>';
-                    // Iterar sobre los datos de cuentas y añadir cada cuenta como una opción al select
-                    data.forEach(cuenta => {
-                        cuentaSelect.innerHTML += `<option value="${cuenta.ID}">${cuenta.NombreCuenta}</option>`;
-                    });
-                } catch (e) {
-                    // Si hay un error al parsear el JSON, mostrar el error en la consola
-                    console.error('Error al parsear JSON:', e);
-                    // Mostrar también el texto original del servidor para más contexto
-                    console.error('Respuesta del servidor:', text);
+                // Obtener el ID de la tipo de usuario seleccionado
+                if (tipo === 3 || tipo ===4) { 
+                    // Si el tipo de usuario es 3 o 4, obtener el ID de la cuenta seleccionada
+                    let direccion =  '../../../Controlador/GET/getSelectCuenta.php';
+                    
+                    // Realizar una solicitud fetch para obtener las cuentas
+                    const response = await fetch(direccion);
+                        
+                    // Verificar si la respuesta es válida
+                    if (!response.ok) {
+                        // Si no es válida, lanzar un error con el estado HTTP
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                        
+                    // Obtener la respuesta como texto
+                    const text = await response.text();
+                        
+                    // Intentar convertir el texto de la respuesta a JSON
+                    try {
+                        // Parsear el texto a JSON
+                        const data = JSON.parse(text);
+                        // Reiniciar las opciones del select de cuentas con una opción por defecto
+                        cuentaSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Cuenta --</option>';
+                            
+                        // Iterar sobre los datos de cuentas y añadir cada cuenta como una opción al select
+                        data.forEach(cuenta => {
+                            cuentaSelect.innerHTML += `<option value="${cuenta.ID}">${cuenta.NombreCuenta}</option>`;
+                        });
+                    } catch (e) {
+                        // Si hay un error al parsear el JSON, mostrar el error en la consola
+                        console.error('Error al parsear JSON:', e);
+                            
+                        // Mostrar también el texto original del servidor para más contexto
+                        console.error('Respuesta del servidor:', text);
+                    }
                 }
             } catch (error) {
                 // Si hay un error en la solicitud fetch, mostrarlo en la consola

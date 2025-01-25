@@ -2,26 +2,22 @@
 
 <div class="container mt-5">
 <center><h1>Registrar Cuenta</h1></center>
-
-    <form class="needs-validation" action="../../../Controlador/DEV/INSERT/Funcion_Insert_Cuenta.php" method="post" novalidate>
-
-    <div class="mb-3">
-        <label for="NombreCuenta" class="form-label">Nombre de Cuenta:</label>
-        <input type="text" class="form-control" id="NombreCuenta" name="NombreCuenta" placeholder="Ingresa el nombre de la cuenta" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-        <div class="invalid-feedback">
-            Por favor, ingresa el Nombre de la Cuenta.
+    <form id="FormInsertCuentaNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Cuenta.php" method="post" novalidate>
+        <div class="mb-3">
+            <label for="NombreCuenta" class="form-label">Nombre de Cuenta:</label>
+            <input type="text" class="form-control" id="NombreCuenta" name="NombreCuenta" placeholder="Ingresa el nombre de la cuenta" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
+            <div class="invalid-feedback">
+                Por favor, ingresa el Nombre de la Cuenta.
+            </div>
         </div>
-    </div>
-
-    <div class="mb-3">
-        <label for="NroElemetos" class="form-label">Numero de Elementos:</label>
-        <input type="number" class="form-control" id="NroElemetos" name="NroElemetos" placeholder="Ingresa el Numero de Elementos" required>
-        <div class="invalid-feedback">
-            Por favor, ingresa el Numero de Elementos.
+        <div class="mb-3">
+            <label for="NroElemetos" class="form-label">Numero de Elementos:</label>
+            <input type="number" class="form-control" id="NroElemetos" name="NroElemetos" placeholder="Ingresa el Numero de Elementos" required>
+            <div class="invalid-feedback">
+                Por favor, ingresa el Numero de Elementos.
+            </div>
         </div>
-    </div>
-
-    <div class="mb-3">
+        <div class="mb-3">
             <button type="submit" class="btn btn-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -42,5 +38,7 @@
         </div>
     </form>
 </div>
+
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Cuenta.js"></script>
 
 <?php include('footer.php'); ?>

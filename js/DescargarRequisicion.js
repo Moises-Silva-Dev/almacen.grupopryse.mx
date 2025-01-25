@@ -6,7 +6,7 @@ document.querySelectorAll('.BtnDescargarRequisicion').forEach(button => {
         var idRequisicion = this.dataset.id;
 
         // Va ir al direccionamiento donde genera el PDF
-        fetch(`../../Controlador/Reportes/Descargar_Requisición.php?nocache=${Date.now()}`, {
+        fetch(`../../Controlador/Reportes/Descargar_Requisicion.php?nocache=${Date.now()}`, {
             // Define el método HTTP como POST.
             method: 'POST',
             headers: {

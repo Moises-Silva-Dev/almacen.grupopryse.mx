@@ -1,87 +1,9 @@
-// Función que se ejecuta cuando el documento está listo
-$(document).ready(function() {
-    // Evento de cambio para el campo con ID 'ID_Producto'
-    $('#ID_Producto').change(function() {
-        // Obtiene el valor seleccionado en el campo 'ID_Producto'
-        var producto_id = $(this).val();
-
-        // Realiza una petición AJAX para obtener la información del producto
-        $.ajax({
-            // URL del controlador para obtener la información del producto
-            url: '../../../Controlador/GET/getProductInfo.php',
-            // Método de la petición
-            method: 'POST',
-            // Datos enviados al servidor (el ID del producto)
-            data: { ID_Producto: producto_id },
-            // Tipo de datos esperados en la respuesta (JSON)
-            dataType: 'json',
-            // Función que se ejecuta si la petición es exitosa
-            success: function(response) {
-                // Establece los valores de los campos con la información del producto obtenida de la respuesta
-                $('#Empresa').val(response.empresa);
-                $('#Categoria').val(response.categoria);
-                $('#Descripcion').val(response.descripcion);
-                $('#Especificacion').val(response.especificacion);
-
-                // Limpia el select de tallas
-                $('#ID_Talla').empty();
-                
-                // Itera sobre cada talla en la respuesta y agrega una opción al select de tallas
-                $.each(response.tallas, function(index, talla) {
-                    $('#ID_Talla').append('<option value="' + talla.id + '" data-nombre="' + talla.nombre + '">' + talla.nombre + '</option>');
-                });
-            }
-        });
-    });
-
-    // Manejar el clic en el botón para mostrar la imagen (incluso para las filas nuevas)
-    $(document).on('click', '#btnMostrarImagen', function() {
-        // Encuentra el elemento padre más cercano con clase 'fila-fija'
-        var fila = $(this).closest('.fila-fija');
-        // Obtiene el identificador común
-        var id_comun = fila.data('id'); 
-        // Encuentra la fila relacionada con el mismo data-id
-        var fila2 = $('.fila-fija2[data-id="' + id_comun + '"]');
-        // Obtiene el valor del campo de ID_Producto dentro de la fila
-        var producto_id = fila.find('#ID_Producto').val();
-        // Obtiene el valor del campo de Descripcion dentro de la fila
-        var descripcion = fila2.find('#Descripcion').val();
-        // Obtiene el valor del campo de Especificacion dentro de la fila
-        var especificacion = fila2.find('#Especificacion').val();
-
-        // Realiza una petición AJAX para obtener la imagen del producto
-        $.ajax({
-            // URL del controlador para obtener la imagen del producto
-            url: '../../../Controlador/GET/getProductImage.php',
-            // Método de la petición
-            method: 'POST',
-            // Datos enviados al servidor (el ID del producto)
-            data: { ID_Producto: producto_id },
-            // Tipo de datos esperados en la respuesta (JSON)
-            dataType: 'json',
-            // Función que se ejecuta si la petición es exitosa
-            success: function(response) {
-                // Establece la URL de la imagen obtenida en el elemento con ID 'imagenProducto'
-                $('#imagenProducto').attr('src', response.url);
-                $('#descripcionProducto').text(descripcion);
-                $('#especificacionProducto').text(especificacion);
-                $('#modalImagen').modal('show');
-            }
-        });
-
-        // Evento de clic para el botón de cierre del modal de imagen
-        $('#modalImagen .close').on('click', function() {
-            // Oculta el modal de imagen
-            $('#modalImagen').modal('hide');
-        });
-    });
-
-    // Obtiene el botón "Agregar" del DOM
-    const btnAgregar = document.getElementById("btn_Agregar");
-    // Obtiene la tabla de productos del DOM
-    const tablaProductos = document.querySelector(".table-responsive table tbody");
-    // Obtiene el campo de datos de la tabla del DOM
-    const datosTablaInput = document.getElementById("datosTabla");
+// Obtiene el botón "Agregar" del DOM
+const btnAgregar = document.getElementById("btn_AgregarProductoEntrada");
+// Obtiene la tabla de productos del DOM
+const tablaProductos = document.querySelector(".table-responsive table tbody");
+// Obtiene el campo de datos de la tabla del DOM
+const datosTablaInput = document.getElementById("datosTablaUpdateEntrada");
 
     // Función para actualizar los datos de la tabla oculta
     function actualizarDatosTabla() {
@@ -119,10 +41,16 @@ $(document).ready(function() {
         const cant = parseInt(document.getElementById("Cantidad").value, 10);
 
         // Verifica que todos los campos estén completos y que la cantidad sea un número válido
-        if (idProduct === "" || empre === "" || categor === "" || descripc === "" || especificac === "" || idtall === "" || isNaN(cant) || cant <= 0
+        if (idProduct === "" || empre === "" || categor === "" || 
+            descripc === "" || especificac === "" || idtall === "" || 
+            isNaN(cant) || cant <= 0
         ) {
             // Si falta algún campo o la cantidad no es válida, muestra una alerta y sale de la función
-            alert("Por favor, complete todos los campos correctamente antes de agregar el producto.");
+            Swal.fire({
+                icon: "error", // Icono de error
+                title: "Falto un Campo", // Título del mensaje
+                text: "Por favor, complete todos los campos correctamente antes de agregar el producto."
+            });
             return;
         }
         
@@ -198,10 +126,3 @@ $(document).ready(function() {
             actualizarDatosTabla();
         }
     });
-
-    // Agrega un evento de escucha para el evento "submit" del formulario con ID "formGuardar"
-    document.getElementById("formGuardar").addEventListener("submit", function(event) {
-        // Llama a la función actualizarDatosTabla antes de que el formulario sea enviado
-        actualizarDatosTabla();
-    });
-});

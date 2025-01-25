@@ -190,4 +190,6 @@
 </div>
 </center>
 
+<script src="../../js/DescargarRequisicion.js"></script>
+
 <?php include('footer.php'); ?>

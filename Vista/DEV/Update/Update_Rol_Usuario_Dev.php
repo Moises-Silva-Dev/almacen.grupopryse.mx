@@ -75,7 +75,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <div class="container mt-5">
 <center><h2>Modificar Rol Usuario</h2></center>
     <!-- Formulario -->
-    <form method="post" class="needs-validation" action="../../../Controlador/DEV/UPDATE/Funcion_Update_Rol_Usuario.php" novalidate>
+    <form id="FormUpdateRolUsuario" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Rol_Usuario.php" method="post" enctype="multipart/form-data" novalidate>
         <!-- ID (para edición) -->
         <input type="hidden" name="idTipo" id="idTipo" value="<?php echo $row['ID_Tipo_Usuario']  ?>">
         <input type="hidden" name="id" id="id" value="<?php echo $row['ID_Usuario']  ?>">
@@ -84,82 +84,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         
         <!-- Crear DIV para notificación -->
         <div id="notificationContainer"></div>
-        
             <?php 
-                if ($row['ID_Tipo_Usuario'] == 3) {
-                    echo '<div class="mb-3">
-                            <label for="ID_Cuenta_Update" class="form-label">Cuenta:</label>
-                            <div class="input-group">
-                                <select class="form-select" id="ID_Cuenta_Update">
-                                    <option value="" selected>-- Seleccionar Cuenta --</option>';
-                
-                                    // Consulta SQL para el usuario tipo 3
-                                    $sqlA = $conexion->query("SELECT 
-                                                                c.ID, c.NombreCuenta
-                                                            FROM 
-                                                                Cuenta c
-                                                            JOIN 
-                                                                Cuenta_Region cr ON c.ID = cr.ID_Cuentas
-                                                            JOIN 
-                                                                Estado_Region er ON cr.ID_Regiones = er.ID_Regiones
-                                                            WHERE 
-                                                                c.ID NOT IN (SELECT 
-                                                                                uc.ID_Cuenta
-                                                                            FROM 
-                                                                                Usuario_Cuenta uc
-                                                                            JOIN 
-                                                                                Usuario u ON uc.ID_Usuarios = u.ID_Usuario
-                                                                            JOIN 
-                                                                                Tipo_Usuarios tu ON u.ID_Tipo_Usuario = tu.ID
-                                                                            WHERE 
-                                                                                tu.Tipo_Usuario = 'Administrador')
-                                                            GROUP BY 
-                                                                c.ID, c.NombreCuenta");
-                
-                                    // Genera las opciones del select
-                                    while ($cuentaA = $sqlA->fetch_assoc()) {
-                                        echo "<option value='" . $cuentaA['ID'] . "'>" . $cuentaA['NombreCuenta'] . "</option>";
-                                    }
-                
-                    echo '      </select>
-                                <button class="btn btn-secondary" type="button" id="addCuentaUpdateButton">Agregar</button>
-                            </div>
-                            <div class="invalid-feedback">
-                                Por favor, selecciona una materia.
-                            </div>
-                        </div>
-                
-                        <div class="mb-3">
-                            <label class="form-label">Cuentas Seleccionadas:</label>
-                            <table class="table table-bordered" id="cuentaUpdateTable">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>';
-                                // Asegúrate de haber hecho la consulta para obtener las cuentas seleccionadas
-                                while($cuentaSeleccionada = $resultado2->fetch_assoc()) {
-                                    if ($cuentaSeleccionada['TotalRequisiciones'] > 0) {
-                                        echo "<tr>
-                                                <td>" . $cuentaSeleccionada['ID'] . "</td>
-                                                <td>" . $cuentaSeleccionada['NombreCuenta'] . "</td>
-                                                <td>SORRY</td>
-                                        </tr>";
-                                    } else {
-                                        echo "<tr>
-                                                <td>" . $cuentaSeleccionada['ID'] . "</td>
-                                                <td>" . $cuentaSeleccionada['NombreCuenta'] . "</td>
-                                                <td><button type='button' class='btn btn-danger btn-sm removeCuentaUpdate'>Eliminar</button></td>
-                                        </tr>";
-                                    }
-                                }
-                    echo '      </tbody>
-                            </table>
-                        </div>';
-                } else if ($row['ID_Tipo_Usuario'] == 4) {
+                if ($row['ID_Tipo_Usuario'] == 3 || $row['ID_Tipo_Usuario'] == 4) {
                     echo '<div class="mb-3">
                             <label for="ID_Materia" class="form-label">Cuenta:</label>
                             <div class="input-group">
@@ -351,5 +277,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         </div>
     </form>
 </div>
+
+<script src="../../../js/Update_Rol.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Rol_Usuario.js"></script>
 
 <?php include('footer.php'); ?>

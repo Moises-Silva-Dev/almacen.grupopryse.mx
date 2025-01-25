@@ -38,7 +38,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <div class="container mt-5">
 <center><h2>Modificar Usuario</h2></center>
     <!-- Formulario -->
-    <form class="needs-validation" action="../../../Controlador/DEV/UPDATE/Funcion_Update_Usuario.php" method="post" novalidate>
+    <form id="FormUpdateUsuario" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Usuario.php" method="post" enctype="multipart/form-data" novalidate>
         <!-- ID (para edición) -->
         <input type="hidden" name="id" id="id" value="<?php echo $row['ID_Usuario']  ?>">
 
@@ -177,5 +177,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         </div>
     </form>
 </div>
+
+<script src="../../../js/ValidarPass.js"></script>
+<script src="../../../js/UpdatePass.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Usuario.js"></script>
 
 <?php include('footer.php'); ?>

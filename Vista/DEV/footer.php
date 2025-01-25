@@ -15,38 +15,6 @@
 
     <!-- Scripts personalizados -->
     <script src="../../js/ValidarCampo.js"></script>
-    <script src="../../js/Ocultar_Estatus.js"></script>
-    <script src="../../js/InvalidarBtnEstatus.js"></script>
-    <script src="../../js/ConfigurarValidacionFechas.js"></script>
-    <script src="../../js/GenerarPDFEntradasFechas.js"></script>
-    <script src="../../js/GenerarPDFEntradasID.js"></script>
-    <script src="../../js/GenerarPDFSalidasFechas.js"></script>
-    <script src="../../js/GenerarPDFSalidasID.js"></script>
-    <script src="../../js/GenerarPDFInventario.js"></script>
-    <script src="../../js/GenerarPDFSolicitudID.js"></script>
-    <script src="../../js/GenerarPDFSolicitudFechas.js"></script>
-    <script src="../../js/GenerarPDFConteoSalidasSolicitudFechas.js"></script>
-    <script src="../../js/GenerarExcelEntradasFechas.js"></script>
-    <script src="../../js/GenerarExcelSalidasFechas.js"></script>
-    <script src="../../js/GenerarExcelSolicitudFechas.js"></script>
-    <script src="../../js/GenerarExcelInventario.js"></script>
-    <script src="../../js/GenerarExcelConteoSalidasSolicitudFechas.js"></script>
 
-    <script src="../../js/Notificacion_SweetAlert_RespdaldoDB.js"></script>
-    <script src="../../js/Notificacion_SweetAlert_RestauracionDB.js"></script>
-    <script src="../../js/Notificacion_SweetAlert_BtnDeletedDB.js"></script>
-    
-    <!-- Tu script personalizado -->
-    <script>
-        function eliminar(){
-            var respuesta = confirm("¿Estas Seguro que Deseas Eliminarlo?");
-        return respuesta;
-        }
-
-        function Permiso(){
-            var respuesta = confirm("¿Desea dar Autorización a esta Requisición?");
-        return respuesta;
-        }
-    </script>
 </body>
 </html>

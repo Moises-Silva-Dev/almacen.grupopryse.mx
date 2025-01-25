@@ -32,10 +32,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <h2>Modificar Cuenta</h2>
 
     <!-- Formulario -->
-    <form action="../../../Controlador/DEV/UPDATE/Funcion_Update_Cuenta.php" method="post" class="needs-validation" novalidate>
+    <form id="FormUpdateCuenta" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Cuenta.php" method="post" class="needs-validation" novalidate>
         <!-- ID (para edición) -->
         <input type="hidden" id="ID_Cuenta" name="ID_Cuenta" value="<?php echo $row['ID']; ?>">
-
         <div class="mb-3">
             <label for="NombreCuenta" class="form-label">Nombre de la Cuenta:</label>
             <input type="text" class="form-control" id="NombreCuenta" name="NombreCuenta" value="<?php echo $row['NombreCuenta'] ?>" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)" required>
@@ -51,7 +50,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 Por favor, ingresa el Numero de elementos.
             </div>
         </div>
-
         <!-- Botones -->
         <div class="mb-3">
             <button type="submit" class="btn btn-primary">
@@ -75,5 +73,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             </a>
         </div>
     </form>
+</div>
+
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Cuenta.js"></script>
 
 <?php include('footer.php'); ?>

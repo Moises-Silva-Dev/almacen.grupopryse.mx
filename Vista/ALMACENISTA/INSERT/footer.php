@@ -4,14 +4,15 @@
         <p>&copy; 2023 Tu Sitio. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Scripts de Bootstrap (Requiere Popper.js y jQuery) -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="../../../js/ValidarCampo.js"></script>
-    <script src="../../../js/Form_Producto.js"></script>
-    <script src="../../../js/Insert_Entrada_Producto_datosTabla.js"></script>
-    <script src="../../../js/VistaTablaProductos.js"></script>
-    <script src="../../../js/Insert_Salida_Soli.js"></script>
 </body>
 </html>

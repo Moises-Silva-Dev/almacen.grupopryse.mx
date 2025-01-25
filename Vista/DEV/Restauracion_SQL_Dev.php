@@ -58,8 +58,7 @@
         <?php foreach ($archivos_paginados as $archivo): ?>
             <tr>
                 <td><?php echo $archivo . ' - ' . date("F d Y H:i:s.", filemtime($carpeta_backups . '/' . $archivo)); ?></td>
-                <td>
-                    <a onclick="confirmarRestauracion('<?php echo urlencode($archivo); ?>')" class="btn btn-success btn-sm">
+                <td><a onclick="confirmarRestauracion('<?php echo urlencode($archivo); ?>')" class="btn btn-success btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-restore" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M3.06 13a9 9 0 1 0 .49 -4.087" />
@@ -68,8 +67,7 @@
                         </svg>Restaurar
                     </a>
                 </td>
-                <td>
-                    <a onclick="confirmarEliminacion('<?php echo urlencode($archivo); ?>')" class="btn btn-danger btn-sm">
+                <td><a onclick="confirmarEliminacion('<?php echo urlencode($archivo); ?>')" class="btn btn-danger btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M4 7h16" />
@@ -109,5 +107,9 @@
     </ul>
 </nav>
 </div>
+
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_RespdaldoDB.js"></script>
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_RestauracionDB.js"></script>
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_BtnDeletedDB.js"></script>
 
 <?php include('footer.php'); ?>

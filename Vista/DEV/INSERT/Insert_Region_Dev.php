@@ -2,20 +2,20 @@
 
 <div class="container mt-5">
 <center><h1>Registrar Región</h1></center>
-    <form class="needs-validation" action="../../../Controlador/DEV/INSERT/Funcion_Insert_Region.php" method="post" enctype="multipart/form-data" novalidate>
+    <form id="FormInsertRegionNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Region.php" method="post" enctype="multipart/form-data" novalidate>
 
-    <input type="hidden" id="datosTabla" name="datosTabla">
+    <input type="hidden" id="datosTablaInsertRegion" name="datosTablaInsertRegion">
 
     <div class="mb-3">
         <label for="ID_Cuenta" class="form-label">Cuenta:</label>
             <select class="form-select mb-3" id="ID_Cuenta" name="ID_Cuenta" required>
                 <option value="" selected disabled>-- Seleccionar Cuenta --</option>
-                    <?php
-                        include('../../../Modelo/Conexion.php'); 
-                        $conexion = (new Conectar())->conexion();
-                        $sql = $conexion->query("SELECT * FROM Cuenta;");
-                        while ($resultado = $sql->fetch_assoc()) {
-                            echo "<option value='" . $resultado['ID'] . "'>" . $resultado['NombreCuenta'] . "</option>";
+                    <?php 
+                        include('../../../Modelo/Conexion.php');  // incluir la conexión a la base de datos
+                        $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
+                        $sql = $conexion->query("SELECT * FROM Cuenta;"); // Consulta a la base de datos
+                        while ($resultado = $sql->fetch_assoc()) { // Recorrer los resultados de la consulta
+                            echo "<option value='" . $resultado['ID'] . "'>" . $resultado['NombreCuenta'] . "</option>"; // Mostrar los resultados
                         }
                     ?>
             </select>
@@ -37,9 +37,9 @@
             <select class="form-select mb-3" id="Nombre_Estado" name="Nombre_Estado">
                 <option value="" selected disabled>Selecciona un estado</option>
                     <?php
-                        $sql1 = $conexion->query("SELECT * FROM Estados;");
-                        while ($resultado1 = $sql1->fetch_assoc()) {
-                            echo "<option value='" . $resultado1['Id_Estado'] . "'>" . $resultado1['Nombre_estado'] . "</option>";
+                        $sql1 = $conexion->query("SELECT * FROM Estados;"); // Consulta a la base de datos
+                        while ($resultado1 = $sql1->fetch_assoc()) { // Recorrer los resultados de la consulta
+                            echo "<option value='" . $resultado1['Id_Estado'] . "'>" . $resultado1['Nombre_estado'] . "</option>"; // Mostrar los resultados
                         }
                     ?>
             </select>
@@ -50,7 +50,7 @@
 
     <!-- Botones -->
         <div class="mb-3">
-            <button id="btn_Agregar" type="button" class="btn btn-success">
+            <button id="btn_AgregarRegionConEstado" type="button" class="btn btn-success">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-text-wrap" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <path d="M4 6l16 0" />
@@ -93,5 +93,8 @@
     </table>
 </div>
 </div>
+
+<script src="../../../js/Insert_Region_datosTabla.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Region.js"></script>
 
 <?php include('footer.php'); ?>

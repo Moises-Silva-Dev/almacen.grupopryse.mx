@@ -3,7 +3,6 @@
 <center>
 <div class="table-responsive">
     <h2 class="mb-4">Estado de Requisición</h2>
-
     <!-- Formulario para seleccionar el estatus, alineado a la derecha -->
     <form method="GET" class="form-inline d-flex justify-content-end mb-4">
         <div class="form-group mb-2">
@@ -182,5 +181,7 @@
     </nav>
 </div>
 </center>
+
+<script src="../../js/DescargarRequisicion.js"></script>
 
 <?php include('footer.php'); ?>

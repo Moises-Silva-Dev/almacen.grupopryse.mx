@@ -38,7 +38,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <div class="container mt-5">
 <center><h2>Modificar Registro Producto</h2></center>
     <!-- Formulario -->
-    <form class="needs-validation" action="../../../Controlador/DEV/UPDATE/Funcion_Update_Producto.php" method="post" enctype="multipart/form-data" novalidate>
+    <form id="FormUpdateProducto" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Producto.php" method="post" enctype="multipart/form-data" novalidate>
         <!-- ID (para edición) -->
         <input type="hidden" name="id" id="id" value="<?php echo $row['IdCProducto']; ?>">
 
@@ -48,7 +48,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php
                 $sql_tipos_colaborador = $conexion->query("SELECT * FROM CEmpresas");
                 while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['ID_Empresas'] == $resultado_tipo_colaborador['IdCEmpresa']) ? 'selected' : '';
+                    $selected = ($row['IdCEmp'] == $resultado_tipo_colaborador['IdCEmpresa']) ? 'selected' : '';
                     echo "<option value='".$resultado_tipo_colaborador['IdCEmpresa']."' $selected>".$resultado_tipo_colaborador['Nombre_Empresa']."</option>";
                 }
                 ?>
@@ -64,7 +64,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php
                 $sql_tipos_colaborador = $conexion->query("SELECT * FROM CCategorias");
                 while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['Id_cate'] == $resultado_tipo_colaborador['IdCCate']) ? 'selected' : '';
+                    $selected = ($row['IdCCat'] == $resultado_tipo_colaborador['IdCCate']) ? 'selected' : '';
                     echo "<option value='".$resultado_tipo_colaborador['IdCCate']."' $selected>".$resultado_tipo_colaborador['Descrp']."</option>";
                 }
                 ?>
@@ -80,7 +80,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php
                 $sql_tipos_colaborador = $conexion->query("SELECT * FROM CTipoTallas");
                 while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['Id_TipTall'] == $resultado_tipo_colaborador['IdCTipTall']) ? 'selected' : '';
+                    $selected = ($row['IdCTipTal'] == $resultado_tipo_colaborador['IdCTipTall']) ? 'selected' : '';
                     echo "<option value='".$resultado_tipo_colaborador['IdCTipTall']."' $selected>".$resultado_tipo_colaborador['Descrip']."</option>";
                 }
                 ?>
@@ -92,7 +92,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
         <div class="mb-3">
             <label for="Descripción" class="form-label">Descripción:</label>
-            <textarea id="Descripción" name="Descripción" class="form-control" placeholder="Ingresa la Descripción" required><?php echo $row['Descripcion']; ?></textarea>
+            <textarea id="Descripcion" name="Descripcion" class="form-control" placeholder="Ingresa la Descripción" required><?php echo $row['Descripcion']; ?></textarea>
             <div class="invalid-feedback">
                 Por favor, ingresa la Descripción.
             </div>
@@ -152,5 +152,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 </div>
 
 <script src="../../../js/Form_Producto_Update.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Producto.js"></script>
 
 <?php include('footer.php'); ?>

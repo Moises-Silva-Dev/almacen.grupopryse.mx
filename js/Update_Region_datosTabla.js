@@ -1,11 +1,9 @@
 // Obtiene el botón "Agregar" del DOM
-const btnAgregar = document.getElementById("btn_Agregar");
+const btnAgregar = document.getElementById("btn_ModificarRegionConEstado");
 // Obtiene la tabla de estados del DOM
 const tablaEstados = document.querySelector(".table-responsive table tbody");
 // Obtiene el campo de datos de la tabla del DOM
-const datosTablaInput = document.getElementById("datosTabla");
-// Obtiene el formulario del DOM
-const formulario = document.getElementById("formulario");
+const datosTablaInput = document.getElementById("datosTablaUpdateRegion");
 
 // Función para actualizar los datos de la tabla
 function actualizarDatosTabla() {
@@ -36,9 +34,13 @@ btnAgregar.addEventListener("click", function() {
 
     // Verifica que el estado esté seleccionado
     if (idEstado === "") {
-        // Si falta seleccionar el estado, muestra una alerta y sale de la función
-        alert("Por favor, seleccione un estado antes de agregar.");
-        return;
+        // Usamos SweetAlert para mostrar un mensaje de advertencia
+        Swal.fire({
+            icon: "warning", // Icono de advertencia
+            title: "Estado no seleccionado", // Título del mensaje
+            text: "Por favor, seleccione un estado antes de agregar.",
+        });
+        return; // Salimos de la función
     }
 
     // Busca si ya existe una fila con el mismo estado en la tabla
@@ -89,10 +91,4 @@ tablaEstados.addEventListener("click", function(event) {
         // Después de eliminar la fila, actualiza los datos de la tabla para reflejar los cambios en el campo oculto datosTablaInput
         actualizarDatosTabla();
     }
-});
-
-// Antes de enviar el formulario, verifica que al menos un estado haya sido agregado
-formulario.addEventListener("submit", function(event) {
-    // Llama a la función actualizarDatosTabla para asegurarse de que el campo oculto datosTablaInput contiene los datos más recientes de la tabla de estados
-    actualizarDatosTabla();
 });
