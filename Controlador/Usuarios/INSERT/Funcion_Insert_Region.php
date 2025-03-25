@@ -3,11 +3,22 @@ header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
 session_start(); // Iniciar sesión
 setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
 date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria de México
+
+// Incluir dependencias necesarias
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
-require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Carga la clase de funciones de la cuenta
+require_once("../../../Modelo/Funciones/Funciones_Regiones.php"); // Incluir el archivo de funciones de regiones
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
+
+// Verificar si la conexión a la base de datos fue exitosa
+if (!$conexion || $conexion->connect_error) {
+    echo json_encode([ // Si la conexión falla, enviar un mensaje de error
+        "success" => false, // Indicar si la operación fue exitosa
+        "message" => "Error en la conexión: " . $conexion->connect_error // Mostrar el error de conexión
+    ]);
+    exit; // Salir del script
+}
 
 // Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -39,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Insertar en la tabla Region_Cuenta
         if (!insertarNuevoRegionCuenta($conexion, $ID_Cuenta, $ID_region)){
+            // Lanzar una excepción en caso de error en la inserción
             throw new Exception("Error al insertar en la tabla Region_Cuenta");
         }
 
@@ -54,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Itera sobre los datos de la tabla oculta utilizando un bucle for
                 for ($i = 0; $i < $numFilas; $i++) {
+                    // Obtiene los datos de la fila actual
                     $idEstado = $datosTabla[$i]['idEstado'];
 
                     // Inserta en la tabla Estado_Region
@@ -86,14 +99,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         echo json_encode([  // Enviar la respuesta en formato JSON
             "success" => true, // Indicar que la operación fue exitosa
-            "message" => "Se ha Guardado Correctamente.",
+            "message" => "Se ha Guardado Correctamente.", // Mensaje de éxito
             "redirect" => $urls[$RetornarTipoUsuario] ?? "../../../index.php" // Redireccionar a la página de inicio
         ]);
     } catch (Exception $e) {
         $conexion->rollback(); // Cancelar la transacción
         echo json_encode([ // Enviar la respuesta en formato JSON
             "success" => false, // Indicar que la operación falló
-            "message" => "Error al realizar el registro: " . htmlspecialchars($e->getMessage())
+            "message" => "Error al realizar el registro: " . htmlspecialchars($e->getMessage()) // Mostrar el mensaje de error
         ]);
     } finally {
         // Cerrar la conexión
@@ -102,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     echo json_encode([ // Devuelve un JSON con el resultado
         "success" => false, // Indica que la operación falló
-        "message" => "No se proporcionó un ID válido."
+        "message" => "No se proporcionó un ID válido." // Mensaje de error
     ]);
 }
 ?>

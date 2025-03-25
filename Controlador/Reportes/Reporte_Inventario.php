@@ -39,8 +39,8 @@ try {
 
     // Establecer la consulta para la tabla Inventario
     $sql = "SELECT 
-                P.IdCProducto,
-                P.Descripcion AS Descripcion,
+                P.IdCProducto, 
+                P.Descripcion AS Descripcion, 
                 P.Especificacion AS Especificacion, 
                 T.Talla AS Talla, 
                 I.Cantidad AS Cantidad, 
@@ -58,8 +58,10 @@ try {
                 CCategorias CCA ON P.IdCCat = CCA.IdCCate 
             INNER JOIN 
                 CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
+            WHERE 
+                I.Cantidad > 0 
             GROUP BY 
-                CE.Nombre_Empresa, P.IdCProducto, P.Descripcion, T.Talla;";
+                CE.Nombre_Empresa, P.IdCProducto, P.Descripcion, T.Talla";
 
     // Ejecutar la consulta
     $resultado = $conexion->query($sql);
@@ -97,16 +99,31 @@ try {
     // Título de la tabla Salida_E
     $pdf->SetFont("helvetica", "B", 14);
     $pdf->Cell(0, 10, "Productos Inventario", 0, 1, "C");
-    
+
     // Estilo de la tabla
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
-    $pdf->MultiCell(40, 7, "Nombre de la Empresa", 1, 'C', true, 0);
-    $pdf->MultiCell(40, 7, "Descripción", 1, 'C', true, 0);
-    $pdf->MultiCell(40, 7, "Especificación", 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, "Categoria", 1, 'C', true, 0);
-    $pdf->MultiCell(20, 7, "Talla", 1, 'C', true, 0);
-    $pdf->MultiCell(20, 7, "Cantidad", 1, 'C', true, 1);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(40, "Nombre de la Empresa"),
+        $pdf->getStringHeight(40, "Descripción"),
+        $pdf->getStringHeight(40, "Especificación"),
+        $pdf->getStringHeight(30, "Categoria"),
+        $pdf->getStringHeight(20, "Talla"),
+        $pdf->getStringHeight(20, "Cantidad")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
+    
+    // Cabecera de la tabla inventario
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Nombre de la Empresa", 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Descripción", 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Especificación", 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, "Categoria", 1, 'C', true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, "Talla", 1, 'C', true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, "Cantidad", 1, 'C', true, 1);
 
     // Agregar datos a la tabla
     $pdf->SetFont("helvetica", "", 10); // Restaurar el estilo de fuente normal
@@ -117,7 +134,8 @@ try {
             $pdf->getStringHeight(40, $fila['Descripcion']),
             $pdf->getStringHeight(40, $fila['Especificacion']),
             $pdf->getStringHeight(30, $fila['Categoria']),
-            $pdf->getStringHeight(20, $fila['Talla'])
+            $pdf->getStringHeight(20, $fila['Talla']),
+            $pdf->getStringHeight(20, $fila['Cantidad'])
         ];
     
         // Definir la altura máxima para la fila actual

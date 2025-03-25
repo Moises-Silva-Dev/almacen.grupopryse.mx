@@ -24,7 +24,7 @@ if(isset($_POST['ID_Producto'])) {
 
         // Construir el array de respuesta que contiene la URL de la imagen
         $response = array(
-            'url' => $url_imagen
+            'url' => $url_imagen // Incluir la URL de la imagen en el array de respuesta
         );
 
         // Devolver la respuesta como JSON

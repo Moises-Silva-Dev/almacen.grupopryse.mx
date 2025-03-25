@@ -26,6 +26,7 @@ try {
 
     // Verificar que las fechas se recibieron correctamente
     if (empty($fecha_inicio) || empty($fecha_fin)) {
+        // Lanzar una excepción si las fechas no se recibieron correctamente
         throw new Exception("Fechas no recibidas correctamente.");
     }
 
@@ -34,12 +35,21 @@ try {
     $fecha_fin = date("Y-m-d", strtotime($fecha_fin));
 
     // Consultar la base de datos para obtener la información de EntradaE
-    $sqlE = "SELECT IdEntE, Fecha_Creacion, Proveedor, Receptor, Comentarios, Estatus 
-             FROM EntradaE 
-             WHERE Fecha_Creacion BETWEEN ? AND ?";
+    $sqlE = "SELECT 
+                IdEntE, Fecha_Creacion, Proveedor, 
+                Receptor, Comentarios, Estatus 
+            FROM 
+                EntradaE 
+            WHERE 
+                Fecha_Creacion BETWEEN ? AND ?";
+    
+    // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
+    // vincular los parámetros
     $stmtE->bind_param('ss', $fecha_inicio, $fecha_fin);
+    // ejecutar la consulta
     $stmtE->execute();
+    // obtener el resultado de la consulta
     $resultadoE = $stmtE->get_result();
 
     // Consultar la base de datos para obtener la información de EntradaD
@@ -62,9 +72,14 @@ try {
                 CCategorias CCA ON P.IdCCat = CCA.IdCCate 
             WHERE 
                 DATE(EE.Fecha_Creacion) BETWEEN ? AND ?";
+
+    // Ejecutar la consulta para obtener los datos de EntradaD
     $stmtD = $conexion->prepare($sqlD);
+    // vincular los parámetros
     $stmtD->bind_param('ss', $fecha_inicio, $fecha_fin);
+    // ejecutar la consulta
     $stmtD->execute();
+    // obtener el resultado de la consulta
     $resultadoD = $stmtD->get_result();
 
     // Crear un nuevo documento de Excel
@@ -73,56 +88,56 @@ try {
     // ======================
     // Hoja 1: EntradaE
     // ======================
-    $spreadsheet->setActiveSheetIndex(0);
-    $sheetE = $spreadsheet->getActiveSheet();
-    $sheetE->setTitle('Entradas');
+    $spreadsheet->setActiveSheetIndex(0); // Establecer la hoja activa
+    $sheetE = $spreadsheet->getActiveSheet(); // Obtener la hoja activa
+    $sheetE->setTitle('Entradas'); // Establecer el título de la hoja
 
     // Encabezados para EntradaE
     $sheetE->setCellValue('A1', 'ID')
-           ->setCellValue('B1', 'Fecha Creación')
-           ->setCellValue('C1', 'Proveedor')
-           ->setCellValue('D1', 'Receptor')
-           ->setCellValue('E1', 'Comentarios')
-           ->setCellValue('F1', 'Estatus');
+        ->setCellValue('B1', 'Fecha Creación')
+        ->setCellValue('C1', 'Proveedor')
+        ->setCellValue('D1', 'Receptor')
+        ->setCellValue('E1', 'Comentarios')
+        ->setCellValue('F1', 'Estatus');
 
     // Insertar datos de EntradaE
     $row = 2;
-    while ($filaE = $resultadoE->fetch_assoc()) {
+    while ($filaE = $resultadoE->fetch_assoc()) { // Recorrer los resultados de la consulta
         $sheetE->setCellValue('A' . $row, $filaE['IdEntE'])
-               ->setCellValue('B' . $row, $filaE['Fecha_Creacion'])
-               ->setCellValue('C' . $row, $filaE['Proveedor'])
-               ->setCellValue('D' . $row, $filaE['Receptor'])
-               ->setCellValue('E' . $row, $filaE['Comentarios'])
-               ->setCellValue('F' . $row, $filaE['Estatus']);
-        $row++;
+            ->setCellValue('B' . $row, $filaE['Fecha_Creacion'])
+            ->setCellValue('C' . $row, $filaE['Proveedor'])
+            ->setCellValue('D' . $row, $filaE['Receptor'])
+            ->setCellValue('E' . $row, $filaE['Comentarios'])
+            ->setCellValue('F' . $row, $filaE['Estatus']);
+        $row++; // Incrementar el contador de filas
     }
 
     // ======================
     // Hoja 2: EntradaD
     // ======================
-    $sheetD = $spreadsheet->createSheet();
-    $sheetD->setTitle('EntradaD');
+    $sheetD = $spreadsheet->createSheet(); // Crear una nueva hoja
+    $sheetD->setTitle('EntradaD'); // Establecer el título de la hoja
 
     // Encabezados para EntradaD
     $sheetD->setCellValue('A1', 'Identificador')
-           ->setCellValue('B1', 'Empresa')
-           ->setCellValue('C1', 'Descripción')
-           ->setCellValue('D1', 'Especificación')
-           ->setCellValue('E1', 'Talla')
-           ->setCellValue('F1', 'Cantidad')
-           ->setCellValue('G1', 'Fecha');
+        ->setCellValue('B1', 'Empresa')
+        ->setCellValue('C1', 'Descripción')
+        ->setCellValue('D1', 'Especificación')
+        ->setCellValue('E1', 'Talla')
+        ->setCellValue('F1', 'Cantidad')
+        ->setCellValue('G1', 'Fecha');
 
     // Insertar datos de EntradaD
     $row = 2;
-    while ($filaD = $resultadoD->fetch_assoc()) {
+    while ($filaD = $resultadoD->fetch_assoc()) { // Recorrer los resultados de la consulta
         $sheetD->setCellValue('A' . $row, $filaD['Identificador'])
-               ->setCellValue('B' . $row, $filaD['Nombre_Empresa'])
-               ->setCellValue('C' . $row, $filaD['Descripcion'])
-               ->setCellValue('D' . $row, $filaD['Especificacion'])
-               ->setCellValue('E' . $row, $filaD['Talla'])
-               ->setCellValue('F' . $row, $filaD['Cantidad'])
-               ->setCellValue('G' . $row, $filaD['Fecha']);
-        $row++;
+            ->setCellValue('B' . $row, $filaD['Nombre_Empresa'])
+            ->setCellValue('C' . $row, $filaD['Descripcion'])
+            ->setCellValue('D' . $row, $filaD['Especificacion'])
+            ->setCellValue('E' . $row, $filaD['Talla'])
+            ->setCellValue('F' . $row, $filaD['Cantidad'])
+            ->setCellValue('G' . $row, $filaD['Fecha']);
+        $row++; // Incrementar el contador de filas
     }
 
     // Cerrar las sentencias y la conexión a la base de datos
@@ -137,10 +152,12 @@ try {
 
     // Crear el escritor y enviar el archivo al navegador para la descarga automática
     $writer = new Xlsx($spreadsheet);
+    // Guardar el archivo en la salida de PHP
     $writer->save('php://output');
-    exit;
+    exit; // Salir del script
 
 } catch (Exception $e) {
+    // Manejar cualquier excepción que se produzca durante la ejecución del código
     echo "Error: " . $e->getMessage();
 }
 ?>

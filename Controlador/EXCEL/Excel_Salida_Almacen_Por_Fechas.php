@@ -26,6 +26,7 @@ try {
 
     // Verificar que las fechas se recibieron correctamente
     if (empty($fecha_inicio) || empty($fecha_fin)) {
+        // Lanzar una excepción si las fechas no se recibieron correctamente
         throw new Exception("Fechas no recibidas correctamente.");
     }
 
@@ -35,16 +36,12 @@ try {
 
     // Consultar la base de datos para obtener la información de EntradaE
     $sqlE = "SELECT 
-                SE.Id_SalE, 
-                DATE(SE.FchSalidad) AS FchSalida, 
-                SE.ID_ReqE, 
+                SE.Id_SalE, DATE(SE.FchSalidad) AS FchSalida, SE.ID_ReqE, 
                 U.Nombre AS NombreUsuarioSolicitante, 
                 U.Apellido_Paterno AS ApellidoPaternoUsuarioSolicitante, 
                 U.Apellido_Materno AS ApellidoMaternoUsuarioSolicitante, 
-                C.NombreCuenta, 
-                DATE(RE.FchCreacion) AS FchCreacion, 
-                RE.Estatus AS Estado,
-                U2.Nombre AS NombreUsuarioSalida,
+                C.NombreCuenta, DATE(RE.FchCreacion) AS FchCreacion, 
+                RE.Estatus AS Estado, U2.Nombre AS NombreUsuarioSalida,
                 U2.Apellido_Paterno AS ApellidoPaternoUsuarioSalida,
                 U2.Apellido_Materno AS ApellidoMaternoUsuarioSalida
             FROM 
@@ -64,9 +61,13 @@ try {
             GROUP BY 
                 SE.Id_SalE";
                 
+    // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
+    // vincular los parámetros
     $stmtE->bind_param('ss', $fecha_inicio, $fecha_fin);
+    // ejecutar la consulta
     $stmtE->execute();
+    // obtener el resultado de la consulta
     $resultadoE = $stmtE->get_result();
 
     // Crear un nuevo documento de Excel
@@ -75,32 +76,32 @@ try {
     // ======================
     // Hoja 1: EntradaE
     // ======================
-    $spreadsheet->setActiveSheetIndex(0);
-    $sheetE = $spreadsheet->getActiveSheet();
-    $sheetE->setTitle('Salidas');
+    $spreadsheet->setActiveSheetIndex(0); // Crear una nueva hoja de cálculo
+    $sheetE = $spreadsheet->getActiveSheet(); // Obtener la hoja de cálculo activa
+    $sheetE->setTitle('Salidas'); // Establecer el título de la hoja de cálculo
 
     // Encabezados para EntradaE
     $sheetE->setCellValue('A1', 'Identificador')
-           ->setCellValue('B1', 'Fecha de Salida')
-           ->setCellValue('C1', 'IdReqE')
-           ->setCellValue('D1', 'Estatus')
-           ->setCellValue('E1', 'Nombre del Solicitante')
-           ->setCellValue('F1', 'Cuenta')
-           ->setCellValue('G1', 'Fecha de Solicitud')
-           ->setCellValue('H1', 'Entrego');
+        ->setCellValue('B1', 'Fecha de Salida')
+        ->setCellValue('C1', 'IdReqE')
+        ->setCellValue('D1', 'Estatus')
+        ->setCellValue('E1', 'Nombre del Solicitante')
+        ->setCellValue('F1', 'Cuenta')
+        ->setCellValue('G1', 'Fecha de Solicitud')
+        ->setCellValue('H1', 'Entrego');
 
     // Insertar datos de EntradaE
     $row = 2;
-    while ($filaE = $resultadoE->fetch_assoc()) {
+    while ($filaE = $resultadoE->fetch_assoc()) { // Recorrer los resultados
         $sheetE->setCellValue('A' . $row, $filaE['Id_SalE'])
-               ->setCellValue('B' . $row, $filaE['FchSalida'])
-               ->setCellValue('C' . $row, $filaE['ID_ReqE'])
-               ->setCellValue('D' . $row, $filaE['Estado'])
-               ->setCellValue('E' . $row, $filaE['NombreUsuarioSolicitante'] . ' ' . $filaE['ApellidoPaternoUsuarioSolicitante'] . ' ' . $filaE['ApellidoMaternoUsuarioSolicitante'])
-               ->setCellValue('F' . $row, $filaE['NombreCuenta'])
-               ->setCellValue('G' . $row, $filaE['FchCreacion'])
-               ->setCellValue('H' . $row, $filaE['NombreUsuarioSalida'] . ' ' . $filaE['ApellidoPaternoUsuarioSalida'] . ' ' . $filaE['ApellidoMaternoUsuarioSalida']);
-        $row++;
+            ->setCellValue('B' . $row, $filaE['FchSalida'])
+            ->setCellValue('C' . $row, $filaE['ID_ReqE'])
+            ->setCellValue('D' . $row, $filaE['Estado'])
+            ->setCellValue('E' . $row, $filaE['NombreUsuarioSolicitante'] . ' ' . $filaE['ApellidoPaternoUsuarioSolicitante'] . ' ' . $filaE['ApellidoMaternoUsuarioSolicitante'])
+            ->setCellValue('F' . $row, $filaE['NombreCuenta'])
+            ->setCellValue('G' . $row, $filaE['FchCreacion'])
+            ->setCellValue('H' . $row, $filaE['NombreUsuarioSalida'] . ' ' . $filaE['ApellidoPaternoUsuarioSalida'] . ' ' . $filaE['ApellidoMaternoUsuarioSalida']);
+        $row++; // Incrementar el índice de fila
     }
 
     // Cerrar las sentencias y la conexión a la base de datos
@@ -114,9 +115,11 @@ try {
 
     // Crear el escritor y enviar el archivo al navegador para la descarga automática
     $writer = new Xlsx($spreadsheet);
+    // Guardar el archivo en la salida de la aplicación
     $writer->save('php://output');
-    exit;
+    exit; // Finalizar la ejecución del script
 } catch (Exception $e) {
+    // En caso de error, mostrar un mensaje de error
     echo "Error: " . $e->getMessage();
 }
 ?>

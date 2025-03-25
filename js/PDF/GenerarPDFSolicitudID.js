@@ -11,7 +11,7 @@ function Generar_PDF_Solicitud_ID(event) {
     if (!form.checkValidity()) {
         // Agregar una clase de validación si el formulario no es válido y salir de la función
         form.classList.add('was-validated');
-        return;
+        return; // Salir de la función si el formulario no es válido
     }
 
     // Crear un objeto FormData con los datos del formulario
@@ -22,8 +22,8 @@ function Generar_PDF_Solicitud_ID(event) {
 
     // Realizar una solicitud fetch para enviar los datos del formulario al servidor
     fetch(url, {
-        method: 'POST',
-        body: formData
+        method: 'POST', // Especificar el método HTTP
+        body: formData // Enviar los datos del formulario como cuerpo de la solicitud
     })
     // Convertir la respuesta a un objeto Blob
     .then(response => {
@@ -50,7 +50,7 @@ function Generar_PDF_Solicitud_ID(event) {
 
                     // Mostrar la ventana modal que contiene el visor de PDF
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    myModalError.show(); // Mostrar la ventana modal
                 }
             } catch (e) {
                 // Crear una URL local para el Blob generado
@@ -61,7 +61,7 @@ function Generar_PDF_Solicitud_ID(event) {
 
                 // Mostrar la ventana modal que contiene el visor de PDF
                 var myModal = new bootstrap.Modal(document.getElementById('pdfModalSolicitudID'));
-                myModal.show();
+                myModal.show(); // Mostrar la ventana modal
             }
         });
     })
@@ -72,6 +72,6 @@ function Generar_PDF_Solicitud_ID(event) {
 
         // Mostrar la ventana modal que contiene el visor de error
         var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-        myModalError.show();
+        myModalError.show(); // Mostrar la ventana modal
     });
 }

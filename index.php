@@ -1,27 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGIN</title>
-    <!-- Enlace a Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Enlace a tu archivo CSS personalizado -->
-    <link rel="shortcut icon" href="img/2.png">
-    <link rel="stylesheet" href="css/login.css">
-    <style>
-        body {
-            background-color: #bae0f5; /* Puedes cambiar el código de color según tu preferencia */
-        }
-
-        h1 {
-            font-style: italic;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGIN</title>
+  <!-- Enlace a Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Enlace a tu archivo CSS personalizado -->
+  <link rel="shortcut icon" href="img/2.png">
+  <link rel="stylesheet" href="css/login.css">
+  <style>
+    body {
+      background-color: #bae0f5; /* Puedes cambiar el código de color según tu preferencia */
+    }
+    
+    h1 {
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
+
+  <?php 
+    if (isset($_GET['auth']) && $_GET['auth'] == 'failed'):  // Si el usuario ha fallado en la autenticación
+  ?>
+  <script>
+    Swal.fire({ // Muestra un mensaje de error
+      icon: 'warning', // Icono de advertencia
+      title: 'Acceso denegado', // Título del mensaje
+      text: 'Debes iniciar sesión para acceder.', // Texto del mensaje
+      confirmButtonText: 'OK' // Botón de confirmación
+    }).then(() => {
+      window.location = "index.php"; // Redirige a la página de inicio
+    });
+  </script>
+  <?php 
+    endif; // Fin de la condición
+  ?>
+
 <section class="vh-100">
   <div class="container py-5 h-100">
     <div class="row d-flex align-items-center justify-content-center h-100">

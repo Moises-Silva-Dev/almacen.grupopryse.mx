@@ -232,19 +232,32 @@ try {
     // Estilo de la tabla 
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(25, "Identificador"),
+        $pdf->getStringHeight(55, "Descripción"),
+        $pdf->getStringHeight(55, "Especificación"),
+        $pdf->getStringHeight(20, "Talla"),
+        $pdf->getStringHeight(35, "Cantidad Entregada")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
     
     // Cabecera de la tabla 
-    $pdf->MultiCell(25, 7, "Identificador", 1, 'C', true, 0);
-    $pdf->MultiCell(55, 7, "Descripción", 1, 'C', true, 0);
-    $pdf->MultiCell(55, 7, "Especificación", 1, 'C', true, 0);
-    $pdf->MultiCell(20, 7, "Talla", 1, 'C', true, 0);
-    $pdf->MultiCell(35, 7, "Cantidad Entregada", 1, 'C', true, 1);
+    $pdf->MultiCell(25, $maxHeightEncabezado, "Identificador", 1, 'C', true, 0);
+    $pdf->MultiCell(55, $maxHeightEncabezado, "Descripción", 1, 'C', true, 0);
+    $pdf->MultiCell(55, $maxHeightEncabezado, "Especificación", 1, 'C', true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, "Talla", 1, 'C', true, 0);
+    $pdf->MultiCell(35, $maxHeightEncabezado, "Cantidad Entregada", 1, 'C', true, 1);
 
     // Agregar datos a la tabla
     $pdf->SetFont("helvetica", "", 10); // Restaurar el estilo de fuente normal
     while ($filaProducto = $resultadoProductos->fetch_assoc()) {
         // Calcular la altura de la fila más alta
         $cellHeights = [
+            $pdf->getStringHeight(25, $filaProducto['Identificador_Producto']),
             $pdf->getStringHeight(55, $filaProducto['Descripcion_Producto']),
             $pdf->getStringHeight(55, $filaProducto['Especificacion_Producto']),
             $pdf->getStringHeight(20, $filaProducto['Talla_Requisicion']),

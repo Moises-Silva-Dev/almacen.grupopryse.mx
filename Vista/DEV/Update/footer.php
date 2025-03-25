@@ -13,10 +13,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="../../../js/ValidarCampo.js"></script>
-    <script src="../../../js/Form_Envio.js"></script>
-    <script src="../../../js/Solicitud_Carga_CueRegEst.js"></script>
-    <script src="../../../js/Update_Entrada_Producto_datosTabla.js"></script>
-    <script src="../../../js/VistaTablaProductos.js"></script>
-</body>
+    <script src="../../../js/ValidarCampo.js"></script></body>
 </html>

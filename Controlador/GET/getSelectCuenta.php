@@ -1,4 +1,5 @@
 <?php
+// Incluir dependencias necesarias
 include('../../Modelo/Conexion.php'); 
 
 // Crear una nueva conexión a la base de datos
@@ -20,15 +21,17 @@ $sql = "SELECT
         GROUP BY 
             c.ID, c.NombreCuenta";
 
-// Ejecutar la consulta
-if ($stmt = $conexion->prepare($sql)) {
-    $stmt->execute();
-    $resultado = $stmt->get_result();
+// Ejecutar la consulta SQL
+if ($stmt = $conexion->prepare($sql)) { // Preparar la sentencia SQL
+    $stmt->execute(); // Ejecutar la consulta
+    $resultado = $stmt->get_result(); // Obtiene el resultado de la consulta
 
     // Recopilar los resultados
     $Cuenta = array();
+
+    // Recorrer los resultados
     while ($row = $resultado->fetch_assoc()) {
-        $Cuenta[] = $row;
+        $Cuenta[] = $row; // Agregar cada fila a un array
     }
 
     // Devolver los resultados como JSON
@@ -37,6 +40,7 @@ if ($stmt = $conexion->prepare($sql)) {
     // Cerrar la declaración
     $stmt->close();
 } else {
+    // Si la consulta falla, mostrar un mensaje de error
     echo json_encode(array("error" => "No se pudo preparar la consulta."));
 }
 

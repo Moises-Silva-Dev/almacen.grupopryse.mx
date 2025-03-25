@@ -49,11 +49,11 @@ try {
     $sqlE = "SELECT 
                 EE.IdEntE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
                 EE.Fecha_Creacion, EE.Proveedor, EE.Receptor, EE.Comentarios, EE.Estatus 
-             FROM 
+            FROM 
                 EntradaE EE
-             INNER JOIN 
+            INNER JOIN 
                 Usuario U ON EE.Usuario_Creacion = U.ID_Usuario
-             WHERE IdEntE = ?;";
+            WHERE IdEntE = ?;";
 
     // Preparar y ejecutar la consulta para EntradaE
     $stmtE = $conexion->prepare($sqlE);
@@ -185,35 +185,50 @@ try {
     // Estilo de la tabla EntradaD
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(25, "Identificador"),
+        $pdf->getStringHeight(30, "Empresa"),
+        $pdf->getStringHeight(50, "Descripción"),
+        $pdf->getStringHeight(50, "Especificación"),
+        $pdf->getStringHeight(20, "Talla"),
+        $pdf->getStringHeight(20, "Cantidad")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
     
     // Cabecera de la tabla EntradaD
-    $pdf->Cell(25, 7, "Identificador", 1, 0, "C", true);
-    $pdf->Cell(30, 7, "Empresa", 1, 0, "C", true);
-    $pdf->Cell(50, 7, "Descripción", 1, 0, "C", true);
-    $pdf->Cell(50, 7, "Especificación", 1, 0, "C", true);
-    $pdf->Cell(20, 7, "Talla", 1, 0, "C", true);
-    $pdf->Cell(20, 7, "Cantidad", 1, 1, "C", true);
+    $pdf->MultiCell(25, $maxHeightEncabezado, "Identificador", 1, "C", true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, "Empresa", 1, "C", true, 0);
+    $pdf->MultiCell(50, $maxHeightEncabezado, "Descripción", 1, "C", true, 0);
+    $pdf->MultiCell(50, $maxHeightEncabezado, "Especificación", 1, "C", true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, "Talla", 1, "C", true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, "Cantidad", 1, "C", true, 1);
     
     // Agregar datos a la tabla EntradaD
     $pdf->SetFont("helvetica", "", 10); // Restaurar el estilo de fuente normal
     while ($filaD = $resultadoD->fetch_assoc()) {
         // Calcular la altura de la fila más alta
         $cellHeights = [
+            $pdf->getStringHeight(25, $filaD['Identificador']),
             $pdf->getStringHeight(50, $filaD['Nombre_Empresa']),
             $pdf->getStringHeight(50, $filaD['Descripcion']),
             $pdf->getStringHeight(50, $filaD['Especificacion']),
-            $pdf->getStringHeight(50, $filaD['Talla'])
+            $pdf->getStringHeight(50, $filaD['Talla']),
+            $pdf->getStringHeight(20, $filaD['Cantidad'])
         ];
     
         // Definir la altura máxima para la fila actual
         $maxHeight = max($cellHeights);
         
-        $pdf->MultiCell(25, 7, $filaD['Identificador'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, 7, $filaD['Nombre_Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, 7, $filaD['Descripcion'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, 7, $filaD['Especificacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, 7, $filaD['Talla'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, 7, $filaD['Cantidad'], 1, 'C', false, 1);
+        $pdf->MultiCell(25, $maxHeight, $filaD['Identificador'], 1, 'C', false, 0);
+        $pdf->MultiCell(30, $maxHeight, $filaD['Nombre_Empresa'], 1, 'C', false, 0);
+        $pdf->MultiCell(50, $maxHeight, $filaD['Descripcion'], 1, 'C', false, 0);
+        $pdf->MultiCell(50, $maxHeight, $filaD['Especificacion'], 1, 'C', false, 0);
+        $pdf->MultiCell(20, $maxHeight, $filaD['Talla'], 1, 'C', false, 0);
+        $pdf->MultiCell(20, $maxHeight, $filaD['Cantidad'], 1, 'C', false, 1);
     }
     
     // Cerrar el statement de productos

@@ -11,7 +11,7 @@ function Generar_PDF_Salida_ID(event) {
     if (!form.checkValidity()) {
         // Agregar una clase de validación si el formulario no es válido y salir de la función
         form.classList.add('was-validated');
-        return;
+        return; // Salir de la función si el formulario no es válido
     }
 
     // Crear un objeto FormData con los datos del formulario
@@ -22,14 +22,15 @@ function Generar_PDF_Salida_ID(event) {
 
     // Realizar una solicitud fetch para enviar los datos del formulario al servidor
     fetch(url, {
-        method: 'POST',
-        body: formData
+        method: 'POST', // Especificar el método HTTP
+        body: formData // Incluir los datos del formulario en el cuerpo de la solicitud
     })
     // Convertir la respuesta a un objeto Blob
     .then(response => {
         if (response.ok) {
             return response.blob(); // Convertir la respuesta en un Blob si es exitosa
         } else {
+            // Si la respuesta no es exitosa, obtener el texto de la respuesta
             return response.text().then(text => {
                 // Si la respuesta no es ok, asumir que es un error y lanzar una excepción
                 throw new Error(text);
@@ -50,7 +51,7 @@ function Generar_PDF_Salida_ID(event) {
 
                     // Mostrar la ventana modal que contiene el visor de PDF
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    myModalError.show(); // Mostrar la ventana modal
                 }
             } catch (e) {
                 // Crear una URL local para el Blob generado
@@ -61,7 +62,7 @@ function Generar_PDF_Salida_ID(event) {
 
                 // Mostrar la ventana modal que contiene el visor de PDF
                 var myModal = new bootstrap.Modal(document.getElementById('pdfModalSalidaID'));
-                myModal.show();
+                myModal.show(); // Mostrar la ventana modal
             }
         });
     })
@@ -72,6 +73,6 @@ function Generar_PDF_Salida_ID(event) {
 
         // Mostrar la ventana modal que contiene el visor de error
         var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-        myModalError.show();
+        myModalError.show(); // Mostrar la ventana modal
     });
 }

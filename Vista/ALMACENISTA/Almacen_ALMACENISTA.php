@@ -37,7 +37,7 @@
                 
                 $sql = "SELECT * FROM EntradaE
                             WHERE Estatus='Creada' OR Estatus='Modificado'
-                        GROUP BY Fecha_Creacion
+                        GROUP BY Fecha_Creacion DESC
                             LIMIT $records_per_page OFFSET $offset;;";
 
                 $query = mysqli_query($conexion, $sql);

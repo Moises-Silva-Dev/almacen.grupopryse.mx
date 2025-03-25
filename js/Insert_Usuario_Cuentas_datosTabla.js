@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let cuentasSeleccionadas = [];
 
     // Lista de IDs de tipos de usuarios que no requieren la selección de una cuenta
-    const noCuentaRequired = [1, 2, 5]; // Ajusta estos valores según sea necesario
+    const noCuentaRequired = [1, 2, 5, 6]; // Ajusta estos valores según sea necesario
 
     // Evento cuando el usuario cambia el tipo de usuario en el select
     tipoSelect.addEventListener('change', async () => {
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
                 // Obtener el ID de la tipo de usuario seleccionado
-                if (tipo === 3 || tipo ===4) { 
+                if (tipo === 3 || tipo === 4) { 
                     // Si el tipo de usuario es 3 o 4, obtener el ID de la cuenta seleccionada
                     let direccion =  '../../../Controlador/GET/getSelectCuenta.php';
 

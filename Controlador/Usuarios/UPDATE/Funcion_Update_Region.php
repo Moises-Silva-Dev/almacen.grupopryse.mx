@@ -3,11 +3,22 @@ header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
 session_start(); // Iniciar sesión
 setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
 date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria de México
+
+// Incluir dependencias necesarias
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
 require_once("../../../Modelo/Funciones/Funciones_Regiones.php"); // Carga la clase de funciones de la cuenta
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
+
+// Verificar si la conexión a la base de datos fue exitosa
+if (!$conexion || $conexion->connect_error) {
+    echo json_encode([ // Si la conexión falla, enviar un mensaje de error
+        "success" => false, // Indicar si la operación fue exitosa
+        "message" => "Error en la conexión: " . $conexion->connect_error // Mostrar el error de conexión
+    ]);
+    exit; // Salir del script
+}
 
 // Verificar si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -3,11 +3,22 @@ header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
 session_start(); // Iniciar sesión
 setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
 date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria de México
+
+// Incluir dependencias necesarias
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
 require_once("../../../Modelo/Funciones/Funciones_Cuenta.php"); // Carga la clase de funciones de la cuenta
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
+
+// Verificar si la conexión a la base de datos fue exitosa
+if (!$conexion || $conexion->connect_error) {
+    echo json_encode([ // Si la conexión falla, enviar un mensaje de error
+        "success" => false, // Indicar si la operación fue exitosa
+        "message" => "Error en la conexión: " . $conexion->connect_error // Mostrar el error de conexión
+    ]);
+    exit; // Salir del script
+}
 
 // Verificar si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $NroElemetos = $_POST['NroElemetos'];
     $usuario = $_SESSION["usuario"]; // Recuperar el usuario de la sesión
 
-    if (!$id_cuenta || !$NombreCuenta || !$NroElemetos) { // Verificar que los campos no estén vacíos
+    if (!$id_cuenta || !$NombreCuenta || !$NroElemetos || !$usuario) { // Verificar que los campos no estén vacíos
         echo json_encode([ // Devuelve un arreglo JSON con el mensaje de error
-            "success" => false, 
-            "message" => "Datos inválidos. Por favor, revise la información enviada."
+            "success" => false, // Indicar si la operación fue exitosa
+            "message" => "Datos inválidos. Por favor, revise la información enviada." // Mostrar el mensaje de error
         ]);
         exit; // Salir del script
     }
@@ -46,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             echo json_encode([  // Enviar la respuesta en formato JSON
                 "success" => true, // Indicar que la operación fue exitosa
-                "message" => "Se ha Modificado Correctamente.",
+                "message" => "Se ha Modificado Correctamente.", // Mostrar un mensaje de éxito
                 "redirect" => $urls[$RetornarTipoUsuario] ?? "../../../index.php" // Redireccionar a la página de inicio
             ]);
         } else {
@@ -57,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conexion->rollback(); // Cancelar la transacción
         echo json_encode([ // Enviar la respuesta en formato JSON
             "success" => false, // Indicar que la operación falló
-            "message" => "No se pudo realizar el registro: " . $e->getMessage()
+            "message" => "No se pudo realizar el registro: " . $e->getMessage() // Mostrar el mensaje de error
         ]);
     } finally {
         // Cerrar la conexión
@@ -66,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     echo json_encode([ // Devuelve un JSON con el resultado
         "success" => false, // Indica que la operación falló
-        "message" => "No se proporcionó un ID válido."
+        "message" => "No se proporcionó un ID válido." // Muestra un mensaje de error
     ]);
 }
 ?>

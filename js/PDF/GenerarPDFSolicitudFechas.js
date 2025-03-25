@@ -10,7 +10,7 @@ function Generar_PDF_Solicitud_Fechas(event) {
     if (!form.checkValidity()) {
         // Agregar una clase de validación si el formulario no es válido y salir de la función
         form.classList.add('was-validated');
-        return;
+        return; // Salir de la función si el formulario no es válido
     }
 
     // Crear un objeto FormData con los datos del formulario
@@ -21,8 +21,8 @@ function Generar_PDF_Solicitud_Fechas(event) {
 
     // Realizar una solicitud fetch para enviar los datos del formulario al servidor
     fetch(url, {
-        method: 'POST',
-        body: formData
+        method: 'POST', // Especificar el método HTTP
+        body: formData // Incluir los datos del formulario en el cuerpo de la solicitud
     })
     // Convertir la respuesta a un objeto Blob
     .then(response => response.blob())
@@ -41,18 +41,18 @@ function Generar_PDF_Solicitud_Fechas(event) {
 
                     // Mostrar la ventana modal que contiene el visor de PDF
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    myModalError.show(); // Mostrar la ventana modal
                 } else {
                     // Si no hay error en el JSON, tratar el texto como contenido PDF
                     var pdfBlob = new Blob([text], { type: 'application/pdf' });
-                    var pdfUrl = URL.createObjectURL(pdfBlob);
+                    var pdfUrl = URL.createObjectURL(pdfBlob); // Crear una URL temporal para el Blob
                     
                     // Establecer la fuente del visor de PDF para mostrar el PDF generado
                     document.getElementById('pdfIframeSolicitudFechas').src = pdfUrl;
 
                     // Mostrar la ventana modal que contiene el visor de PDF
                     var myModal = new bootstrap.Modal(document.getElementById('pdfModalSolicitudFechas'));
-                    myModal.show();
+                    myModal.show(); // Mostrar la ventana modal
                 }
             } catch (e) {
                 // Crear una URL local para el Blob generado
@@ -63,7 +63,7 @@ function Generar_PDF_Solicitud_Fechas(event) {
 
                 // Mostrar la ventana modal que contiene el visor de PDF
                 var myModal = new bootstrap.Modal(document.getElementById('pdfModalSolicitudFechas'));
-                myModal.show();
+                myModal.show(); // Mostrar la ventana modal
             }
         });
     })

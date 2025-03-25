@@ -26,6 +26,7 @@ try {
 
     // Verificar que las fechas se recibieron correctamente
     if (empty($fecha_inicio) || empty($fecha_fin)) {
+        // Lanzar una excepción si las fechas no se recibieron correctamente
         throw new Exception("Fechas no recibidas correctamente.");
     }
 
@@ -52,9 +53,13 @@ try {
             GROUP BY
                 RE.IDRequisicionE";
                 
+    // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
+    // Vincular los parámetros
     $stmtE->bind_param('ss', $fecha_inicio, $fecha_fin);
+    // Ejecutar la consulta
     $stmtE->execute();
+    // Obtener el resultado de la consulta
     $resultadoE = $stmtE->get_result();
 
     // Crear un nuevo documento de Excel
@@ -63,34 +68,34 @@ try {
     // ======================
     // Hoja 1: EntradaE
     // ======================
-    $spreadsheet->setActiveSheetIndex(0);
-    $sheetE = $spreadsheet->getActiveSheet();
-    $sheetE->setTitle('Solicitud');
+    $spreadsheet->setActiveSheetIndex(0); // Establecer la hoja activa
+    $sheetE = $spreadsheet->getActiveSheet(); // Obtener la hoja activa
+    $sheetE->setTitle('Solicitud'); // Establecer el título de la hoja
 
     // Encabezados para EntradaE
     $sheetE->setCellValue('A1', 'Identificador')
-           ->setCellValue('B1', 'Nombre Solicitante')
-           ->setCellValue('C1', 'Fecha y Hora')
-           ->setCellValue('D1', 'Estatus')
-           ->setCellValue('E1', 'Cuenta')
-           ->setCellValue('F1', 'Supervisor')
-           ->setCellValue('G1', 'Centro de Trabajo')
-           ->setCellValue('H1', 'Receptor')
-           ->setCellValue('I1', 'Justificacion');
+        ->setCellValue('B1', 'Nombre Solicitante')
+        ->setCellValue('C1', 'Fecha y Hora')
+        ->setCellValue('D1', 'Estatus')
+        ->setCellValue('E1', 'Cuenta')
+        ->setCellValue('F1', 'Supervisor')
+        ->setCellValue('G1', 'Centro de Trabajo')
+        ->setCellValue('H1', 'Receptor')
+        ->setCellValue('I1', 'Justificacion');
 
     // Insertar datos de EntradaE
     $row = 2;
-    while ($filaE = $resultadoE->fetch_assoc()) {
+    while ($filaE = $resultadoE->fetch_assoc()) { // Recorrer los resultados
         $sheetE->setCellValue('A' . $row, $filaE['IDRequisicionE'])
-               ->setCellValue('B' . $row, $filaE['Nombre'] . ' ' . $filaE['Apellido_Paterno'] . ' ' . $filaE['Apellido_Materno'])
-               ->setCellValue('C' . $row, $filaE['Fecha'] . ' ' . $filaE['HoraMinutos'])
-               ->setCellValue('D' . $row, $filaE['Estatus'])
-               ->setCellValue('E' . $row, $filaE['NombreCuenta'])
-               ->setCellValue('F' . $row, $filaE['Supervisor'])
-               ->setCellValue('G' . $row, $filaE['CentroTrabajo'])
-               ->setCellValue('H' . $row, $filaE['Receptor'])
-               ->setCellValue('I' . $row, $filaE['Justificacion']);
-        $row++;
+            ->setCellValue('B' . $row, $filaE['Nombre'] . ' ' . $filaE['Apellido_Paterno'] . ' ' . $filaE['Apellido_Materno'])
+            ->setCellValue('C' . $row, $filaE['Fecha'] . ' ' . $filaE['HoraMinutos'])
+            ->setCellValue('D' . $row, $filaE['Estatus'])
+            ->setCellValue('E' . $row, $filaE['NombreCuenta'])
+            ->setCellValue('F' . $row, $filaE['Supervisor'])
+            ->setCellValue('G' . $row, $filaE['CentroTrabajo'])
+            ->setCellValue('H' . $row, $filaE['Receptor'])
+            ->setCellValue('I' . $row, $filaE['Justificacion']);
+        $row++; // Incrementar el índice de fila
     }
 
     // Cerrar las sentencias y la conexión a la base de datos
@@ -104,9 +109,11 @@ try {
 
     // Crear el escritor y enviar el archivo al navegador para la descarga automática
     $writer = new Xlsx($spreadsheet);
+    // Guardar el archivo en el flujo de salida
     $writer->save('php://output');
-    exit;
+    exit; // Finalizar la ejecución del script
 } catch (Exception $e) {
+    // Manejar cualquier excepción que se produzca durante la ejecución del script
     echo "Error: " . $e->getMessage();
 }
 ?>

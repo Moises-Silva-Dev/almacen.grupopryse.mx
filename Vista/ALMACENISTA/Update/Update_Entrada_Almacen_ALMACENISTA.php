@@ -51,7 +51,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         <input type="hidden" name="id" id="id" value="<?php echo $row['IdEntD']; ?>">
         <input type="hidden" name="IdEntE" id="IdEntE" value="<?php echo $row['IdEntE']; ?>">
         <input type="hidden" name="Nro_Modif" id="Nro_Modif" value="<?php echo $row['Nro_Modif']; ?>">
-        <input type="text" id="datosTablaUpdateEntrada" name="datosTablaUpdateEntrada">
+        <input type="hidden" id="datosTablaUpdateEntrada" name="datosTablaUpdateEntrada">
 
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
@@ -137,13 +137,13 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                 </div>
                                         </div>
                                     </td>
-                                    <td>                        
+                                    <td colspan="2">                        
                                         <div class="mb-2">
                                             <label for="Cantidad" class="form-label">Cantidad:</label>
                                             <input type="text" class="form-control" id="Cantidad" name="Cantidad[]" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" placeholder="Ingresa la Cantidad">
                                         </div>
                                     </td>
-                                    <td>
+                                    <td rowspan="2" style="text-align: center; vertical-align: middle;">
                                         <div class="mb-2">
                                             <button type="button" class="btn btn-secondary" id="btnMostrarImagen">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">

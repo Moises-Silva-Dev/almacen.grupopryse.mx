@@ -108,24 +108,43 @@ try {
     // Encabezado de la tabla
     $pdf->SetFillColor(200, 220, 255);
     $pdf->SetFont('helvetica', 'B', 8);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(15, "ID"),
+        $pdf->getStringHeight(30, "Nombre Solicitante"),
+        $pdf->getStringHeight(30, "Fecha y Hora"),
+        $pdf->getStringHeight(30, "Estatus"),
+        $pdf->getStringHeight(30, "Cuenta"),
+        $pdf->getStringHeight(30, "Supervisor"),
+        $pdf->getStringHeight(30, "Centro de Trabajo"),
+        $pdf->getStringHeight(30, "Receptor"),
+        $pdf->getStringHeight(35, "Justificación")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
     
     // Encabezados de la tabla usando MultiCell para cada columna
-    $pdf->MultiCell(15, 7, 'ID', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Nombre Solicitante', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Fecha y Hora', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Estatus', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Cuenta', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Supervisor', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Centro de Trabajo', 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, 'Receptor', 1, 'C', true, 0);
-    $pdf->MultiCell(35, 7, 'Justificacion', 1, 'C', true, 1);
+    $pdf->MultiCell(15, $maxHeightEncabezado, 'ID', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Nombre Solicitante', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Fecha y Hora', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Estatus', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Cuenta', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Supervisor', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Centro de Trabajo', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Receptor', 1, 'C', true, 0);
+    $pdf->MultiCell(35, $maxHeightEncabezado, 'Justificación', 1, 'C', true, 1);
 
     // Contenido de la tabla
     $pdf->SetFont('helvetica', '', 12);
     while ($filaD = $resultadoD->fetch_assoc()) {
         // Calcular la altura de la fila más alta
         $cellHeights = [
+            $pdf->getStringHeight(15, $filaD['IDRequisicionE']),
             $pdf->getStringHeight(30, $filaD['Nombre'] . ' ' . $filaD['Apellido_Paterno'] . ' ' . $filaD['Apellido_Materno']),
+            $pdf->getStringHeight(30, $filaD['Fecha'] . ' ' . $filaD['HoraMinutos']),
+            $pdf->getStringHeight(30, $filaD['Estatus']),
             $pdf->getStringHeight(30, $filaD['NombreCuenta']),
             $pdf->getStringHeight(30, $filaD['Supervisor']),
             $pdf->getStringHeight(30, $filaD['CentroTrabajo']),

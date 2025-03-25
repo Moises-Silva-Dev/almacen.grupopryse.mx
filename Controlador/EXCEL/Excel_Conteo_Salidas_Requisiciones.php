@@ -26,6 +26,7 @@ try {
 
     // Verificar que las fechas se recibieron correctamente
     if (empty($fecha_inicio) || empty($fecha_fin)) {
+        // Lanzar una excepción si las fechas no se recibieron correctamente
         throw new Exception("Fechas no recibidas correctamente.");
     }
 
@@ -81,9 +82,13 @@ try {
                 T5.Nombre_estado, T6.IdCProd,
                 T7.Descripcion, T7.Especificacion;";
                 
+    // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
+    // Vincular los parámetros
     $stmtE->bind_param('ss', $fecha_inicio, $fecha_fin);
+    // Ejecutar la consulta
     $stmtE->execute();
+    // Obtener el resultado de la consulta
     $resultadoE = $stmtE->get_result();
 
     // Crear un nuevo documento de Excel
@@ -92,38 +97,38 @@ try {
     // ======================
     // Hoja 1: EntradaE
     // ======================
-    $spreadsheet->setActiveSheetIndex(0);
-    $sheetE = $spreadsheet->getActiveSheet();
-    $sheetE->setTitle('Salidas');
+    $spreadsheet->setActiveSheetIndex(0); // Establecer la hoja activa
+    $sheetE = $spreadsheet->getActiveSheet(); // Obtener la hoja activa
+    $sheetE->setTitle('Salidas'); // Establecer el título de la hoja
 
     // Encabezados para EntradaE
     $sheetE->setCellValue('A1', 'Identificador')
-           ->setCellValue('B1', 'Fecha de Creación')
-           ->setCellValue('C1', 'Usuario')
-           ->setCellValue('D1', 'Cuenta')
-           ->setCellValue('E1', 'Región')
-           ->setCellValue('F1', 'Estado')
-           ->setCellValue('G1', 'Identificador de Prodcuto')
-           ->setCellValue('H1', 'Descripción')
-           ->setCellValue('I1', 'Especificación')
-           ->setCellValue('J1', 'Cantidad Pedida')
-           ->setCellValue('K1', 'Cantidad Salida');
+        ->setCellValue('B1', 'Fecha de Creación')
+        ->setCellValue('C1', 'Usuario')
+        ->setCellValue('D1', 'Cuenta')
+        ->setCellValue('E1', 'Región')
+        ->setCellValue('F1', 'Estado')
+        ->setCellValue('G1', 'Identificador de Prodcuto')
+        ->setCellValue('H1', 'Descripción')
+        ->setCellValue('I1', 'Especificación')
+        ->setCellValue('J1', 'Cantidad Pedida')
+        ->setCellValue('K1', 'Cantidad Salida');
 
     // Insertar datos de EntradaE
     $row = 2;
-    while ($filaE = $resultadoE->fetch_assoc()) {
+    while ($filaE = $resultadoE->fetch_assoc()) { // Recorrer los resultados de la consulta
         $sheetE->setCellValue('A' . $row, $filaE['Identificador_Requisicion'])
-               ->setCellValue('B' . $row, $filaE['Fecha_Creacion'])
-               ->setCellValue('C' . $row, $filaE['Usuario'])
-               ->setCellValue('D' . $row, $filaE['Cuenta'])
-               ->setCellValue('E' . $row, $filaE['Region'])
-               ->setCellValue('F' . $row, $filaE['Estado'])
-               ->setCellValue('G' . $row, $filaE['Identificador_Producto'])
-               ->setCellValue('H' . $row, $filaE['Descripcion'])
-               ->setCellValue('I' . $row, $filaE['Especificacion'])
-               ->setCellValue('J' . $row, $filaE['Cantidad_Requerida'])
-               ->setCellValue('K' . $row, $filaE['Cantidad_Salida']);
-        $row++;
+            ->setCellValue('B' . $row, $filaE['Fecha_Creacion'])
+            ->setCellValue('C' . $row, $filaE['Usuario'])
+            ->setCellValue('D' . $row, $filaE['Cuenta'])
+            ->setCellValue('E' . $row, $filaE['Region'])
+            ->setCellValue('F' . $row, $filaE['Estado'])
+            ->setCellValue('G' . $row, $filaE['Identificador_Producto'])
+            ->setCellValue('H' . $row, $filaE['Descripcion'])
+            ->setCellValue('I' . $row, $filaE['Especificacion'])
+            ->setCellValue('J' . $row, $filaE['Cantidad_Requerida'])
+            ->setCellValue('K' . $row, $filaE['Cantidad_Salida']);
+        $row++; // Incrementar el contador de filas
     }
 
     // Cerrar las sentencias y la conexión a la base de datos
@@ -137,9 +142,11 @@ try {
 
     // Crear el escritor y enviar el archivo al navegador para la descarga automática
     $writer = new Xlsx($spreadsheet);
+    // Guardar el archivo en la salida de PHP (salida al navegador)
     $writer->save('php://output');
-    exit;
+    exit; // Finalizar el script
 } catch (Exception $e) {
+    // Mostrar un mensaje de error si algo falla
     echo "Error: " . $e->getMessage();
 }
 ?>

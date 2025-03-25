@@ -3,12 +3,23 @@ header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
 session_start(); // Iniciar sesión
 setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
 date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria de México
+
+// Incluir dependencias necesarias
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
 require_once("../../../Modelo/Funciones/Funciones_Empresa.php");
 require_once("../../../Modelo/Funciones/Funciones_Producto.php"); // Carga la clase de funciones de la cuenta
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
+
+// Verificar si la conexión a la base de datos fue exitosa
+if (!$conexion || $conexion->connect_error) {
+    echo json_encode([ // Si la conexión falla, enviar un mensaje de error
+        "success" => false, // Indicar si la operación fue exitosa
+        "message" => "Error en la conexión: " . $conexion->connect_error // Mostrar el error de conexión
+    ]);
+    exit; // Salir del script
+}
 
 // Verifica si la solicitud es de tipo POST.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -54,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Sube la imagen del producto y obtiene la ruta de la imagen.
         $imagen = subirImagen($SubirImagen);
 
-        if (!$imagen) {
+        if (!$imagen) { // Verificar si la imagen se subió correctamente
             // Lanzar una excepción en caso de error en la inserción
             throw new Exception("Error al guardar la imagen.");
         }
@@ -83,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Error al insertar en la tabla TipoTalla.");
         }
 
+        // Inserta el producto en la base de datos.
         if (insertarNuevoProducto($conexion, $ID_Empresa, $ID_Categoria, $ID_TipoTalla, $Descripcion, $Especificacion, $imagen, $registro)) {
             // Si todo fue bien, hacer commit de la transacción
             $conexion->commit();
@@ -100,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             echo json_encode([  // Enviar la respuesta en formato JSON
                 "success" => true, // Indicar que la operación fue exitosa
-                "message" => "Se ha Guardado Correctamente.",
+                "message" => "Se ha Guardado Correctamente.", // Mensaje de éxito
                 "redirect" => $urls[$RetornarTipoUsuario] ?? "../../../index.php" // Redireccionar a la página de inicio
             ]);
         } else {
@@ -111,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexion->rollback(); // Cancelar la transacción
         echo json_encode([ // Enviar la respuesta en formato JSON
             "success" => false, // Indicar que la operación falló
-            "message" => "No se pudo realizar el registro: " . $e->getMessage()
+            "message" => "No se pudo realizar el registro: " . $e->getMessage() // Mensaje de error
         ]);
     } finally {
         // Cerrar la conexión
@@ -120,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     echo json_encode([ // Devuelve un JSON con el resultado
         "success" => false, // Indica que la operación falló
-        "message" => "No se proporcionó un ID válido."
+        "message" => "No se proporcionó un ID válido." // Mensaje de error
     ]);
 }
 ?>

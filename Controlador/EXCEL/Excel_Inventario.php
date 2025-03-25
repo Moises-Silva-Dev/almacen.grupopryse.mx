@@ -22,8 +22,8 @@ try {
 
     // Consultar la base de datos para obtener la información de EntradaE
     $sqlE = "SELECT 
-                P.IdCProducto,
-                P.Descripcion AS Descripcion,
+                P.IdCProducto, 
+                P.Descripcion AS Descripcion, 
                 P.Especificacion AS Especificacion, 
                 T.Talla AS Talla, 
                 I.Cantidad AS Cantidad, 
@@ -41,11 +41,16 @@ try {
                 CCategorias CCA ON P.IdCCat = CCA.IdCCate 
             INNER JOIN 
                 CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
+            WHERE 
+                I.Cantidad > 0 
             GROUP BY 
-                CE.Nombre_Empresa, P.IdCProducto, P.Descripcion, T.Talla;";
-            
+                CE.Nombre_Empresa, P.IdCProducto, P.Descripcion, T.Talla";
+    
+    // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
+    // Asignar los parámetros a la consulta
     $stmtE->execute();
+    // Obtener el resultado de la consulta
     $resultadoE = $stmtE->get_result();
 
     // Crear un nuevo documento de Excel
@@ -54,28 +59,28 @@ try {
     // ======================
     // Hoja 1: EntradaE
     // ======================
-    $spreadsheet->setActiveSheetIndex(0);
-    $sheetE = $spreadsheet->getActiveSheet();
-    $sheetE->setTitle('Productos Inventario');
+    $spreadsheet->setActiveSheetIndex(0); // Establecer la hoja activa
+    $sheetE = $spreadsheet->getActiveSheet(); // Obtener la hoja activa
+    $sheetE->setTitle('Productos Inventario'); // Establecer el título de la hoja
 
     // Encabezados para EntradaE
     $sheetE->setCellValue('A1', 'Nombre de la Empresa')
-           ->setCellValue('B1', 'Descripción')
-           ->setCellValue('C1', 'Especificación')
-           ->setCellValue('D1', 'Categoria')
-           ->setCellValue('E1', 'Talla')
-           ->setCellValue('F1', 'Cantidad');
+        ->setCellValue('B1', 'Descripción')
+        ->setCellValue('C1', 'Especificación')
+        ->setCellValue('D1', 'Categoria')
+        ->setCellValue('E1', 'Talla')
+        ->setCellValue('F1', 'Cantidad');
                 
     // Insertar datos de EntradaE
     $row = 2;
-    while ($filaE = $resultadoE->fetch_assoc()) {
+    while ($filaE = $resultadoE->fetch_assoc()) { // Recorrer los resultados de la consulta
         $sheetE->setCellValue('A' . $row, $filaE['Nombre_Empresa'])
-               ->setCellValue('B' . $row, $filaE['Descripcion'])
-               ->setCellValue('C' . $row, $filaE['Especificacion'])
-               ->setCellValue('D' . $row, $filaE['Categoria'])
-               ->setCellValue('E' . $row, $filaE['Talla'])
-               ->setCellValue('F' . $row, $filaE['Cantidad']);
-        $row++;
+            ->setCellValue('B' . $row, $filaE['Descripcion'])
+            ->setCellValue('C' . $row, $filaE['Especificacion'])
+            ->setCellValue('D' . $row, $filaE['Categoria'])
+            ->setCellValue('E' . $row, $filaE['Talla'])
+            ->setCellValue('F' . $row, $filaE['Cantidad']);
+        $row++; // Incrementar el número de fila
     }
 
     // Cerrar las sentencias y la conexión a la base de datos
@@ -89,9 +94,11 @@ try {
 
     // Crear el escritor y enviar el archivo al navegador para la descarga automática
     $writer = new Xlsx($spreadsheet);
+    // Guardar el archivo en la salida de la aplicación
     $writer->save('php://output');
-    exit;
+    exit; // Salir del script
 } catch (Exception $e) {
+    // Manejar cualquier excepción que se produzca durante la ejecución del script
     echo "Error: " . $e->getMessage();
 }
 ?>

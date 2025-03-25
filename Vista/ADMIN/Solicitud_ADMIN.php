@@ -21,6 +21,7 @@
                 <th scope="col">Estatus</th>
                 <th scope="col">Cuenta</th>
                 <th scope="col">Justificación</th>
+                <th scope="col">Comentario para Modificación</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
@@ -61,8 +62,10 @@
                     // Consulta para obtener las requisiciones
                     $sql = "SELECT 
                             BRE.BIDRequisicionE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                            BRE.BFchCreacion, BRE.BEstatus, C.NombreCuenta, BRE.BCentroTrabajo, BRE.BJustificacion,
-                            BRE.BReceptor FROM Borrador_RequisicionE BRE
+                            BRE.BFchCreacion, BRE.BEstatus, C.NombreCuenta, BRE.BCentroTrabajo, 
+                            BRE.BJustificacion, BRE.BReceptor, BRE.BComentariosMod 
+                        FROM 
+                            Borrador_RequisicionE BRE
                         INNER JOIN 
                             Usuario U ON BRE.BIdUsuario = U.ID_Usuario
                         INNER JOIN
@@ -93,6 +96,7 @@
                                 <td><?php echo $row['BEstatus']; ?></td>
                                 <td><?php echo $row['NombreCuenta']; ?></td>
                                 <td><?php echo $row['BJustificacion']; ?></td>
+                                <td><?php echo $row['BComentariosMod']; ?></td>
                                 <td><a class="btn btn-warning" href="Update/Update_Solicitud_ADMIN.php?id=<?php echo $row['BIDRequisicionE']; ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24V0H24z" fill="none"/>

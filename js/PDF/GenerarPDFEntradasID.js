@@ -31,9 +31,9 @@ function Generar_PDF_Entrada_ID(event) {
             // Si la respuesta es exitosa, convertirla en un Blob
             return response.blob();
         } else {
-            // Si la respuesta no es exitosa, obtener el texto y lanzar una excepción con el mensaje
+            // Si la respuesta no es exitosa, obtener el texto
             return response.text().then(text => {
-                throw new Error(text);
+                throw new Error(text); // Lanzar una excepción con el mensaje de error
             });
         }
     })
@@ -52,7 +52,7 @@ function Generar_PDF_Entrada_ID(event) {
 
                     // Mostrar la ventana modal con el mensaje de error
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    myModalError.show(); // Mostrar la ventana modal
                 }
             } catch (e) {
                 // Si no es un JSON de error, tratar el Blob como un PDF
@@ -63,8 +63,8 @@ function Generar_PDF_Entrada_ID(event) {
 
                 // Mostrar la ventana modal que contiene el visor de PDF
                 var myModal = new bootstrap.Modal(document.getElementById('pdfModalEntradaID'));
-                myModal.show();
-            }
+                myModal.show(); // Mostrar la ventana modal
+            } 
         });
     })
     // Manejar errores que ocurran en la solicitud fetch o durante el procesamiento
@@ -74,6 +74,6 @@ function Generar_PDF_Entrada_ID(event) {
 
         // Mostrar la ventana modal con el mensaje de error
         var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-        myModalError.show();
+        myModalError.show(); // Mostrar la ventana modal
     });
 }

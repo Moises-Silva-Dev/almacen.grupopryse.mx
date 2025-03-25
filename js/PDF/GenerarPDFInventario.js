@@ -1,6 +1,6 @@
-// Funci¨®n llamada por el bot¨®n al hacer clic
+// Funciï¿½ï¿½n llamada por el botï¿½ï¿½n al hacer clic
 function Generar_PDF_Inventario(event) {
-    // Prevenir el comportamiento predeterminado del bot¨®n (como el env¨ªo de un formulario)
+    // Prevenir el comportamiento predeterminado del botï¿½ï¿½n (como el envï¿½ï¿½o de un formulario)
     event.preventDefault();
 
     // URL del archivo PHP que genera el PDF
@@ -8,7 +8,7 @@ function Generar_PDF_Inventario(event) {
 
     // Realizar una solicitud `fetch` para obtener el PDF desde el servidor
     fetch(url, {
-        method: 'GET', // Se utiliza el m¨¦todo GET para obtener el recurso
+        method: 'GET', // Se utiliza el mï¿½ï¿½todo GET para obtener el recurso
     })
     .then(response => {
         // Obtener el tipo de contenido de la respuesta HTTP
@@ -24,7 +24,7 @@ function Generar_PDF_Inventario(event) {
 
                     // Mostrar la ventana modal que contiene el mensaje de error
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    myModalError.show(); // Mostrar la ventana modal
                 }
             });
         } else {

@@ -51,7 +51,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         <input type="hidden" name="id" id="id" value="<?php echo $row['IdEntD']; ?>">
         <input type="hidden" name="IdEntE" id="IdEntE" value="<?php echo $row['IdEntE']; ?>">
         <input type="hidden" name="Nro_Modif" id="Nro_Modif" value="<?php echo $row['Nro_Modif']; ?>">
-        <input type="text" id="datosTablaUpdateEntrada" name="datosTablaUpdateEntrada">
+        <input type="hidden" id="datosTablaUpdateEntrada" name="datosTablaUpdateEntrada">
 
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
@@ -317,8 +317,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <th scope="col">Tipo</th>
                                 <th scope="col">Descripción</th>
                                 <th scope="col">Especificación</th>
-                                <th scope="col">Talla</th>
-                                <th scope="col">Existencias</th>
                             </tr>
                         </thead>
                         <tbody id="tablaCuerpo">

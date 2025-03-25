@@ -31,6 +31,13 @@ $(document).ready(function() {
                 $('#Descripcion').val(response.descripcion);
                 $('#Especificacion').val(response.especificacion);
 
+                // Actualiza la imagen del producto
+                if (response.IMG) {
+                    $('#IMG').attr('src', response.IMG);
+                } else {
+                    $('#IMG').attr('src', '../../../img/IMG_Requicision.png'); // Imagen por defecto si no hay imagen disponible
+                }
+
                 // Vacía el select de tallas y agrega una opción por defecto
                 $('#ID_Talla').empty();
                 

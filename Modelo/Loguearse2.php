@@ -1,20 +1,22 @@
 <?php
 // Iniciar la sesión
 session_start(); 
+
 // Desactivar la notificación de errores para evitar mostrar mensajes de error al usuario
 error_reporting(0);
 
+session_regenerate_id(true); // Evita el secuestro de sesiones
+
 // Comprobar si el usuario está autenticado
 if (!isset($_SESSION['usuario'])) {
-    // Mostrar alerta en JavaScript
-    echo '<script>
-        alert("Por favor, debes iniciar sesión.");
-        window.location = "../../../index.php";
-    </script>';
     // Destruir la sesión
     session_destroy();
+
+    // Redirigir al index con un mensaje de SweetAlert
+    header("Location: ../../../index.php?auth=failed");
+
     // Finalizar la ejecución del script
-    die();
+    exit();
 }
 
 // Configurar la sesión para no expirar automáticamente

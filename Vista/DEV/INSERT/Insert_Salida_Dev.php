@@ -115,7 +115,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <div class="container mt-5">
     <center><h2>Registrar Salida</h2></center>
     <!-- Formulario -->
-    <form id="FormInsertSalidaNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Prueba_Funcion_Insert_Salida.php" method="post" enctype="multipart/form-data" novalidate>
+    <form id="FormInsertSalidaNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Salida.php" method="post" enctype="multipart/form-data" novalidate>
         <input type="hidden" name="ID_RequisicionE" id="ID_RequisicionE" value="<?php echo $requisicion_id; ?>">
         <input type="hidden" id="datosTablaInsertSalida" name="datosTablaInsertSalida">
         <div class="accordion" id="accordionExample">

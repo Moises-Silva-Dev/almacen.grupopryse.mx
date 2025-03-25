@@ -27,7 +27,7 @@ $regiones = [];
 
 // Iterar sobre el resultado de la consulta y almacenar cada región en el array
 while ($resultado = $result->fetch_assoc()) {
-    $regiones[] = $resultado;
+    $regiones[] = $resultado; // Agregar cada región al array
 }
 
 // Convertir el array de regiones a formato JSON y enviarlo como respuesta

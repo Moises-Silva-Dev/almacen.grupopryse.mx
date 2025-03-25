@@ -53,9 +53,9 @@ try {
     // Consultar la base de datos para obtener la información de EntradaE
     $sqlE = "SELECT 
                 IdEntE, Fecha_Creacion, Proveedor, Receptor, Comentarios, Estatus 
-             FROM 
+            FROM 
                 EntradaE 
-             WHERE 
+            WHERE 
                 DATE(Fecha_Creacion) BETWEEN ? AND ?";
 
     // Preparar y ejecutar la consulta para EntradaE
@@ -97,20 +97,34 @@ try {
     // Estilo de la tabla EntradaE
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(25, "Identificador"),
+        $pdf->getStringHeight(40, "Fecha de Creación"),
+        $pdf->getStringHeight(40, "Proveedor"),
+        $pdf->getStringHeight(40, "Receptor"),
+        $pdf->getStringHeight(40, "Comentarios"),
+        $pdf->getStringHeight(30, "Estatus")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
     
     // Cabecera de la tabla EntradaE
-    $pdf->MultiCell(25, 7, "Identificador", 1, 'C', true, 0);
-    $pdf->MultiCell(40, 7, "Fecha Creación", 1, 'C', true, 0);
-    $pdf->MultiCell(40, 7, "Proveedor", 1, 'C', true, 0);
-    $pdf->MultiCell(40, 7, "Receptor", 1, 'C', true, 0);
-    $pdf->MultiCell(40, 7, "Comentarios", 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, "Estatus", 1, 'C', true, 1);
+    $pdf->MultiCell(25, $maxHeightEncabezado, "Identificador", 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Fecha Creación", 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Proveedor", 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Receptor", 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, "Comentarios", 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, "Estatus", 1, 'C', true, 1);
 
     // Agregar datos a la tabla EntradaE
     $pdf->SetFont("helvetica", "", 12); // Restaurar el estilo de fuente normal
     while ($filaE = $resultadoE->fetch_assoc()) {
         // Calcular la altura de la fila más alta
         $cellHeights = [
+            $pdf->getStringHeight(25, $filaE['IdEntE']),
             $pdf->getStringHeight(40, $filaE['Fecha_Creacion']),
             $pdf->getStringHeight(40, $filaE['Proveedor']),
             $pdf->getStringHeight(40, $filaE['Receptor']),

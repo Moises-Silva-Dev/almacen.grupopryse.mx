@@ -231,9 +231,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="tablaModalLabel">Lista de Productos</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Buscador -->
@@ -249,8 +247,6 @@
                                 <th scope="col">Tipo</th>
                                 <th scope="col">Descripción</th>
                                 <th scope="col">Especificación</th>
-                                <th scope="col">Talla</th>
-                                <th scope="col">Existencias</th>
                             </tr>
                         </thead>
                         <tbody id="tablaCuerpo">

@@ -27,7 +27,7 @@ $estados = [];
 
 // Iterar sobre el resultado de la consulta y almacenar cada estado en el array
 while ($resultado = $result->fetch_assoc()) {
-    $estados[] = $resultado;
+    $estados[] = $resultado; // Agregar cada estado al array
 }
 
 // Convertir el array de estados a formato JSON y enviarlo como respuesta

@@ -77,25 +77,25 @@ function EliminarBorradorRequisicionE($conexion, $id_RequisionE) {
 }
 
 // Función para insertar en la tabla Borrador_RequisicionE
-function InsertarBorradorRequisicionERegresado($conexion, $FchEnvio, $InformacionRequisicionE) {
+function InsertarBorradorRequisicionERegresado($conexion, $FchEnvio, $InformacionRequisicionE, $comentario) {
     $estatus = 'Modificacion_Solicitada'; // Define el estatus inicial
 
     // Preparar consulta SQL para insertar el registro
-    $SetenciaInsertarBorradorRequisicionERegresado = "INSERT INTO Borrador_RequisicionE (BIdUsuario, BFchCreacion, BEstatus, BSupervisor, BIdCuenta, BIdRegion, BCentroTrabajo, BNroElementos, BReceptor, BTelReceptor, BRfcReceptor, BIdEstado, BMpio, BColonia, BCalle, BNro, BCP, BJustificacion) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $SetenciaInsertarBorradorRequisicionERegresado = "INSERT INTO Borrador_RequisicionE (BIdUsuario, BFchCreacion, BEstatus, BSupervisor, BIdCuenta, BIdRegion, BCentroTrabajo, BNroElementos, BReceptor, BTelReceptor, BRfcReceptor, BIdEstado, BMpio, BColonia, BCalle, BNro, BCP, BJustificacion, BComentariosMod) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Verifica si el número de columnas y valores coinciden
     $StmtInsertarBorradorRequisicionERegresado = $conexion->prepare($SetenciaInsertarBorradorRequisicionERegresado);
 
     // Vincula los parámetros, asegurándote de que el número de parámetros coincida con el número de columnas
     $StmtInsertarBorradorRequisicionERegresado->bind_param(
-        "isssiisssssissssss",
+        "isssiisssssisssssss",
         $InformacionRequisicionE['IdUsuario'], $FchEnvio, $estatus, $InformacionRequisicionE['Supervisor'], 
         $InformacionRequisicionE['IdCuenta'], $InformacionRequisicionE['IdRegion'], $InformacionRequisicionE['CentroTrabajo'], 
         $InformacionRequisicionE['NroElementos'], $InformacionRequisicionE['Receptor'], $InformacionRequisicionE['TelReceptor'], 
         $InformacionRequisicionE['RfcReceptor'], $InformacionRequisicionE['IdEstado'], $InformacionRequisicionE['Mpio'],
         $InformacionRequisicionE['Colonia'], $InformacionRequisicionE['Calle'], $InformacionRequisicionE['Nro'],
-        $InformacionRequisicionE['CP'], $InformacionRequisicionE['Justificacion']);
+        $InformacionRequisicionE['CP'], $InformacionRequisicionE['Justificacion'], $comentario);
 
     // Ejecutar la consulta
     if ($StmtInsertarBorradorRequisicionERegresado->execute()){
@@ -132,7 +132,7 @@ function SeleccionarInformacionBorradorRequisicionE($conexion, $BIDRequisicionE)
 
 // Función para insertar en la tabla Borrador_RequisicionE
 function InsertarBorradorRequisicionEProductosPendientes($conexion, $FchEnvio, $InformacionRequisicionE) {
-    $estatus = 'Borrador_Requisicion_Productos_Pendientes'; // Define el estatus inicial
+    $estatus = 'Borrador_Productos_Pendientes'; // Define el estatus inicial
 
     // Preparar consulta SQL para insertar el registro
     $SetenciaInsertarBorradorRequisicionEProductosPendientes = "INSERT INTO Borrador_RequisicionE (BIdUsuario, BFchCreacion, BEstatus, BSupervisor, BIdCuenta, BIdRegion, BCentroTrabajo, BNroElementos, BReceptor, BTelReceptor, BRfcReceptor, BIdEstado, BMpio, BColonia, BCalle, BNro, BCP, BJustificacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

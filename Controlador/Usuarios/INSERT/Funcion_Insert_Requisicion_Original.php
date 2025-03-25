@@ -17,12 +17,22 @@ require_once '../../Reportes/Generar_Reporte_Solicitud_a_Gmail.php';
 // Incluir autoload de Composer para cargar TCPDF
 require_once('../../../librerias/PHPMailer/vendor/autoload.php'); 
 
+// Incluir autoload de Composer para cargar TCPDF
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 // Obtiene la conexión a la base de datos
 $conexion = (new Conectar())->conexion();
+
+// Verificar si la conexión a la base de datos fue exitosa
+if (!$conexion || $conexion->connect_error) {
+    echo json_encode([ // Si la conexión falla, enviar un mensaje de error
+        "success" => false, // Indicar si la operación fue exitosa
+        "message" => "Error en la conexión: " . $conexion->connect_error // Mostrar el error de conexión
+    ]);
+    exit; // Salir del script
+}
 
 try {
     // Obtiene la fecha y hora de creación de la requisición 
@@ -234,6 +244,7 @@ function enviarCorreo($FchEnvio, $ID_RequisionE, $conexion) {
         // Configurar remitente y destinatario
         $mail->setFrom('tecnico.ti@grupopryse.mx', 'Tecnico Pryse');
         $mail->addAddress('karen.lopez.pryse@gmail.com');
+        $mail->addAddress('tecnico.pryse@gmail.com');
     
         // Adjuntar archivo si existe
         if (file_exists($rutaPDF)) {

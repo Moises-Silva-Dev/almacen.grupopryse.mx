@@ -62,7 +62,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 ?>
 
 <div class="container mt-5">
-    <center><h2>Modificacón Solicitud</h2></center>
+    <center><h2>Modificación Borrador Requisición</h2></center>
     <!-- Formulario -->
     <form id="FormUpdateRequisicion" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Borrador_Requision.php" method="POST" enctype="multipart/form-data" novalidate>
 
@@ -331,7 +331,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                     </div>
                                 </td>
                                 <td colspan="2">                        
-                                    <div class="mb-3">
+                                    <div class="mb-2">
                                         <label for="ID_Talla" class="form-label">Talla:</label>
                                             <select class="form-select mb-3" id="ID_Talla" name="ID_Talla[]">
                                                 <option value="" selected disabled>-- Seleccionar una Talla --</option>
@@ -341,22 +341,15 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                             </div>
                                     </div>
                                 </td>
-                                <td>                        
+                                <td colspan="2">                        
                                     <div class="mb-2">
                                         <label for="Cantidad" class="form-label">Cantidad:</label>
                                         <input type="text" class="form-control" id="Cantidad" name="Cantidad[]" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" placeholder="Ingresa la Cantidad">
                                     </div>
                                 </td>
-                                <td>
+                                <td rowspan="2">
                                     <div class="mb-2">
-                                        <button type="button" class="btn btn-info" id="btnMostrarImagen">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                <path d="M11.102 17.957c-3.204 -.307 -5.904 -2.294 -8.102 -5.957c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a19.5 19.5 0 0 1 -.663 1.032" />
-                                                <path d="M15 19l2 2l4 -4" />
-                                            </svg>Mostrar Imagen
-                                        </button>
+                                        <img src="../../../img/Armar_Requicision.png" alt="Imagen del Producto" id="IMG" width="250" height="350">
                                     </div>
                                 </td>
                             </tr>
@@ -424,32 +417,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         </a>
     </div>
     </form>
-    <div class="modal" tabindex="-1" role="dialog" id="modalImagen">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Imagen del Producto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <center><img src="" alt="Imagen del Producto" id="imagenProducto" style="max-width: 100%;"></center>
-                    </div>
-                    <br>
-                    <div>
-                        <h6>Descripción:</h6>
-                        <p id="descripcionProducto"></p>
-                    </div>
-                    <div>
-                        <h6>Especificación:</h6>
-                        <p id="especificacionProducto"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="container mt-5">
         <div class="table-responsive">

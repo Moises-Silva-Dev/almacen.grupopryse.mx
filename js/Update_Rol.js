@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let cuentasSeleccionadas = []; // Lista de cuentas seleccionadas en la tabla principal
     
     // Lista de IDs de tipos de usuarios que no requieren la selección de una cuenta
-    const noCuentaRequired = [1, 2, 5]; // Ajusta estos valores según sea necesario
+    const noCuentaRequired = [1, 2, 5, 6]; // Ajusta estos valores según sea necesario
 
 
     // Función para actualizar los datos en formato JSON en los inputs ocultos
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Intentar realizar una solicitud para obtener las cuentas
             try {
                 // Obtener el ID de la tipo de usuario seleccionado
-                if (tipo === 3 || tipo ===4) { 
+                if (tipo === 3 || tipo === 4) { 
                     // Si el tipo de usuario es 3 o 4, obtener el ID de la cuenta seleccionada
                     let direccion =  '../../../Controlador/GET/getSelectCuenta.php';
                     

@@ -2,7 +2,7 @@
 document.getElementById('FormularioAutorizarRequisicion').addEventListener('submit', function (e) {
     e.preventDefault(); // Evita el comportamiento predeterminado del formulario (recargar la página)
     const formData = new FormData(e.target); // Recoge los datos del formulario
-  
+
     // Realiza una petición al backend usando fetch
     fetch(e.target.action, { // La URL del formulario está en el atributo "action"
         method: e.target.method, // El método del formulario está en el atributo "method" (POST)

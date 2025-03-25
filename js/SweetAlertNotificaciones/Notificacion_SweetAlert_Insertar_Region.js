@@ -16,7 +16,7 @@ document.getElementById('FormInsertRegionNueva').addEventListener("submit", func
     // Si se han agregado estados, procede a enviar el formulario
     e.preventDefault(); // Evita el envío estándar del formulario
     const formData = new FormData(e.target); // Recoge los datos del formulario
-  
+
     // Realiza una petición al backend usando fetch
     fetch(e.target.action, { // La URL del formulario está en el atributo "action"
         method: e.target.method, // El método del formulario está en el atributo "method" (POST)

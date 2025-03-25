@@ -3,11 +3,22 @@ header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
 session_start(); // Iniciar sesión
 setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
 date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria de México
+
+// Incluir dependencias necesarias
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Carga la clase de funciones de la cuenta
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
+
+// Verificar si la conexión a la base de datos fue exitosa
+if (!$conexion || $conexion->connect_error) {
+    echo json_encode([ // Si la conexión falla, enviar un mensaje de error
+        "success" => false, // Indicar si la operación fue exitosa
+        "message" => "Error en la conexión: " . $conexion->connect_error // Mostrar el error de conexión
+    ]);
+    exit; // Salir del script
+}
 
 // Verificar si es una solicitud POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -15,6 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_Usuario = $_POST['id'];
     $ID_Tipo = $_POST['ID_Tipo'];
     $usuario = $_SESSION["usuario"]; // Recuperar el usuario de la sesión
+
+    if (!$id_Usuario || !$ID_Tipo || !$usuario) { // Verificar que los campos no estén vacíos
+        echo json_encode([ // Devuelve un arreglo JSON con el mensaje de error
+            "success" => false, // Indica que la operación no se realizó con éxito
+            "message" => "Datos inválidos. Por favor, revise la información enviada."
+        ]);
+        exit; // Salir del script
+    }
 
     // Comenzar la transacción
     $conexion->begin_transaction();
@@ -27,16 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Actualizamos el rol del usuario en la base de datos.
                 if (!UpdateRolUsuario($conexion, $ID_Tipo, $id_Usuario)) {
+                    // Si la actualización falla, devolvemos un mensaje de error.
                     throw new Exception("Error al intentar modificar el rol.");
                 }
 
                 // Eliminamos cualquier vinculación existente entre el usuario y cuentas en la tabla `Usuario_Cuenta`.
                 if (!EliminarUsuarioCuenta($conexion, $id_Usuario)) {
+                    // Si la eliminación falla, lanzamos una excepción.
                     throw new Exception("Error al intentar eliminar la relacion.");
                 }
 
                 // Insertamos el registro en `Usuario_Cuenta` con `ID_Cuenta` como `NULL` ya que el tipo de usuario no es 3 o 4.
                 if (!InsertarNuevoUsuarioCuenta($conexion, $id_Usuario, $cuentaId = NULL)) {
+                    // Si la inserción falla, eliminamos el registro de `Usuario_Cuenta` insertado anterior
                     throw new Exception("Error al intentar eliminar la relacion.");
                 }
             } else {
@@ -49,11 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if (json_last_error() === JSON_ERROR_NONE) {
                         // Eliminamos las vinculaciones anteriores del usuario en `Usuario_Cuenta`.
                         if (!EliminarUsuarioCuenta($conexion, $id_Usuario)) {
+                            // Si la eliminación falla, lanzamos una excepción.
                             throw new Exception("Error al intentar eliminar la relacion.");
                         }
 
                         // Actualizamos el rol del usuario.
                         if (!UpdateRolUsuario($conexion, $ID_Tipo, $id_Usuario)) {
+                            // Si la actualización del rol falla, se lanza una excepción.
                             throw new Exception("Error al intentar modificar el rol.");
                         }
 
@@ -67,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             
                             // Inserta en la tabla Usuario_Cuenta
                             if (!InsertarNuevoUsuarioCuenta($conexion, $id_Usuario, $cuentaId)) {
+                                // Si no se pudo insertar, lanzamos una excepción.
                                 throw new Exception("Error al insertar en usuario cuenta");
                             }
                         }
@@ -93,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                     // Eliminar la vinculación en la Tabla Usuario_Cuenta
                     if (!EliminarUsuarioCuenta($conexion, $id_Usuario)) {
+                        // Lanzar una excepción en caso de error
                         throw new Exception("Error al intentar eliminar la relacion.");
                     }
                         
@@ -107,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
                         // Inserta en la tabla Usuario_Cuenta
                         if (!InsertarNuevoUsuarioCuenta($conexion, $id_Usuario, $cuentaId)) {
+                            // Lanzar una excepción en caso de error
                             throw new Exception("Error al insertar en usuario cuenta");
                         }
                     }
@@ -121,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             
                             // Si no está vinculada, insertarla
                             if (!InsertarNuevoUsuarioCuenta($conexion, $id_Usuario, $ID_CuentaP)) {
+                                // Lanzar una excepción en caso de error
                                 throw new Exception("Error al insertar en usuario cuenta existente");
                             }
                         }
@@ -151,14 +179,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         echo json_encode([  // Enviar la respuesta en formato JSON
             "success" => true, // Indicar que la operación fue exitosa
-            "message" => "Se ha Cambiado el Rol Correctamente.",
+            "message" => "Se ha Cambiado el Rol Correctamente.", // Mensaje de éxito
             "redirect" => $urls[$RetornarTipoUsuario] ?? "../../../index.php" // Redireccionar a la página de inicio
         ]);
     } catch (Exception $e) {
         $conexion->rollback(); // Cancelar la transacción
         echo json_encode([ // Enviar la respuesta en formato JSON
             "success" => false, // Indicar que la operación falló
-            "message" => "No se pudo realizar el registro: " . $e->getMessage()
+            "message" => "No se pudo realizar el registro: " . $e->getMessage() // Mensaje de error
         ]);
     } finally {
         // Cerrar la conexión
@@ -167,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     echo json_encode([ // Devuelve un JSON con el resultado
         "success" => false, // Indica que la operación falló
-        "message" => "No se proporcionó un ID válido."
+        "message" => "No se proporcionó un ID válido." // Mensaje de error
     ]);
 }
 ?>

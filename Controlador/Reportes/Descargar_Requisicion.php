@@ -269,14 +269,27 @@ try {
     // Estilo de la tabla 
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(38, "Nombre de la Empresa"),
+        $pdf->getStringHeight(50, "Descripción"),
+        $pdf->getStringHeight(50, "Especificación"),
+        $pdf->getStringHeight(20, "Talla"),
+        $pdf->getStringHeight(18, "Solicitado"),
+        $pdf->getStringHeight(18, "Entregado")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
     
     // Cabecera de la tabla 
-    $pdf->MultiCell(38, 7, 'Nombre de la Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(50, 7, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(50, 7, 'Especificación', 1, 'C', true, 0);
-    $pdf->MultiCell(20, 7, 'Talla', 1, 'C', true, 0);
-    $pdf->MultiCell(18, 7, 'Solicitado', 1, 'C', true, 0);
-    $pdf->MultiCell(18, 7, 'Entregado', 1, 'C', true, 1);
+    $pdf->MultiCell(38, $maxHeightEncabezado, 'Nombre de la Empresa', 1, 'C', true, 0);
+    $pdf->MultiCell(50, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
+    $pdf->MultiCell(50, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, 'Talla', 1, 'C', true, 0);
+    $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 0);
+    $pdf->MultiCell(18, $maxHeightEncabezado, 'Entregado', 1, 'C', true, 1);
     
     // Agregar datos a la tabla
     $pdf->SetFont("helvetica", '', 10); // Restaurar el estilo de fuente normal
@@ -286,7 +299,9 @@ try {
             $pdf->getStringHeight(38, $filaProducto['Empresa']),
             $pdf->getStringHeight(50, $filaProducto['Descripcion_Producto']),
             $pdf->getStringHeight(50, $filaProducto['Especificacion_Producto']),
-            $pdf->getStringHeight(20, $filaProducto['Talla'])
+            $pdf->getStringHeight(20, $filaProducto['Talla']),
+            $pdf->getStringHeight(18, $filaProducto['Cantidad_Solicitada']),
+            $pdf->getStringHeight(18, $filaProducto['Cantidad_Salida'])
         ];
     
         // Definir la altura máxima para la fila actual

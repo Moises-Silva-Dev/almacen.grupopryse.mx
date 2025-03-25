@@ -41,18 +41,18 @@ function Generar_PDF_Entradas_Fechas(event) {
 
                     // Mostrar la ventana modal que indica el error
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    myModalError.show(); // Mostrar la ventana modal
                 } else {
                     // Si no hay error en el JSON, interpretar el texto como contenido PDF
                     var pdfBlob = new Blob([text], { type: 'application/pdf' });
-                    var pdfUrl = URL.createObjectURL(pdfBlob);
+                    var pdfUrl = URL.createObjectURL(pdfBlob); // Crear una URL temporal para el Blob
 
                     // Establecer la fuente del visor de PDF para mostrar el PDF generado
                     document.getElementById('pdfViewerEntradasFechas').src = pdfUrl;
 
                     // Mostrar la ventana modal con el visor de PDF
                     var myModal = new bootstrap.Modal(document.getElementById('pdfModalEntradaFechas'));
-                    myModal.show();
+                    myModal.show(); // Mostrar la ventana modal
                 }
             } catch (e) {
                 // Si no es JSON válido, tratar el Blob directamente como contenido PDF
@@ -63,7 +63,7 @@ function Generar_PDF_Entradas_Fechas(event) {
 
                 // Mostrar la ventana modal con el visor de PDF
                 var myModal = new bootstrap.Modal(document.getElementById('pdfModalEntradaFechas'));
-                myModal.show();
+                myModal.show(); // Mostrar la ventana modal
             }
         });
     })

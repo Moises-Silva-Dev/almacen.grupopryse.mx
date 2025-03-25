@@ -120,26 +120,44 @@ try {
     // Estilo de la tabla Salida_D
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 8);
+
+    // Calcular la altura de la fila más alta
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(25, "Identificador"),
+        $pdf->getStringHeight(30, "Fecha de Salida"),
+        $pdf->getStringHeight(15, "IdReqE"),
+        $pdf->getStringHeight(20, "Estatus"),
+        $pdf->getStringHeight(50, "Nombre del Solicitante"),
+        $pdf->getStringHeight(30, "Cuenta"),
+        $pdf->getStringHeight(30, "Fecha de Solicitud"),
+        $pdf->getStringHeight(50, "Entrego")
+    ];
+
+    // Definir la altura máxima para la fila actual
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
     
     // Cabecera de la tabla Salida_D
-    $pdf->MultiCell(25, 7, "Identificador", 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, "Fecha de Salida", 1, 'C', true, 0);
-    $pdf->MultiCell(15, 7, "IdReqE", 1, 'C', true, 0);
-    $pdf->MultiCell(20, 7, "Estatus", 1, 'C', true, 0);
-    $pdf->MultiCell(50, 7, "Nombre del Solicitante", 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, "Cuenta", 1, 'C', true, 0);
-    $pdf->MultiCell(30, 7, "Fecha de Solicitud", 1, 'C', true, 0);
-    $pdf->MultiCell(50, 7, "Entrego", 1, 'C', true, 1);
+    $pdf->MultiCell(25, $maxHeightEncabezado, "Identificador", 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, "Fecha de Salida", 1, 'C', true, 0);
+    $pdf->MultiCell(15, $maxHeightEncabezado, "IdReqE", 1, 'C', true, 0);
+    $pdf->MultiCell(20, $maxHeightEncabezado, "Estatus", 1, 'C', true, 0);
+    $pdf->MultiCell(50, $maxHeightEncabezado, "Nombre del Solicitante", 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, "Cuenta", 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, "Fecha de Solicitud", 1, 'C', true, 0);
+    $pdf->MultiCell(50, $maxHeightEncabezado, "Entrego", 1, 'C', true, 1);
 
     // Agregar datos a la tabla Salida_D
     $pdf->SetFont("helvetica", "", 12); // Restaurar el estilo de fuente normal
     while ($filaD = $resultadoD->fetch_assoc()) {
         // Calcular la altura de la fila más alta
         $cellHeights = [
+            $pdf->getStringHeight(25, $filaD['Id_SalE']),
             $pdf->getStringHeight(30, $filaD['FchSalida']),
+            $pdf->getStringHeight(15, $filaD['ID_ReqE']),
             $pdf->getStringHeight(20, $filaD['Estado']),
             $pdf->getStringHeight(50, $filaD['NombreUsuarioSolicitante'] . ' ' . $filaD['ApellidoPaternoUsuarioSolicitante'] . ' ' . $filaD['ApellidoMaternoUsuarioSolicitante']),
             $pdf->getStringHeight(30, $filaD['NombreCuenta']),
+            $pdf->getStringHeight(30, $filaD['FchCreacion']),
             $pdf->getStringHeight(50, $filaD['NombreUsuarioSalida'] . ' ' . $filaD['ApellidoPaternoUsuarioSalida'] . ' ' . $filaD['ApellidoMaternoUsuarioSalida'])
         ];
     
