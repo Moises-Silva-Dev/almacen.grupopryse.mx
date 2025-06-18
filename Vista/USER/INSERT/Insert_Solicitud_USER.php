@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <center><h2>Registrar Nuevo Borrador Requisición</h2></center>
     <!-- Formulario -->
-    <form id="FormInsertRequisionNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Borrador_Requision.php" method="POST" enctype="multipart/form-data" novalidate>
+    <form id="FormInsertBorradorRequisionNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Borrador_Requision.php" method="POST" enctype="multipart/form-data" novalidate>
     <input type="hidden" id="datosTabla" name="datosTabla">
 
     <div class="accordion" id="accordionExample">
@@ -356,7 +356,7 @@
 <script src="../../../js/Solicitud_Carga_CueRegEst.js" defer></script>
 <script type="module" src="../../../js/Busqueda_Requision_Productos.js" defer></script>
 <script src="../../../js/Insert_Producto_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Requisicion.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Borrador_Requisicion.js"></script>
 <script src="../../../js/VistaTablaProductos.js"></script>
 
 <?php include('footer.php'); ?>

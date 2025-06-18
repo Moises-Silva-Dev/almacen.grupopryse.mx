@@ -13,6 +13,8 @@ require_once("../../../Modelo/Funciones/Funciones_Borrador_RequisicionE.php");
 require_once("../../../Modelo/Funciones/Funciones_RequisicionD.php");
 require_once("../../../Modelo/Funciones/Funciones_RequisicionE.php");
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php");
+require_once("../../Reportes/Generar_Reporte_Solicitud_a_Gmail.php"); // Incluir el archivo donde está definida la función generarPDF()
+require_once("../../../Modelo/Funciones/Funcion_Correo_Requisicion.php");
 
 // Conexión a la base de datos
 $conexion = (new Conectar())->conexion();
@@ -50,14 +52,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Id'])) {
         }
 
         // Crear nueva requisición en RequisicionE
-        $id_RequisionE = InsertarNuevaRequisicionE($conexion, $FchEnvio, $requisicionesE);
+        $ID_RequisionE = InsertarNuevaRequisicionE($conexion, $FchEnvio, $requisicionesE);
 
-        if (!$id_RequisionE) { // Verificar que la inserción se haya realizado correctamente
+        if (!$ID_RequisionE) { // Verificar que la inserción se haya realizado correctamente
             throw new Exception('Error al insertar datos en la tabla RequisicionE.');
         }
 
         // Insertar detalles en RequisicionD
-        $resultadoDetalles = InsertarNuevaRequisicionD($conexion, $id_RequisionE, $requisicionesD);
+        $resultadoDetalles = InsertarNuevaRequisicionD($conexion, $ID_RequisionE, $requisicionesD);
 
         if (!$resultadoDetalles) { // Verificar que la inserción se haya realizado correctamente
             throw new Exception('Error al insertar detalles en la tabla RequisicionD.');
@@ -73,25 +75,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Id'])) {
             throw new Exception('Error al eliminar el borrador de requisición E.');
         }
 
-        // Confirmar la transacción
-        $conexion->commit();
+        // Envía correo electrónico notificando la nueva solicitud
+        if (!enviarCorreo($FchEnvio, $ID_RequisionE, $conexion)) {
+            throw new Exception('Error al enviar correo electrónico.');
+        }
 
-        $RetornarTipoUsuario = buscarYRetornarTipoUsuario($usuario, $conexion); // Buscar y retornar el tipo de usuario
+        if ($resultadoDetalles == true) {
+            // Confirmar la transacción
+            $conexion->commit();
 
-        // Respuesta de éxito con la URL según tipo de usuario
-        $urls = [
-            1 => "../../../Vista/DEV/index_DEV.php", // URL para el tipo de usuario 1
-            2 => "../../../Vista/SUPERADMIN/index_SUPERADMIN.php", // URL para el tipo de usuario 2
-            3 => "../../../Vista/ADMIN/Solicitud_ADMIN.php", // URL para el tipo de usuario 3
-            4 => "../../../Vista/USER/Solicitud_USER.php", // URL para el tipo de usuario 4
-            5 => "../../../Vista/ALMACENISTA/index_ALMACENISTA.php" // URL para el tipo de usuario 5
-        ];
+            $RetornarTipoUsuario = buscarYRetornarTipoUsuario($usuario, $conexion); // Buscar y retornar el tipo de usuario
 
-        echo json_encode([  // Enviar la respuesta en formato JSON
-            "success" => true, // Indicar que la operación fue exitosa
-            "message" => "Se ha Guardado Correctamente.",
-            "redirect" => $urls[$RetornarTipoUsuario] ?? "../../../index.php" // Redireccionar a la página de inicio
-        ]);
+            // Respuesta de éxito con la URL según tipo de usuario
+            $urls = [
+                1 => "../../../Vista/DEV/index_DEV.php", // URL para el tipo de usuario 1
+                2 => "../../../Vista/SUPERADMIN/index_SUPERADMIN.php", // URL para el tipo de usuario 2
+                3 => "../../../Vista/ADMIN/Solicitud_ADMIN.php", // URL para el tipo de usuario 3
+                4 => "../../../Vista/USER/Solicitud_USER.php", // URL para el tipo de usuario 4
+                5 => "../../../Vista/ALMACENISTA/index_ALMACENISTA.php" // URL para el tipo de usuario 5
+            ];
+
+            echo json_encode([  // Enviar la respuesta en formato JSON
+                    "success" => true, // Indicar que la operación fue exitosa
+                    "message" => "Se ha Guardado Correctamente.",
+                "redirect" => $urls[$RetornarTipoUsuario] ?? "../../../index.php" // Redireccionar a la página de inicio
+            ]);
+        }
     } catch (Exception $e) {
         // Revertir la transacción en caso de error
         $conexion->rollback();

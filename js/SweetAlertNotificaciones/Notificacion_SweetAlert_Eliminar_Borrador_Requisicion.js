@@ -1,5 +1,5 @@
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
-function eliminarRegistroRequisicion(id) { 
+function eliminarRegistroBorradorRequisicion(id) { 
     // Confirmación de SweetAlert
     Swal.fire({
         title: '¿Estás seguro?', // título

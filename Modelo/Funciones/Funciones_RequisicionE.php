@@ -1,4 +1,61 @@
 <?php
+// Función para insertar en la tabla RequisicionE
+function InsertarNuevaRequisicionEAdmin($conexion, $id_Usuario, $FchCreacion, $Supervisor, $ID_Cuenta, $Region, $CentroTrabajo, $NroElementos, $Estado, $Receptor, $TelReceptor, $RfcReceptor, $Justificacion) {
+    $estatus = 'Pendiente'; // Define el estatus inicial 
+
+    // Preparar consulta SQL para insertar el registro
+    $SetenciaInsertarNuevoBorradorRequisicionE = "INSERT INTO RequisicionE (IdUsuario, FchCreacion, Estatus, Supervisor, IdCuenta, IdRegion, CentroTrabajo, NroElementos, IdEstado, Receptor, TelReceptor, RfcReceptor, Justificacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    // Verifica si el número de columnas y valores coinciden
+    $StmtInsertarNuevoBorradorRequisicionE = $conexion->prepare($SetenciaInsertarNuevoBorradorRequisicionE);
+    
+    // Vincula los parámetros, asegurándote de que el número de parámetros
+    $StmtInsertarNuevoBorradorRequisicionE->bind_param("isssiississss", $id_Usuario, $FchCreacion, $estatus, $Supervisor, $ID_Cuenta, $Region, $CentroTrabajo, $NroElementos, $Estado, $Receptor, $TelReceptor, $RfcReceptor, $Justificacion);
+    
+    if ($StmtInsertarNuevoBorradorRequisicionE->execute()) {
+        return $conexion->insert_id; // Regresar true si la inserción fue exitosa
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al insertar nueva región: " . $conexion->error);
+    }
+}
+
+// Función para actualizar la tabla RequisicionE con datos principales y envío
+function ActualizarRequisicionEAdmin($conexion, $FchCreacion, $Estatus, $Supervisor, $ID_Cuenta, $Region, $CentroTrabajo, $NroElementos, $Estado, $Receptor, $TelReceptor, $RfcReceptor, $Justificacion, $id_RequisionE) {
+    // Actualizar los datos principales de la requisición
+    $SetenciaActualizarRequisicionE = "UPDATE RequisicionE SET FchCreacion=?, Estatus=?, Supervisor=?, IdCuenta = ?, IdRegion=?, CentroTrabajo=?, NroElementos = ?, IdEstado=?, Receptor=?, TelReceptor=?, RfcReceptor=?, Justificacion=? WHERE IDRequisicionE = ?";
+    // Preparar la consulta SQL para actualizar el registro
+    $StmtActualizarRequisicionE = $conexion->prepare($SetenciaActualizarRequisicionE);
+    // Vincula los parámetros
+    $StmtActualizarRequisicionE->bind_param("sssiississssi", $FchCreacion, $Estatus, $Supervisor, $ID_Cuenta, $Region, $CentroTrabajo, $NroElementos, $Estado, $Receptor, $TelReceptor, $RfcReceptor, $Justificacion, $id_RequisionE);
+    // Ejecutar la consulta
+    if ($StmtActualizarRequisicionE->execute()) {
+        return true;
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al actualizar la requisiciónE: " . $conexion->error);
+    }
+}
+
+// Función para actualizar la tabla RequisicionE con datos de envío
+function ActualizarDomicilioRequisicionEAdmin($conexion, $Mpio, $Colonia, $Calle, $Nro, $CP, $ID_RequisionE) {
+    // Preparar consulta SQL para actualizar el registro
+    $SetenciaActualizarDomicilioRequisicionE = "UPDATE RequisicionE SET Mpio=?, Colonia=?, Calle=?, Nro=?, CP=? WHERE IDRequisicionE=?";
+    
+    // Verifica si el número de columnas y valores coinciden
+    $StmtActualizarDomicilioRequisicionE = $conexion->prepare($SetenciaActualizarDomicilioRequisicionE);
+    
+    // Vincula los parámetros, asegurándote de que el número de parámetros
+    $StmtActualizarDomicilioRequisicionE->bind_param("sssssi", $Mpio, $Colonia, $Calle, $Nro, $CP, $ID_RequisionE);
+    
+    if ($StmtActualizarDomicilioRequisicionE->execute()) {
+        return true; // Regresar true si la actualización fue exitosa
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al actualizar el domicilio de la requisición: " . $conexion->error);
+    }
+}
+
 // Función para cambiar estatus de requisicion en la tabla RequisicionE
 function CambiarEstatusRequisicionE($conexion, $idSolicitud, $fecha_alta) {
     // Declarar variables
