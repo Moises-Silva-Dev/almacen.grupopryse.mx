@@ -66,7 +66,7 @@ try {
             INNER JOIN 
                 Usuario U2 ON U2.ID_Usuario = SE.ID_Usuario_Salida
             WHERE 
-                SE.Id_SalE = ?
+                RE.IDRequisicionE = ?
             GROUP BY 
                 RE.IDRequisicionE;";
                 
@@ -97,7 +97,7 @@ try {
         FROM
             Salida_E se
         INNER JOIN
-        	Salida_D sd ON sd.Id = se.Id_SalE
+            Salida_D sd ON sd.Id = se.Id_SalE
         INNER JOIN
             Producto p ON sd.IdCProd = p.IdCProducto
         INNER JOIN

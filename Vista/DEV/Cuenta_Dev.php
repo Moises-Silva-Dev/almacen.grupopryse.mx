@@ -1,77 +1,98 @@
 <?php include('head.php'); ?>
-
-<center><div class="table-responsive">
-    <h2 class="mb-4">Cuentas Registrados</h2>        
-    <!-- Botones -->
-    <a class="btn btn-primary" href="INSERT/Insert_Cuenta_Dev.php">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-            <path d="M16 19h6" />
-            <path d="M19 16v6" />
-            <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-        </svg>Nuevo</a>
+<!-- Contenedor de las alertas -->            
+<div class="table-responsive">
+    <center>
+        <h2 class="mb-4">Cuentas Registradas</h2>
+        <!-- Botones -->
+        <a class="btn btn-primary" href="INSERT/Insert_Cuenta_Dev.php">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                <path d="M16 19h6" />
+                <path d="M19 16v6" />
+                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+            </svg>Nueva Cuenta
+        </a>
+    </center>
     <!-- Tabla para mostrar los registros -->
-    <table class="table table-hover table-striped mt-4" class="table">
-        <thead>
-            <tr class="table-primary">
-                <th scope="col">Nmr.</th>
+    <table class="table table-hover table-striped mt-4">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
                 <th scope="col">Nombre de la Cuenta</th>
                 <th scope="col">Numero de Elementos</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+                <th colspan="2" scope="col"><center>Acciones</center></th>
             </tr>
         </thead>
         <tbody>
             <?php
-                // Asegúrate de tener el resultado de la consulta asignado a $query antes de este bloque
-                include('../../Modelo/Conexion.php'); 
-                $conexion = (new Conectar())->conexion();
-                
-                // Parámetros para la paginación
-                $records_per_page = 10;
-                $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $offset = ($page - 1) * $records_per_page;
-                
-                $sql = "SELECT * FROM Cuenta LIMIT $records_per_page OFFSET $offset;";
-                
-                $query = mysqli_query($conexion, $sql);
-                
-                // Total de registros
-                $sql_total = "SELECT COUNT(*) FROM Cuenta";
-                $result_total = mysqli_query($conexion, $sql_total);
-                $total_rows = mysqli_fetch_array($result_total)[0];
-                $total_pages = ceil($total_rows / $records_per_page);
+                try {
+                    $conexion = (new Conectar())->conexion(); // Crear una nueva instancia de la clase Conectar y obtener la conexión
+                    
+                    $records_per_page = 10; // Número de registros por página
+                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1; // Obtener la página actual, por defecto es 1
+                    $offset = ($page - 1) * $records_per_page; // Calcular el offset para la consulta SQL
+                    
+                    // Preparar la consulta SQL con LIMIT y OFFSET
+                    $sql = "SELECT * FROM Cuenta 
+                            LIMIT 
+                                ? OFFSET ?";
+                    
+                    $stmt = $conexion->prepare($sql); // Preparar la consulta SQL
+                    $stmt->bind_param("ii", $records_per_page, $offset); // Vincular los parámetros a la consulta
+                    $stmt->execute(); // Ejecutar la consulta
+                    $query = $stmt->get_result(); // Obtener el resultado de la consulta
+                    
+                    $sql_total = "SELECT COUNT(*) FROM Cuenta"; // Consulta para obtener el total de registros
+                    $result_total = mysqli_query($conexion, $sql_total); // Ejecutar la consulta para obtener el total de registros 
+                    $total_rows = mysqli_fetch_array($result_total)[0]; // Obtener el total de registros
+                    $total_pages = ceil($total_rows / $records_per_page); // Calcular el total de páginas
 
-                while ($row = mysqli_fetch_array($query)) {
+                    while ($row = mysqli_fetch_array($query)) { // Iterar sobre los resultados de la consulta
+                        $id = htmlspecialchars($row['ID'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                        $NombreCuenta = htmlspecialchars($row['NombreCuenta'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                        $NroElemetos = htmlspecialchars($row['NroElemetos'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
             ?>
                     <tr class="table-light">
-                        <td><?php echo $row['ID']; ?></td>
-                        <td><?php echo $row['NombreCuenta']; ?></td>
-                        <td><?php echo $row['NroElemetos']; ?></td>
-                        <td><a class="btn btn-warning" href="Update/Update_Cuenta_Dev.php?id=<?php echo $row['ID']; ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                <path d="M16 5l3 3" />
-                            </svg>Actualizar</a>
+                        <td><?php echo $id; ?></td>
+                        <td><?php echo $NombreCuenta; ?></td>
+                        <td><?php echo $NroElemetos; ?></td>
+                        <td>
+                            <a class="btn btn-warning" href="Update/Update_Cuenta_Dev.php?id=<?php echo $id; ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                    <path d="M16 5l3 3" />
+                                </svg>Modificar
+                            </a>
                         </td>
-                        <td><a class="btn btn-danger" onclick="eliminarRegistroCuenta(<?php echo $row['ID']; ?>)" href="javascript:void(0);">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16zm-9.489 5.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" stroke-width="0" fill="currentColor" />
-                                <path d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z" stroke-width="0" fill="currentColor" />
-                            </svg>Eliminar</a>
+                        <td>
+                            <a class="btn btn-danger" onclick="eliminarRegistroCuenta(<?php echo $id; ?>)" href="javascript:void(0);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16zm-9.489 5.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" stroke-width="0" fill="currentColor" />
+                                    <path d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z" stroke-width="0" fill="currentColor" />
+                                </svg>Eliminar
+                            </a>
                         </td>
                     </tr>
             <?php
+                    }
+                } catch (Exception $e) {
+                    error_log("Error en el sistema: " . $e->getMessage()); // Registrar el error en el log del servidor
+                    echo "<div class='alert alert-danger'>Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.</div>";
+                } finally {
+                    $stmt->close(); // Cerrar la consulta preparada
+                    $conexion->close(); // Cerrar la conexión a la base de datos                    
                 }
             ?>
         </tbody>
     </table>
+    <!-- Paginación -->
     <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center flex-wrap text-center">
+            <!-- Botón anterior -->
             <?php if ($page > 1): ?>
                 <li class="page-item">
                     <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
@@ -80,10 +101,38 @@
                 </li>
             <?php endif; ?>
 
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
-            <?php endfor; ?>
+            <?php
+                $range = 2; // Número de páginas a mostrar a cada lado de la página actual
+                $show_dots_start = false; // Mostrar puntos suspensivos al inicio
+                $show_dots_end = false; // Mostrar puntos suspensivos al final
 
+                if ($page > $range + 2) { // Si la página actual es mayor que el rango más 2
+                    echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>'; // Mostrar siempre la primera página
+                    $show_dots_start = true; // Mostrar puntos suspensivos al inicio
+                }
+
+                if ($show_dots_start) { // Si se deben mostrar puntos suspensivos al inicio
+                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Mostrar puntos suspensivos
+                }
+
+                for ($i = max(1, $page - $range); $i <= min($total_pages, $page + $range); $i++) { // Iterar desde la página actual menos el rango hasta la página actual más el rango
+                    $active = $i == $page ? 'active' : ''; // Marcar la página actual como activa
+                    echo "<li class='page-item $active'><a class='page-link' href='?page=$i'>$i</a></li>"; // Mostrar el número de página
+                }
+
+                if ($page + $range < $total_pages - 1) { // Si la página actual más el rango es menor que la última página menos 1
+                    $show_dots_end = true; // Mostrar puntos suspensivos al final
+                }
+
+                if ($show_dots_end) { // Si se deben mostrar puntos suspensivos al final
+                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Mostrar puntos suspensivos
+                }
+
+                if ($page + $range < $total_pages) { // Si la página actual más el rango es menor que la última página
+                    echo '<li class="page-item"><a class="page-link" href="?page=' . $total_pages . '">' . $total_pages . '</a></li>'; // Mostrar siempre la última página
+                }
+            ?>
+            <!-- Botón siguiente -->
             <?php if ($page < $total_pages): ?>
                 <li class="page-item">
                     <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">

@@ -1,47 +1,50 @@
-// Se activa cuando haces clic en el boton, se envia el formulario
-document.getElementById('FormUpdateRolUsuario').addEventListener('submit', function (e) {
-    e.preventDefault(); // Evita el comportamiento predeterminado del formulario (recargar la página)
-    const formData = new FormData(e.target); // Recoge los datos del formulario
+// Envío del formulario
+document.getElementById('FormUpdateRolUsuario').addEventListener('submit', function(e) { // Agrega un evento de escucha al formulario
+    actualizarDatosTabla(); // Inicializar datos
 
-    // Realiza una petición al backend usando fetch
-    fetch(e.target.action, { // La URL del formulario está en el atributo "action"
-        method: e.target.method, // El método del formulario está en el atributo "method" (POST)
-        body: formData // Los datos del formulario son enviados como "body"
+    const nuevoTipo = parseInt(document.getElementById('ID_Tipo').value); // Obtiene el nuevo tipo de usuario seleccionado
+    if ((nuevoTipo === 3 || nuevoTipo === 4) && cuentasSeleccionadas.length === 0) { // Si el nuevo tipo es 3 o 4 y no hay cuentas seleccionadas
+        Swal.fire('Error', 'Debes asignar al menos una cuenta para este tipo de usuario', 'error'); // Muestra una alerta de error
+        e.preventDefault(); // Detiene el envío del formulario
+        return;
+    }
+    
+    e.preventDefault(); // Evita que se envíe el formulario por defecto
+    const formData = new FormData(this); // Crea un objeto FormData con los datos del formulario
+    
+    fetch(this.action, {
+        method: 'POST', // Método HTTP POST
+        body: formData // Envía los datos del formulario al servidor
     })
-    .then(response => {
-        if (!response.ok) {
-            // Si la respuesta no es 2xx, lanza un error.
-            throw new Error(`HTTP error! status: ${response.status}`);
+    .then(async response => {
+        const text = await response.text(); // Recibe la respuesta del servidor como texto
+        console.log('Respuesta cruda:', text); // Imprime la respuesta cruda en la consola
+        try {
+            const data = JSON.parse(text); // Intenta parsear la respuesta como JSON
+            if (data.success) { // Si la respuesta es exitosa
+                Swal.fire({ 
+                    icon: 'success', // Icono de éxito
+                    title: '¡Cambios guardados!', // Mensaje de éxito
+                    text: data.message, // Mensaje de éxito
+                    timer: 1500, // Tiempo de duración del mensaje
+                    showConfirmButton: false // No muestra el botón de confirmación
+                }).then(() => {
+                    window.location.href = data.redirect; // Redirige a la página de inicio
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error', // Icono de error
+                    title: 'Error', // titulo de error
+                    text: data.message // Mensaje de error
+                });
+            }
+        } catch (err) {
+            Swal.fire('Error', 'Respuesta no válida del servidor. Detalle: ' + err.message, 'error'); // Muestra una alerta de error
+            console.error('JSON inválido:', text); // Imprime el error en la consola
         }
-        return response.json(); // Convierte la respuesta a JSON
     })
-    .then(data => { // Maneja la respuesta del servidor
-        console.log('Respuesta del servidor:', data); // Debugging: Verifica el JSON recibido
-        if (data.success) { // Si el servidor indica éxito
-            Swal.fire({
-                icon: 'success', // Icono de éxito
-                title: '¡Modificación exitosa!', // Título de la alerta
-                text: data.message, // Mensaje enviado por el backend
-                timer: 1500, // Duración de la alerta en milisegundos
-                showConfirmButton: false // No muestra un botón de confirmación
-            }).then(() => {
-                // Redirige automáticamente a la URL proporcionada después del temporizador
-                window.location.href = data.redirect;
-            });
-        } else { // Si la respuesta indica un fallo
-            Swal.fire({
-                icon: 'error', // Icono de error
-                title: 'Error', // Título de la alerta
-                text: data.message // Mensaje enviado por el backend
-            });
-        }
-    })
-    .catch(error => { // Maneja errores de red o del servidor
-        console.error('Error capturado:', error); // Registra el error en la consola
-        Swal.fire({
-            icon: 'error', // Icono de error
-            title: 'Error', // Título de la alerta
-            text: 'Hubo un problema al procesar la solicitud.' // Mensaje genérico para el usuario
-        });
+    .catch(error => {
+        Swal.fire('Error', 'Error de conexión: ' + error.message, 'error'); // Muestra una alerta de error
+        console.error(error); // Imprime el error en la consola
     });
-});  
+});

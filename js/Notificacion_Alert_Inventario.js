@@ -1,95 +1,107 @@
-// Función para mostrar un toast
-function mostrarToast(mensaje) {
-    // Obtener el contenedor de toasts (elemento HTML donde se agregarán las notificaciones flotantes)
-    const toastContainer = document.getElementById('toastContainer');
+// Función para verificar y mostrar notificaciones de productos con pocas existencias
+function verificarExistencias() {
+    fetch("../../Controlador/GET/getNotificacionAlertaInventario.php", { // Cambia la URL según tu estructura de carpetas
+        method: "GET", // Método GET para obtener los datos
+        headers: { 
+            "Content-Type": "application/json" // Asegura que el servidor entienda el tipo de contenido
+        }
+    })
+    .then(response => { // Maneja la respuesta del servidor
+        if (!response.ok) { // Si la respuesta no es exitosa, lanza un error
+            throw new Error("Error en la respuesta del servidor"); // Puedes personalizar el mensaje de error
+        }
+        return response.json(); // Convierte la respuesta a JSON
+    })
+    .then(data => { // Maneja los datos obtenidos
+        // Código para mostrar las notificaciones
+        const toastContainer = document.getElementById('toastContainer'); // Obtiene el contenedor de notificaciones
+        const notificationDot = document.getElementById('notificationDot'); // Obtiene el punto rojo de notificación
+        toastContainer.innerHTML = ''; // Limpiar notificaciones anteriores
+        
+        if (data.length > 0) { // Si hay productos con pocas existencias
+            notificationDot.style.display = 'block'; // Mostrar el punto rojo de notificación
+            data.forEach(producto => { // Itera sobre cada producto con pocas existencias
+                // Crea un mensaje de notificación
+                const mensaje = `El Producto "${producto.NombreProducto}", de la Talla "${producto.Talla}" con el Identificador "${producto.Identificador}", tiene pocas existencias en el inventario!`;
+                const toast = document.createElement('div'); // Crea un nuevo elemento de notificación
+                toast.className = 'toast'; // Estilo de la notificación
 
-    // Crear un nuevo elemento div para representar el toast
-    const toast = document.createElement('div');
+                toast.innerHTML = `
+                    <strong>¡Alerta de Inventario!</strong> <!-- Título de la notificación --> 
+                    <p>${mensaje}</p> <!-- Agrega el mensaje de notificación -->
+                `; // Crea el contenido de la notificación
+                
+                toastContainer.prepend(toast); // Agrega la notificación al inicio del contenedor
+                // Eliminar después de 5 segundos
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.5s'; // Aplica animación de desvanecimiento
+                    setTimeout(() => {
+                        toast.remove(); // Eliminar la not
+                        if (toastContainer.children.length === 0) { // Si no hay más notificaciones
+                            notificationDot.style.display = 'none'; // Ocultar el punto rojo de notificación
+                        }
+                    }, 500); // Eliminar la notificación después de 5 segundos
+                }, 5000); // 5000 milisegundos = 5 segundos
+            });
+        } else {
+            notificationDot.style.display = 'none'; // Ocultar punto rojo si no hay notificaciones
+            const toast = document.createElement('div'); // Crea un nuevo elemento de notificación
+            toast.className = 'toast info'; // Estilo de la notificación
+            toast.innerHTML = `
+                <strong>Sin notificaciones</strong> <!-- Título de la notificación -->
+                <p>No hay productos con pocas existencias</p> <!-- Mensaje de no hay notificaciones -->
+            `; // Crea el contenido de la notificación
 
-    // Estilo del toast: define fondo, color, espaciado, bordes y animaciones
-    toast.style.background = '#ff6b6b'; // Fondo rojo para indicar alerta
-    toast.style.color = '#fff'; // Texto blanco
-    toast.style.padding = '10px 15px'; // Espaciado interno del contenido
-    toast.style.marginBottom = '10px'; // Espacio entre toasts
-    toast.style.borderRadius = '5px'; // Bordes redondeados
-    toast.style.boxShadow = '0 2px 6px rgba(0,0,0,0.15)'; // Sombra para darle efecto flotante
-    toast.style.transition = 'opacity 0.5s ease-in-out'; // Transición suave para ocultar el toast
-    toast.style.opacity = '1'; // Opacidad inicial (completamente visible)
-    toast.textContent = mensaje; // Asignar el texto del mensaje al toast
+            toastContainer.prepend(toast); // Agrega la notificación al inicio del contenedor
+            setTimeout(() => { // Eliminar la notificación después de 5 segundos
+                toast.remove(); // Mostrar mensaje de "No hay notificaciones"
+            }, 5000); // 5000 milisegundos = 5 segundos
+        }
+    })
+    .catch(error => { // Maneja errores de la solicitud
+        console.error("Error al obtener notificaciones:", error); // Maneja errores de la solicitud
+        // Mostrar notificación de error
+        const toast = document.createElement('div'); // Crea un nuevo elemento de notificación
+        toast.className = 'toast error';
+        toast.innerHTML = `
+            <strong>Error</strong> <!-- Título de la notificación -->
+            <p>No se pudieron cargar las notificaciones</p> <!-- Mensaje de error -->
+        `;
 
-    // Agregar el toast al contenedor de toasts
-    toastContainer.appendChild(toast);
-
-    // Configurar un temporizador para desaparecer el toast después de 5 segundos
-    setTimeout(() => {
-        toast.style.opacity = '0'; // Reducir la opacidad a 0 (efecto de desaparición)
-        setTimeout(() => {
-            // Verificar si el toast aún existe en el contenedor antes de eliminarlo
-            if (toastContainer.contains(toast)) {
-                toastContainer.removeChild(toast); // Eliminar el toast del DOM
-            }
-        }, 500); // Esperar 0.5 segundos después de iniciar la transición para eliminarlo
-    }, 5000); // Tiempo total antes de iniciar la transición (5 segundos)
+        document.getElementById('toastContainer').prepend(toast); // Agrega la notificación al inicio del contenedor
+        setTimeout(() => { // Eliminar la notificación después de 5 segundos
+            toast.remove(); // Mostrar mensaje de "No hay notificaciones"
+        }, 5000); // 5000 milisegundos = 5 segundos
+    });
 }
 
-// Función para mostrar las notificaciones
+// Llamar a la función al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('notificationDot').style.display = 'none'; // Ocultar el punto de notificación al inicio
+    const menuToggle = document.getElementById('menu-toggle'); // Obtiene el botón de menú
+    const navbarVertical = document.getElementById('navbar-vertical'); // Obtiene el menú vertical
+    
+    // Toggle del menú en móviles
+    menuToggle.addEventListener('click', function() {
+        // Alterna la clase 'active' para mostrar/ocultar el menú
+        navbarVertical.classList.toggle('active');
+    });
+    
+    // Cerrar menú al hacer clic en un enlace (en móviles)
+    const navLinks = document.querySelectorAll('.navbar-vertical a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() { // Verifica el ancho de la ventana al hacer clic en un enlace
+            if (window.innerWidth <= 768) { // Verifica si el ancho de la ventana es menor o igual a 768px
+                navbarVertical.classList.remove('active'); // Si el ancho de la ventana es menor o igual a 768px, cierra el menú
+            }
+        });
+    });
+});
+
+// Función para el botón de notificaciones
 function mostrarNotificacion() {
-    // Crear un objeto XMLHttpRequest para realizar una solicitud AJAX
-    var xhttp = new XMLHttpRequest();
-
-    // Definir la función que se ejecutará cuando cambie el estado de la solicitud
-    xhttp.onreadystatechange = function() {
-        // Verificar si la solicitud ha sido completada con éxito
-        if (this.readyState == 4 && this.status == 200) {
-            // Parsear la respuesta JSON recibida del servidor
-            var respuesta = JSON.parse(this.responseText);
-
-            // Si hay notificaciones, iterar sobre ellas
-            if (respuesta.length > 0) {
-                respuesta.forEach(function(producto) {
-                    // Construir un mensaje de notificación para cada producto
-                    var mensaje = `El Producto "${producto.NombreProducto}", de la Talla "${producto.Talla}" con el Identificador "${producto.Identificador}", tiene pocas existencias en el inventario!`;
-
-                    // Mostrar el mensaje utilizando la función mostrarToast
-                    mostrarToast(mensaje);
-                });
-
-                // Ocultar el punto de notificación indicando que ya se han leído las alertas
-                document.getElementById('notificationDot').style.display = 'none';
-            }
-        }
-    };
-
-    // Configurar la solicitud AJAX para obtener las notificaciones desde el servidor
-    xhttp.open("GET", "../../Controlador/GET/Veri.php", true);
-    xhttp.send(); // Enviar la solicitud
+    verificarExistencias(); // Simplemente llama a la función de verificación
+    document.getElementById('toastContainer').scrollIntoView({ // También puedes hacer scroll al contenedor de notificaciones
+        behavior: 'smooth' // Desplazamiento suave al contenedor de notificaciones
+    });
 }
-
-// Función para cargar la notificación al iniciar la página
-function cargarNotificacion() {
-    // Crear un objeto XMLHttpRequest para realizar una solicitud AJAX
-    var xhttp = new XMLHttpRequest();
-
-    // Definir la función que se ejecutará cuando cambie el estado de la solicitud
-    xhttp.onreadystatechange = function() {
-        // Verificar si la solicitud ha sido completada con éxito
-        if (this.readyState == 4 && this.status == 200) {
-            // Parsear la respuesta JSON recibida del servidor
-            var respuesta = JSON.parse(this.responseText);
-
-            // Si hay notificaciones pendientes, mostrar el punto de notificación
-            if (respuesta.length > 0) {
-                document.getElementById('notificationDot').style.display = 'block';
-            }
-        }
-    };
-
-    // Configurar la solicitud AJAX para obtener las notificaciones desde el servidor
-    xhttp.open("GET", "../../Controlador/GET/Veri.php", true);
-    xhttp.send(); // Enviar la solicitud
-}
-
-// Cargar la notificación automáticamente al cargar la página
-window.onload = function() {
-    cargarNotificacion(); // Llamar a la función cargarNotificacion cuando la página se haya cargado
-};

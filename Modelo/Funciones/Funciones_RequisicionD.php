@@ -1,4 +1,29 @@
 <?php
+// Función para insertar en la tabla RequisicionD
+function InsertarNuevaRequisicionDAdmin($conexion, $ID_RequisionE, $idProducto, $idtall, $cant) {
+    // Convierte $ID_RequisionE y $idProducto a enteros
+    $ID_RequisionE = (int)$ID_RequisionE;
+    $idProducto = (int)$idProducto;
+
+    // Preparar consulta SQL para insertar el registro
+    $SetenciaInsertarNuevaRequisicionD = "INSERT INTO RequisicionD (IdReqE, IdCProd, IdTalla, Cantidad) VALUES (?, ?, ?, ?)";
+
+    // Prepara la consulta
+    $StmtInsertarNuevaRequisicionD = $conexion->prepare($SetenciaInsertarNuevaRequisicionD);
+
+    // Vincula los parámetros y ejecuta la consulta
+    $StmtInsertarNuevaRequisicionD->bind_param("iiii", $ID_RequisionE, $idProducto, $idtall, $cant);
+    
+    // Ejecuta la consulta
+    if ($StmtInsertarNuevaRequisicionD->execute()) {
+        return true; // Si la inserción es exitosa, devuelve true
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al insertar nueva entradaD: " . $conexion->error);
+    
+    }
+}
+
 // Función para buscar información en la tabla RequisicionD
 function SeleccionarInformacionRequisicionD($conexion, $idSolicitud) {
     // Preparar consulta SQL para insertar el registro

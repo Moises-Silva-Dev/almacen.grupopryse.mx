@@ -1,69 +1,126 @@
 <?php
-// Incluir el archivo de Loguearse.php
-include(__DIR__ . '/../../Modelo/Loguearse.php');
-
-// Verificar si se solicita cerrar sesión
-if(isset($_GET['cerrar_sesion'])) {
-    // Destruir la sesión
-    session_destroy(); 
-    // Redirigir al usuario a la página de inicio de sesión
-    header("Location: ../../index.php"); 
-    exit();
+include('../../Modelo/Loguearse.php'); // Incluir el archivo de Loguearse.php
+if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
+    session_destroy(); // Destruir la sesión
+    header("Location: ../../index.php"); // Redirigir al usuario a la página de inicio de sesión
+    exit();// Finalizar la ejecución del script
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Invertario</title>
-    <!-- Enlace a la hoja de estilos de Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Programador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <!-- Tu hoja de estilos personalizada -->
-    <link rel="shortcut icon" href="../../img/2.png">
+    <link href="../../css/principal.css" rel="stylesheet">
     <link href="../../css/reporte.css" rel="stylesheet">
     <link href="../../css/boton.css" rel="stylesheet">
-
+    <link rel="shortcut icon" href="../../img/2.png">
 </head>
-<style>
-    body {
-        background: #bae0f5;
-    }
-</style>
 <body>
-    <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="index_DEV.php">Inicio
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-assembly" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" />
-                    <path d="M15.5 9.422c.312 .18 .503 .515 .5 .876v3.277c0 .364 -.197 .7 -.515 .877l-3 1.922a1 1 0 0 1 -.97 0l-3 -1.922a1 1 0 0 1 -.515 -.876v-3.278c0 -.364 .197 -.7 .514 -.877l3 -1.79c.311 -.174 .69 -.174 1 0l3 1.79h-.014z" />
-                </svg></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="?cerrar_sesion=true">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-                                <path d="M9 12h12l-3 -3" />
-                                <path d="M18 15l3 -3" />
-                            </svg>Cerrar Sesion</a>
-                    </li>
-                </ul>
+    <div class="container">
+        <!-- Navbar Horizontal -->
+        <nav class="navbar-horizontal">
+            <div class="logo">
+                <p><a style="color: white" href="index_DEV.php">Inicio</a></p>
             </div>
-        </div>
-    </nav>
+            <div class="user-section">
+                <a id="logout-btn" class="btn-logout" href="?cerrar_sesion=true">
+                    <i class="fas fa-sign-out-alt"></i>Salir
+                </a>
+                <button id="menu-toggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
 
-    <!-- Contenido principal -->
-    <div class="container mt-4 ">
-        <!-- Puedes agregar contenido adicional aquí según tus necesidades -->
+        <!-- Navbar Vertical -->
+        <nav class="navbar-vertical" id="navbar-vertical">
+            <div class="user-profile">
+                <?php            
+                    include('../../Modelo/Conexion.php'); // Incluir la conexión    
+                    if (isset($_SESSION['usuario'])) { // Verificar si el usuario ha iniciado sesión
+                        $conexion = (new Conectar())->conexion(); // Crear una instancia de la clase Conectar y obtener la conexión
+                        $usuario = $_SESSION['usuario']; // Obtener el correo electrónico del usuario desde la sesión
+                        
+                        try {
+                            // Preparar la consulta SQL para obtener los datos del usuario
+                            $sql = "SELECT 
+                                        U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
+                                        U.Correo_Electronico, TU.Tipo_Usuario,
+                                        COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta
+                                    FROM 
+                                        Usuario U
+                                    INNER JOIN 
+                                        Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
+                                    LEFT JOIN
+                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
+                                    LEFT JOIN
+                                        Cuenta C ON UC.ID_Cuenta = C.ID
+                                    WHERE 
+                                        U.Correo_Electronico = ?";
+                            
+                            $stmt = $conexion->prepare($sql); // Preparar la consulta SQL
+                            
+                            if (!$stmt) {
+                                throw new Exception("Error al preparar la consulta.");
+                            }
+                            
+                            $stmt->bind_param("s", $usuario); // Vincular el parámetro de la consulta
+        
+                            if (!$stmt->execute()) { // Ejecutar la consulta
+                                throw new Exception("Error al ejecutar la consulta.");
+                            }
+                            
+                            $result = $stmt->get_result(); // Obtener el resultado de la consulta
+                            
+                            if ($result->num_rows > 0) { // Verificar si se encontraron resultados
+                                $row = $result->fetch_assoc(); // Obtener los datos del usuario
+
+                                if ($row['Tipo_Usuario'] == 'Programador') {
+                                    echo '<img src="../../img/pro.png" alt="Usuario" class="profile-img">';
+                                } else {
+                                    echo '<img src="../../img/SUPERADMIN.png" alt="Usuario" class="profile-img">';
+                                }
+                                
+                                // Nombre completo
+                                $nombreCompleto = trim($row['Nombre'].' '.$row['Apellido_Paterno'].' '.$row['Apellido_Materno']);
+                                echo '<p class="profile-name"><strong>'.htmlspecialchars($nombreCompleto).'</strong></p>';
+                                
+                                // Tipo de usuario
+                                echo '<p class="profile-role"><i class="fas fa-user-tag"></i> '.htmlspecialchars($row['Tipo_Usuario']).'</p>';
+                                
+                                // Cuenta asociada (si existe)
+                                if (!empty($row['NombreCuenta']) && $row['NombreCuenta'] !== 'N/A') {
+                                    echo '<p class="profile-account"><i class="fas fa-building"></i> '.htmlspecialchars($row['NombreCuenta']).'</p>';
+                                }
+                            } else {
+                                echo '<p class="profile-message">No se encontraron datos del usuario.</p>';
+                            }
+                        } catch (Exception $e) {
+                            echo '<p class="profile-error"><i class="fas fa-exclamation-circle"></i> Error al cargar los datos del perfil.</p>';
+                            // Opcional: registrar el error en un log
+                            // error_log('Error en perfil de usuario: ' . $e->getMessage());
+                        } finally {
+                            $stmt->close(); // Cerrar la consulta preparada
+                            $conexion->close(); // Cerrar la conexión a la base de datos
+                        }
+                    } else {
+                        echo '<p class="profile-message"><i class="fas fa-exclamation-triangle"></i> No se ha iniciado sesión.</p>';
+                    }
+                ?>
+            </div>
+            <ul>
+                <li><a href="Registro_Usuario_Dev.php"><i class="fas fa-users"></i>Usuarios</a></li>
+                <li><a href="Producto_Dev.php"><i class="fas fa-clipboard-list"></i>Productos</a></li>
+                <li><a href="Salidas_Dev.php"><i class="fas fa-box-open"></i>Salida de Almacén</a></li>
+                <li><a href="Almacen_Dev.php"><i class="fas fa-boxes"></i>Entrada de Productos</a></li>
+                <li><a href="Cuenta_Dev.php"><i class="fas fa-wallet"></i>Cuenta</a></li>
+                <li><a href="Regiones_Dev.php"><i class="fas fa-map-marked-alt"></i>Regiones</a></li>
+                <li><a href="Reportes_Dev.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
+                <li><a href="Restauracion_SQL_Dev.php"><i class="fas fa-database"></i>Respaldos BD</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">

@@ -136,7 +136,7 @@
                     <div class="formulario-panel formulario-derecho">
                         <form id="salidaFormID" class="needs-validation" novalidate>
                             <div class="mb-3">
-                                <label for="Id_Salida" class="form-label">Ingresa el Numero de la Salida :</label>
+                                <label for="Id_Salida" class="form-label">Ingresa el Numero de Requisición: </label>
                                 <input class="form-control" type="text" id="Id_Salida" name="Id_Salida" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
                                 <div class="invalid-feedback">Por favor, ingresa el numero de salida.</div>
                             </div>
@@ -163,9 +163,7 @@
 
     <!-- Formulario de Inventarios -->
     <details class="accordion">
-    <summary class="  
-    
-    accordion-btn">Reporte de Inventario</summary>
+    <summary class="accordion-btn">Reporte de Inventario</summary>
         <div class="accordion-content">
             <div class="mb-3">
                 <center>
@@ -186,6 +184,20 @@
                     </button>
                     <button type="button" id="btnGenerarExcel" class="btn-custom" onclick="Generar_Excel_Inventario(event)">
                         <span class="bgContainer"><span>Generar Excel</span></span>
+                        <span class="arrowContainer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-xls" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                <path d="M4 15l4 6" />
+                                <path d="M4 21l4 -6" />
+                                <path d="M17 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75" />
+                                <path d="M11 15v6h3" />
+                            </svg>
+                        </span>
+                    </button>
+                    <button type="button" id="btnGenerarExcel" class="btn-custom" onclick="Generar_Excel_Producto_x_Estado(event)">
+                        <span class="bgContainer"><span>Generar Operaciones</span></span>
                         <span class="arrowContainer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-xls" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -418,6 +430,26 @@
             </div>
         </div>
     </div>
+
+        <!-- Modal de inventario -->
+    <div class="modal fade" id="pdfModalProductoEstado" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalLabel">Reporte</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="pdfIframeProductoEstado" src="" style="width: 100%; height: 600px;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Modal de entrada fechas -->
     <div class="modal fade" id="pdfModalEntradaFechas" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
@@ -595,5 +627,6 @@
 <script src="../../js/EXCEL/GenerarExcelInventario.js"></script>
 <script src="../../js/EXCEL/GenerarExcelConteoSalidasSolicitudFechas.js"></script>
 <script src="../../js/EXCEL/GenerarExcelRequisicionUsuario.js"></script>
+<script src="../../js/EXCEL/GenerarExcelProductoxEstado.js"></script>
 
 <?php include('footer.php'); ?>

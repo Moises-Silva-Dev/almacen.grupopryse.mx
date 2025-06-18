@@ -13,17 +13,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     //Setencia SQL
     $consulta = $conexion->prepare("SELECT * 
                 FROM 
-                    Borrador_RequisicionE RE 
+                    Borrador_RequisicionE BRE 
                 INNER JOIN 
-                    Usuario U on RE.BIdUsuario = U.ID_Usuario
+                    Usuario U on BRE.BIdUsuario = U.ID_Usuario
                 INNER JOIN 
-                    Cuenta C on RE.BIdCuenta = C.ID
+                    Cuenta C on BRE.BIdCuenta = C.ID
                 INNER JOIN
-                    Regiones R on RE.BIdRegion = R.ID_Region
+                    Regiones R on BRE.BIdRegion = R.ID_Region
                 INNER JOIN 
-                    Estados E on RE.BIdEstado = E.Id_Estado
+                    Estados E on BRE.BIdEstado = E.Id_Estado
                 WHERE 
-                    RE.BIDRequisicionE = ?");
+                    BRE.BIDRequisicionE = ?");
 
     //Parametros
     $consulta->bind_param("i", $ID_Solicitud);
@@ -64,7 +64,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <div class="container mt-5">
     <center><h2>Modificación Borrador Requisición</h2></center>
     <!-- Formulario -->
-    <form id="FormUpdateRequisicion" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Borrador_Requision.php" method="POST" enctype="multipart/form-data" novalidate>
+    <form id="FormUpdateBorradorRequisicion" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Borrador_Requision.php" method="POST" enctype="multipart/form-data" novalidate>
 
     <input type="hidden" name="ID_RequisicionE" id="ID_RequisicionE" value="<?php echo $row['BIDRequisicionE']; ?>">
     <input type="hidden" id="datosTabla" name="datosTabla">
@@ -508,7 +508,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <script src="../../../js/Solicitud_Carga_CueRegEst.js" defer></script>
 <script type="module" src="../../../js/Busqueda_Requision_Productos.js" defer></script>
 <script src="../../../js/Update_Producto_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Requisicion.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Borrador_Requisicion.js"></script>
 <script src="../../../js/VistaTablaProductos.js"></script>
 
 <?php include('footer.php'); ?>

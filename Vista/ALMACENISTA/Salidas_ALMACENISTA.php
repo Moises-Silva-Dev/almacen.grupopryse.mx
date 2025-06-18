@@ -1,79 +1,94 @@
 <?php include('head.php'); ?>
-
-<center><div class="table-responsive">
-    <h2 class="mb-4">Salidas</h2>
+<!-- Contenedor de las alertas -->            
+<div class="table-responsive">
+    <center>
+        <h2 class="mb-4">Salidas Registradas</h2>
+    </center>
     <!-- Tabla para mostrar los registros -->
-    <table id="requisicionesTable" class="table table-hover table-striped mt-4" class="table">
-        <thead>
-            <tr class="table-primary"> 
-                <th scope="col">Nmr.</th>
+    <table id="requisicionesTable" class="table table-hover table-striped mt-4">
+        <thead class="table-light">
+            <tr> 
+                <th scope="col">#</th>
                 <th scope="col">Estatus</th>
                 <th scope="col">Solicitante</th>
                 <th scope="col">Centro de Trabajo</th>
                 <th scope="col">Fecha de Solicitud</th>
-                <th scope="col"></th>
+                <th scope="col">Acción</th>
             </tr>
         </thead>
         <tbody>
             <?php
-                // Asegúrate de tener el resultado de la consulta asignado a $query antes de este bloque
-                include('../../Modelo/Conexion.php'); 
-                $conexion = (new Conectar())->conexion();
-                
-                // Parámetros para la paginación
-                $records_per_page = 10;
-                $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                $offset = ($page - 1) * $records_per_page;
-                
-                $sql = "SELECT 
-                            RE.IDRequisicionE, 
-                            RE.Estatus AS Estado,
-                            RE.Receptor, 
-                            RE.CentroTrabajo, 
-                            RE.FchAutoriza
-                        FROM 
-                            RequisicionE RE
-                        WHERE 
-                            RE.Estatus = 'Autorizado'
-                        ORDER BY 
-                            FchAutoriza DESC
-                        LIMIT 
-                            $records_per_page OFFSET $offset;";
+                try {
+                    $conexion = (new Conectar())->conexion(); // Crear una nueva instancia de la clase Conectar y obtener la conexión
+            
+                    $records_per_page = 10; // Número de registros por página
+                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1; // Obtener la página actual, por defecto es 1
+                    $offset = ($page - 1) * $records_per_page; // Calcular el offset para la consulta SQL
                     
-                $query = mysqli_query($conexion, $sql);
-                
-                // Consulta para contar el total de registros con los mismos filtros
-                $sql_total = "SELECT 
-                                COUNT(DISTINCT RE.IDRequisicionE) AS total
+                    // Preparar la consulta SQL con LIMIT y OFFSET
+                    $sql = "SELECT 
+                                RE.IDRequisicionE, 
+                                RE.Estatus AS Estado,
+                                RE.Receptor, 
+                                RE.CentroTrabajo, 
+                                DATE(RE.FchCreacion) AS Fecha
                             FROM 
-                                RequisicionD RD 
-                            INNER JOIN 
-                                RequisicionE RE on RD.IdReqE = RE.IDRequisicionE
+                                RequisicionE RE
                             WHERE 
-                                RE.Estatus = 'Autorizado';";
-                
-                $result_total = mysqli_query($conexion, $sql_total);
-                $total_rows = mysqli_fetch_array($result_total)['total'];
-                $total_pages = ceil($total_rows / $records_per_page);
+                                RE.Estatus = 'Autorizado'
+                            ORDER BY 
+                                RE.FchAutoriza DESC
+                            LIMIT 
+                                ? OFFSET ?";
 
-                while ($row = mysqli_fetch_array($query)) {
+                    $stmt = $conexion->prepare($sql); // Preparar la consulta SQL
+                    $stmt->bind_param("ii", $records_per_page, $offset); // Vincular los parámetros a la consulta
+                    $stmt->execute(); // Ejecutar la consulta
+                    $query = $stmt->get_result(); // Obtener el resultado de la consulta
+                
+                    // Consulta para contar el total de registros con los mismos filtros
+                    $sql_total = "SELECT 
+                                    COUNT(*) AS total
+                                FROM 
+                                    RequisicionE RE
+                                WHERE 
+                                    RE.Estatus = 'Autorizado'";
+                    
+                    $result_total = mysqli_query($conexion, $sql_total); // Ejecutar la consulta
+                    $total_rows = mysqli_fetch_array($result_total)['total']; // Obtener el total de registros
+                    $total_pages = ceil($total_rows / $records_per_page); // Calcular el total de páginas
+
+                    while ($row = mysqli_fetch_array($query)) {
+                        $IDRequisicionE = htmlspecialchars($row['IDRequisicionE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                        $Estado = htmlspecialchars($row['Estado'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                        $Receptor = htmlspecialchars($row['Receptor'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                        $CentroTrabajo = htmlspecialchars($row['CentroTrabajo'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                        $Fecha = htmlspecialchars($row['Fecha'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
             ?>
-                    <tr>
-                        <td><?php echo $row['IDRequisicionE']; ?></td>
-                        <td><?php echo $row['Estado']; ?></td>
-                        <td><?php echo $row['Receptor']; ?></td>
-                        <td><?php echo $row['CentroTrabajo']; ?></td>
-                        <td><?php echo $row['FchAutoriza']; ?></td>
-                        <td><a class="btn btn-primary" href="INSERT/Insert_Salida_ALMACENISTA.php?id=<?php echo $row['IDRequisicionE']; ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-ballpen" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M14 6l7 7l-4 4" />
-                                <path d="M5.828 18.172a2.828 2.828 0 0 0 4 0l10.586 -10.586a2 2 0 0 0 0 -2.829l-1.171 -1.171a2 2 0 0 0 -2.829 0l-10.586 10.586a2.828 2.828 0 0 0 0 4z" />
-                                <path d="M4 20l1.768 -1.768" />
-                            </svg>Salida</a>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><?php echo $IDRequisicionE; ?></td>
+                            <td><?php echo $Estado; ?></td>
+                            <td><?php echo $Receptor; ?></td>
+                            <td><?php echo $CentroTrabajo; ?></td>
+                            <td><?php echo $Fecha; ?></td>
+                            <td><a class="btn btn-primary" href="INSERT/Insert_Salida_ALMACENISTA.php?id=<?php echo $IDRequisicionE; ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-ballpen" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M14 6l7 7l-4 4" />
+                                    <path d="M5.828 18.172a2.828 2.828 0 0 0 4 0l10.586 -10.586a2 2 0 0 0 0 -2.829l-1.171 -1.171a2 2 0 0 0 -2.829 0l-10.586 10.586a2.828 2.828 0 0 0 0 4z" />
+                                    <path d="M4 20l1.768 -1.768" />
+                                </svg>Salida</a>
+                            </td>
+                        </tr>
             <?php
+                    }
+                } catch (Exception $e) {
+                    echo "Error: " . $e->getMessage(); // Mostrar el mensaje de error
+                    echo "<div class='alert alert-danger'>Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.</div>"; // Mostrar el mensaje de error
+                } finally {
+                    $stmt->close(); // Cerrar la consulta preparada
+                    $result_total->close(); // Cerrar el resultado de la consulta total
+                    $conexion->close(); // Cerrar la conexión a la base de datos
                 }
             ?>
         </tbody>

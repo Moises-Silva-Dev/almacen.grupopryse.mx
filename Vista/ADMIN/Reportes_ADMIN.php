@@ -136,7 +136,7 @@
                     <div class="formulario-panel formulario-derecho">
                         <form id="salidaFormID" class="needs-validation" novalidate>
                             <div class="mb-3">
-                                <label for="Id_Salida" class="form-label">Ingresa el Numero de la Salida :</label>
+                                <label for="Id_Salida" class="form-label">Ingresa el Numero de Requisición: </label>
                                 <input class="form-control" type="text" id="Id_Salida" name="Id_Salida" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
                                 <div class="invalid-feedback">Por favor, ingresa el numero de salida.</div>
                             </div>
