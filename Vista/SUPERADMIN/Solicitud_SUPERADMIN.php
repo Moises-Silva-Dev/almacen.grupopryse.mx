@@ -43,8 +43,6 @@
                                 Usuario U ON RE.IdUsuario = U.ID_Usuario
                             INNER JOIN
                                 Cuenta C ON RE.IdCuenta = C.ID
-                            GROUP BY 
-                                RE.IDRequisicionE
                             ORDER BY 
                                 RE.FchCreacion DESC
                             LIMIT 

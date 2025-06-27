@@ -114,6 +114,7 @@ if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
             </div>
             <ul>
                 <li><a href="Solicitud_ADMIN.php"><i class="fas fa-clipboard-list"></i>Crear Borrador Requisición</a></li>
+                <li><a href="Prestamo_ADMIN.php"><i class="fas fa-pencil"></i>Crear Prestamo</a></li>
                 <li><a href="Ver_ADMIN.php"><i class="fas fa-eye"></i>Ver Requisiciones</a></li>
                 <li><a href="Reportes_ADMIN.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
             </ul>
