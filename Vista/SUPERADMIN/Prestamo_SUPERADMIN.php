@@ -3,15 +3,6 @@
 <div class="table-responsive">    
     <center>
         <h2 class="mb-4">Prestamos Registrados</h2>
-        <!-- Botones -->
-        <a class="btn btn-primary" href="INSERT/Insert_Prestamo_ADMIN.php">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                <path d="M16 19h6" />
-                <path d="M19 16v6" />
-                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-            </svg>Nuevo Prestamo</a>
     </center>
     <!-- Tabla para mostrar los registros -->
     <table class="table table-hover table-striped mt-4">
@@ -22,7 +13,7 @@
                 <th scope="col">Estatus</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Justificación</th>
-                <th colspan="2" scope="col"><center>Acciones</center></th>
+                <th scope="col"><center>Acción</center></th>
             </tr>
         </thead>
         <tbody>
@@ -43,15 +34,13 @@
                             PrestamoE PE
                         INNER JOIN 
                             Usuario U ON PE.IdUsuario = U.ID_Usuario
-                        WHERE 
-                            U.Correo_Electronico = ?
                         ORDER BY 
                             PE.FchCreacion DESC
                         LIMIT 
                             ? OFFSET ?";
 
                     $stmt = $conexion->prepare($sql);
-                    $stmt->bind_param("sii", $usuario, $records_per_page, $offset);
+                    $stmt->bind_param("ii", $records_per_page, $offset);
                     $stmt->execute();
                     $result = $stmt->get_result();
 
@@ -75,21 +64,13 @@
                                 <td><?php echo $FchCreacion; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
                                 <td>
-                                    <a class="btn btn-warning" href="Update/Update_Prestamo_ADMIN.php?id=<?php echo $IdPrestamoE; ?>">
+                                    <a class="btn btn-success" href="Update/Update_Prestamo_ADMIN.php?id=<?php echo $IdPrestamoE; ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
                                         <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                                         <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
                                         <path d="M16 5l3 3" />
-                                    </svg>Modificar</a>
-                                </td>
-                                <td>
-                                    <a class="btn btn-danger" onclick="eliminarRegistroPrestamo(<?php echo $IdPrestamoE; ?>)" href="javascript:void(0);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
-                                        <path d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16zm-9.489 5.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" stroke-width="0" fill="currentColor" />
-                                        <path d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z" stroke-width="0" fill="currentColor" />
-                                    </svg>Eliminar</a>
+                                    </svg>Autorizar</a>
                                 </td>
                             </tr>
             <?php
@@ -99,16 +80,9 @@
                     }
                     
                     // Total de registros para paginaci��n
-                    $sql_total = "SELECT COUNT(*) AS total 
-                                FROM 
-                                    PrestamoE PE 
-                                INNER JOIN 
-                                    Usuario U ON PE.IdUsuario = U.ID_Usuario
-                                WHERE 
-                                    U.Correo_Electronico = ?";
+                    $sql_total = "SELECT COUNT(*) AS total FROM PrestamoE";
                     
                     $stmt_total = $conexion->prepare($sql_total); // Preparar la consulta SQL para el total de registros
-                    $stmt_total->bind_param("s", $usuario); // Vincular el parámetro de la consultaa la variable $usuario
                     $stmt_total->execute(); // Ejecutar la consulta
                     $result_total = $stmt_total->get_result(); // Obtener los resultados de la consulta
                     $total_rows = $result_total->fetch_assoc()['total']; // Obtener el total de registros
@@ -177,7 +151,5 @@
         </ul>
     </nav>
 </div>
-
-<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Prestamo.js"></script>
 
 <?php include('footer.php'); ?>

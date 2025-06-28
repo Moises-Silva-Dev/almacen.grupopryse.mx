@@ -9,7 +9,7 @@ if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Usuario Programador</title>
+    <title>SUPERADMIN</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Chart.js adapter for Luxon -->
@@ -124,6 +124,7 @@ if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
             <ul>
                 <li><a href="Requisicion_SUPERADMIN.php"><i class="fas fa-plus"></i>Crear Requisición</a></li>
                 <li><a href="Solicitud_SUPERADMIN.php"><i class="fas fa-clipboard-list"></i>Requisiciones</a></li>
+                <li><a href="Prestamo_SUPERADMIN.php"><i class="fas fa-check"></i>Prestamos</a></li>
                 <li><a href="Ver_SUPERADMIN.php"><i class="fas fa-eye"></i>Ver Requisiciones</a></li>
                 <li><a href="Reportes_SUPERADMIN.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
             </ul>

@@ -1,13 +1,66 @@
 <?php include('head.php'); ?>
 
+<?php
+include('../../../Modelo/Conexion.php'); // Conectar a la base de datos
+
+// Verifica si la variable $_GET['id'] está definida y no es nula
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $ID_Solicitud = $_GET['id'];
+
+    // Realiza la consulta para obtener la información del empleado
+    $conexion = (new Conectar())->conexion();
+
+    //Setencia SQL
+    $consulta = $conexion->prepare("SELECT PE.IdPrestamoE, PE.Justificacion
+                FROM 
+                    PrestamoE PE 
+                WHERE 
+                    PE.IdPrestamoE = ?");
+
+    //Parametros
+    $consulta->bind_param("i", $ID_Solicitud);
+    $consulta->execute();
+    $resultado = $consulta->get_result();
+
+    // Verifica si se encontraron resultados
+    if ($row = $resultado->fetch_assoc()) {
+        // Ahora, $row contiene la información del empleado que puedes usar en el formulario
+        $query = "SELECT PE.IdPrestamoE, PD.IdCProd, PD.IdTallas, PD.Cantidad, P.Descripcion,
+                    P.Especificacion, P.IMG, CE.Nombre_Empresa, CT.Talla, CC.Descrp
+                    FROM PrestamoD PD
+                    INNER JOIN PrestamoE PE on PD.IdPresE = PE.IdPrestamoE
+                    INNER JOIN Producto P on PD.IdCProd = P.IdCProducto
+                    INNER JOIN CTallas CT on PD.IdTallas = CT.IdCTallas
+                    INNER JOIN CCategorias CC on P.IdCCat = CC.IdCCate
+                    INNER JOIN CTipoTallas CTT on CT.IdCTipTal = CTT.IdCTipTall
+                    INNER JOIN CEmpresas CE on P.IdCEmp = CE.IdCEmpresa
+                    WHERE PE.IdPrestamoE = ?";
+                    
+                    $stmt = $conexion->prepare($query);
+                    $stmt->bind_param("i", $ID_Solicitud);
+                    $stmt->execute();
+                    $resultadoConsulta = $stmt->get_result();
+    } else {
+        // No se encontró ningún empleado con la ID proporcionada, puedes manejar esto según tus necesidades
+        echo "No se encontró ningún registro con la ID proporcionada.";
+        exit; // Puedes salir del script o redirigir a otra página
+    }
+} else {
+    // La variable $_GET['id'] no está definida o es nula, puedes manejar esto según tus necesidades
+    echo "ID de empleado no proporcionada.";
+    exit; // Puedes salir del script o redirigir a otra página
+}
+?>
+
 <div class="container mt-5">
     <center><h2>Registrar Nuevo Prestamo</h2></center>
     <!-- Formulario -->
-    <form id="FormInsertPrestamoNuevo" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Prestamo.php" method="POST" enctype="multipart/form-data" novalidate>
+    <form id="FormUpdatePrestamo" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Prestamo.php" method="POST" enctype="multipart/form-data" novalidate>
+    <input type="hidden" name="IdPrestamoE" id="IdPrestamoE" value="<?php echo $row['IdPrestamoE']; ?>">
     <input type="hidden" id="datosTabla" name="datosTabla">
     <div class="mb-3">
-        <label for="Justificacion" class="form-label"><span style="color: red;">*</span> Justificación:</label>
-        <textarea name="Justificacion" id="Justificacion" class="form-control" placeholder="Ingresa la Justificación" required></textarea>
+        <label for="Justificacion" class="form-label">Justificación:</label>
+        <textarea name="Justificacion" id="Justificacion" class="form-control" placeholder="Ingresa la Justificación" required><?php echo $row['Justificacion'];  ?></textarea>
         <div class="invalid-feedback">
             Por favor, ingresa la Justificación.
         </div>
@@ -33,8 +86,6 @@
                         <select class="form-select mb-3" id="ID_Producto" name="ID_Producto[]">
                             <option value="" selected disabled>-- Seleccionar ID de Producto --</option>
                             <?php
-                                include('../../../Modelo/Conexion.php'); 
-                                $conexion = (new Conectar())->conexion();
                                 $sql = $conexion->query("SELECT * FROM Producto;");
                                 while ($resultado = $sql->fetch_assoc()) {
                                     echo "<option value='" . $resultado['IdCProducto'] . "'>" . $resultado['IdCProducto'] . "</option>";
@@ -134,7 +185,6 @@
         <table class="table table-sm table-dark">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Codigo</th>
                     <th scope="col">Empresa</th>
                     <th scope="col">Categoría</th>
@@ -146,6 +196,34 @@
                 </tr>
             </thead>
             <tbody>
+                <?php
+                        // Comprobar si hay resultados antes de continuar
+                        if ($resultadoConsulta->num_rows > 0) {
+                            // Iterar sobre cada fila de resultados
+                            while ($row1 = $resultadoConsulta->fetch_assoc()) {
+                    ?>
+                        <tr>
+                            <!-- Llamamos información de la consulta -->
+                            <td><?php echo $row1['IdCProd']; ?></td>
+                            <td><?php echo $row1['Nombre_Empresa']; ?></td>
+                            <td><?php echo $row1['Descrp']; ?></td>
+                            <td><?php echo $row1['Descripcion']; ?></td>
+                            <td><?php echo $row1['Especificacion']; ?></td>
+                            <td data-id="<?php echo $row1['IdTallas']; ?>"><?php echo $row1['Talla']; ?></td>
+                            <td><?php echo $row1['Cantidad']; ?></td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-anular">
+                                Eliminar
+                                </button> 
+                            </td>
+                        </tr>
+                    <?php
+                            }
+                        } else {
+                            // Mostrar un mensaje si no hay resultados
+                            echo "<tr><td colspan='8'>No se encontraron productos.</td></tr>";
+                        }
+                    ?>
             </tbody>
         </table>
     </div>
@@ -189,8 +267,8 @@
 <script src="../../../js/Form_Envio.js"></script>
 <script src="../../../js/Solicitud_Carga_CueRegEst.js" defer></script>
 <script type="module" src="../../../js/Busqueda_Requision_Productos.js" defer></script>
-<script src="../../../js/Insert_Producto_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Prestamo.js"></script>
+<script src="../../../js/Update_Producto_datosTabla.js"></script>
+<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Prestamo.js"></script>
 <script src="../../../js/VistaTablaProductos.js"></script>
 
 <?php include('footer.php'); ?>

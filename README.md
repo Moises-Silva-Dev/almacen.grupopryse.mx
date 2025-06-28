@@ -10,6 +10,8 @@ Este sistema web es una aplicación web desarrollada para administrar el inventa
 - Registro de Inventario.
 - Registro de Borradores de requisiciones.
 - Registro de requisiciones.
+- Registro de prestamo.
+- Registro de devoluciones.
 - Registro de salida de requisiciones.
 - Envío de correos electrónicos de notificaciones de requisiciones.
 - Generación de archivos PDF.
