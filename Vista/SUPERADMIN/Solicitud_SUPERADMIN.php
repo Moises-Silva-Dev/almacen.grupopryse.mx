@@ -77,7 +77,7 @@
                             <td><?php echo $NombreCuenta; ?></td>
                             <td><?php echo $Justificacion; ?></td>
                             <td>
-                                <a class="btn btn-success" href="Visualizar/Infor_Solicitud.php?id=<?php echo $IDRequisicionE; ?>">
+                                <a class="btn btn-success" onclick="abrirModal(<?php echo $IDRequisicionE; ?>)">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-ballpen-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
                                     <path d="M17.828 2a3 3 0 0 1 1.977 .743l.145 .136l1.171 1.17a3 3 0 0 1 .136 4.1l-.136 .144l-1.706 1.707l2.292 2.293a1 1 0 0 1 .083 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.497 -1.32l.083 -.094l3.292 -3.293l-1.586 -1.585l-7.464 7.464a3.828 3.828 0 0 1 -2.474 1.114l-.233 .008c-.674 0 -1.33 -.178 -1.905 -.508l-1.216 1.214a1 1 0 0 1 -1.497 -1.32l.083 -.094l1.214 -1.216a3.828 3.828 0 0 1 .454 -4.442l.16 -.17l10.586 -10.586a3 3 0 0 1 1.923 -.873l.198 -.006zm0 2a1 1 0 0 0 -.608 .206l-.099 .087l-1.707 1.707l2.586 2.585l1.707 -1.706a1 1 0 0 0 .284 -.576l.01 -.131a1 1 0 0 0 -.207 -.609l-.087 -.099l-1.171 -1.171a1 1 0 0 0 -.708 -.293z" stroke-width="0" fill="currentColor" />
@@ -170,6 +170,27 @@
     </nav>
 </div>
 
+<!-- Modal -->
+<div id="modalRequisicion" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+    <div style="background:white; margin:10% auto; padding:20px; width:60%; position:relative;">
+        <span style="position:absolute; top:10px; right:15px; cursor:pointer;" onclick="cerrarModal()">✖</span>
+        <center><h3>Detalle de Requisición</h3></center>
+        <div class="table-responsive" id="contenidoRequisicion">
+            Cargando datos...
+        </div>
+        <button id="btnAutorizar" class="btn btn-success" onclick="autorizarRequisicion()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="44" height="44" stroke-width="1.5"> 
+                <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path> 
+                <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path> 
+                <path d="M9 14h.01"></path> <path d="M9 17h.01"></path> 
+                <path d="M12 16l1 1l3 -3"></path> 
+            </svg>Autorizar
+        </button>
+    </div>
+</div>
+
+<script src="../../js/MostrarInfoRequisicionE.js"></script>
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Requisicion.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_BtnSolicitarModificacion.js"></script>
 <script src="../../js/InvalidarBtnEstatus.js"></script>
 <script src="../../js/DescargarRequisicion.js"></script>

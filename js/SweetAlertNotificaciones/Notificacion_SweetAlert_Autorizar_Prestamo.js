@@ -1,10 +1,10 @@
-// Mostrar información de la requisición y autorizarlo
-function autorizarRequisicion() {
+// Mostrar información del préstamo y autorizarlo
+function autorizarPrestamo() {
     const id = document.getElementById('btnAutorizar').getAttribute('data-id'); // Obtener el ID del préstamo desde el botón
     const formData = new FormData(); // Crear un objeto FormData
     formData.append('Id', id); // Agregar el ID del préstamo al FormData
 
-    fetch('../../Controlador/GET/Autorizar_Requisicion.php', { // Enviar la solicitud al servidor
+    fetch('../../Controlador/GET/Autorizar_Prestamo.php', { // Enviar la solicitud al servidor
         method: 'POST', // Método POST para enviar datos 
         body: formData // Enviar el FormData con el ID del préstamo
     })

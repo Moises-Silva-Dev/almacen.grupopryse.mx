@@ -57,4 +57,27 @@ function ActualizarPrestamoE($conexion, $FchActualizacion, $Justificacion, $IdPr
         throw new Exception("Error al actualizar la requisiciónE: " . $conexion->error);
     }
 }
+
+// Función para cambiar estatus de requisicion en la tabla RequisicionE
+function CambiarEstatusPrestamoE($conexion, $fecha_alta, $idSolicitud) {
+    // Declarar variables
+    $NuevoEstatusPrestamo = "Autorizado";
+
+    // Prepara la consulta SQL para cambiar el estatus a "Autorizado"
+    $SetenciaModificarEstatusPrestamoE = "UPDATE PrestamoE SET Estatus = ?, FchAutoriza = ? WHERE IdPrestamoE = ?";
+
+    // Prepara la sentencia
+    $StmtModificarEstatusPrestamoE = $conexion->prepare($SetenciaModificarEstatusPrestamoE);
+
+    // Vincula parámetros
+    $StmtModificarEstatusPrestamoE->bind_param("ssi", $NuevoEstatusPrestamo, $fecha_alta, $idSolicitud);
+
+    // Ejecuta la consulta
+    if ($StmtModificarEstatusPrestamoE->execute()) {
+        return true; // Regresar true si la inserción fue exitosa;
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error en la ejecución de la consulta de inserción.");
+    }
+}
 ?>

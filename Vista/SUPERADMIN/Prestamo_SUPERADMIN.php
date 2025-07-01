@@ -64,13 +64,13 @@
                                 <td><?php echo $FchCreacion; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
                                 <td>
-                                    <a class="btn btn-success" href="Update/Update_Prestamo_ADMIN.php?id=<?php echo $IdPrestamoE; ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <button class="btn btn-success" onclick="abrirModal(<?php echo $IdPrestamoE; ?>)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
                                         <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                                         <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
                                         <path d="M16 5l3 3" />
-                                    </svg>Autorizar</a>
+                                    </svg>Autorizar</button>
                                 </td>
                             </tr>
             <?php
@@ -151,5 +151,27 @@
         </ul>
     </nav>
 </div>
+
+<!-- Modal -->
+<div id="modalPrestamo" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+    <div style="background:white; margin:10% auto; padding:20px; width:60%; position:relative;">
+        <span style="position:absolute; top:10px; right:15px; cursor:pointer;" onclick="cerrarModal()">✖</span>
+        <center><h3>Detalle del préstamo</h3></center>
+        <div class="table-responsive" id="contenidoPrestamo">
+            Cargando datos...
+        </div>
+        <button id="btnAutorizar" class="btn btn-success" onclick="autorizarPrestamo()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="44" height="44" stroke-width="1.5"> 
+                <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path> 
+                <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path> 
+                <path d="M9 14h.01"></path> <path d="M9 17h.01"></path> 
+                <path d="M12 16l1 1l3 -3"></path> 
+            </svg>Autorizar
+        </button>
+    </div>
+</div>
+
+<script src="../../js/MostrarInfoPrestamoE.js"></script>
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Prestamo.js"></script>
 
 <?php include('footer.php'); ?>
