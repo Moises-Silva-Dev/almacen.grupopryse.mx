@@ -41,18 +41,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         // Intentar insertar la nueva cuenta
         if (CambiarEstatusRequisicionE($conexion, $idSolicitud, $fecha_alta)) {
-            // Confirmar la transacción
-            $conexion->commit();
+            
+            $conexion->commit(); // Confirmar la transacción
 
             $RetornarTipoUsuario = buscarYRetornarTipoUsuario($usuario, $conexion); // Buscar y retornar el tipo de usuario
 
             // Respuesta de éxito con la URL según tipo de usuario
             $urls = [
-                1 => "../../../Vista/DEV/index_Dev.php", // URL para el tipo de usuario 1
-                2 => "../../../Vista/SUPERADMIN/Solicitud_SUPERADMIN.php", // URL para el tipo de usuario 2
-                3 => "../../../Vista/ADMIN/index_ADMIN.php", // URL para el tipo de usuario 3
-                4 => "../../../Vista/USER/index_USER.php", // URL para el tipo de usuario 4
-                5 => "../../../Vista/ALMACENISTA/index_ALMACENISTA.php" // URL para el tipo de usuario 5
+                1 => "../../Vista/DEV/index_Dev.php", // URL para el tipo de usuario 1
+                2 => "../../Vista/SUPERADMIN/Solicitud_SUPERADMIN.php", // URL para el tipo de usuario 2
+                3 => "../../Vista/ADMIN/index_ADMIN.php", // URL para el tipo de usuario 3
+                4 => "../../Vista/USER/index_USER.php", // URL para el tipo de usuario 4
+                5 => "../../Vista/ALMACENISTA/index_ALMACENISTA.php" // URL para el tipo de usuario 5
             ];
             
             echo json_encode([  // Enviar la respuesta en formato JSON

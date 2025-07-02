@@ -113,12 +113,13 @@ if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
                 ?>
             </div>
             <ul>
-                <li><a href="Registro_Usuario_Dev.php"><i class="fas fa-users"></i>Usuarios</a></li>
-                <li><a href="Producto_Dev.php"><i class="fas fa-clipboard-list"></i>Productos</a></li>
+                <li><a href="Registro_Usuario_Dev.php"><i class="fas fa-user-plus"></i>Usuarios</a></li>
+                <li><a href="Producto_Dev.php"><i class="fas fa-store"></i>Productos</a></li>
                 <li><a href="Salidas_Dev.php"><i class="fas fa-box-open"></i>Salida de Almacén</a></li>
                 <li><a href="Almacen_Dev.php"><i class="fas fa-boxes"></i>Entrada de Productos</a></li>
                 <li><a href="Cuenta_Dev.php"><i class="fas fa-wallet"></i>Cuenta</a></li>
                 <li><a href="Regiones_Dev.php"><i class="fas fa-map-marked-alt"></i>Regiones</a></li>
+                <li><a href="Registro_Acesso_Dev.php"><i class="fas fa-users"></i>Registro de Acceso de Usuarios</a></li>
                 <li><a href="Reportes_Dev.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
                 <li><a href="Restauracion_SQL_Dev.php"><i class="fas fa-database"></i>Respaldos BD</a></li>
             </ul>

@@ -8,10 +8,10 @@
 <!-- Contenedor de las alertas -->            
 <div class="table-responsive">
     <center>
-        <h2 class="mb-4">Solicitud Registrados</h2>
+        <h2 class="mb-4">Requisiciones Registradas</h2>
     </center>
     <!-- Tabla para mostrar los registros -->
-    <table class="table table-hover table-striped mt-4">
+    <table id="tablaSolicitudes" class="table table-hover table-striped mt-4">
         <thead class="table-light">
             <tr>
                 <th scope="col">#</th>
@@ -189,10 +189,10 @@
     </div>
 </div>
 
+<script src="../../js/InvalidarBtnEstatus.js"></script>
+<script src="../../js/DescargarRequisicion.js"></script>
 <script src="../../js/MostrarInfoRequisicionE.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Requisicion.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_BtnSolicitarModificacion.js"></script>
-<script src="../../js/InvalidarBtnEstatus.js"></script>
-<script src="../../js/DescargarRequisicion.js"></script>
 
 <?php include('footer.php'); ?>

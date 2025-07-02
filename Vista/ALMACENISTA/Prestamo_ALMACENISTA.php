@@ -2,28 +2,18 @@
 <!-- Contenedor de las alertas -->            
 <div class="table-responsive">    
     <center>
-        <h2 class="mb-4">Requisiciones Creadas</h2>
-        <!-- Botones -->
-        <a class="btn btn-primary" href="INSERT/Insert_Requisicion_SUPERADMIN.php">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                <path d="M16 19h6" />
-                <path d="M19 16v6" />
-                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-            </svg>Nuevo Borrador</a>
+        <h2 class="mb-4">Prestamos Registrados</h2>
     </center>
     <!-- Tabla para mostrar los registros -->
-    <table id="tablaSolicitudes" class="table table-hover table-striped mt-4">
+    <table class="table table-hover table-striped mt-4">
         <thead class="table-light">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nombre Solicitante</th>
-                <th scope="col">Fecha</th>
                 <th scope="col">Estatus</th>
-                <th scope="col">Cuenta</th>
+                <th scope="col">Fecha</th>
                 <th scope="col">Justificación</th>
-                <th colspan="2" scope="col"><center>Acciones</center></th>
+                <th scope="col"><center>Acción</center></th>
             </tr>
         </thead>
         <tbody>
@@ -38,24 +28,19 @@
                     
                     // Consulta para obtener las requisiciones
                     $sql = "SELECT 
-                            RE.IDRequisicionE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                            RE.FchCreacion, RE.Estatus, C.NombreCuenta, RE.CentroTrabajo, 
-                            RE.Justificacion, RE.Receptor 
+                            PE.IdPrestamoE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
+                            PE.FchCreacion, PE.Justificacion, PE.Estatus
                         FROM 
-                            RequisicionE RE
+                            PrestamoE PE
                         INNER JOIN 
-                            Usuario U ON RE.IdUsuario = U.ID_Usuario
-                        INNER JOIN
-                            Cuenta C ON RE.IdCuenta = C.ID
-                        WHERE 
-                            U.Correo_Electronico = ?
+                            Usuario U ON PE.IdUsuario = U.ID_Usuario
                         ORDER BY 
-                            RE.FchCreacion DESC
+                            PE.FchCreacion DESC
                         LIMIT 
                             ? OFFSET ?";
 
                     $stmt = $conexion->prepare($sql);
-                    $stmt->bind_param("sii", $usuario, $records_per_page, $offset);
+                    $stmt->bind_param("ii", $records_per_page, $offset);
                     $stmt->execute();
                     $result = $stmt->get_result();
 
@@ -63,39 +48,29 @@
                     if ($result->num_rows > 0) {
                         // Muestra los resultados en la tabla
                         while ($row = $result->fetch_assoc()) {
-                            $IDRequisicionE = htmlspecialchars($row['IDRequisicionE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                            $IdPrestamoE = htmlspecialchars($row['IdPrestamoE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $Nombre = htmlspecialchars($row['Nombre'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $Apellido_Paterno = htmlspecialchars($row['Apellido_Paterno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $Apellido_Materno = htmlspecialchars($row['Apellido_Materno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $FchCreacion = htmlspecialchars($row['FchCreacion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $Estatus = htmlspecialchars($row['Estatus'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $NombreCuenta = htmlspecialchars($row['NombreCuenta'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $Justificacion = htmlspecialchars($row['Justificacion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $NombreCompleto = $Nombre . ' ' . $Apellido_Paterno . ' ' . $Apellido_Materno; // Concatenar el nombre completo
             ?>
-                            <tr>
-                                <td><?php echo $IDRequisicionE; ?></td>
+                            <tr class="table-light">
+                                <td><?php echo $IdPrestamoE; ?></td>
                                 <td><?php echo $NombreCompleto;?></td>
-                                <td><?php echo $FchCreacion; ?></td>
                                 <td><?php echo $Estatus; ?></td>
-                                <td><?php echo $NombreCuenta; ?></td>
+                                <td><?php echo $FchCreacion; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
                                 <td>
-                                    <a class="btn btn-warning" href="Update/Update_Requisicion_SUPERADMIN.php?id=<?php echo $IDRequisicionE; ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <a class="btn btn-primary" href="INSERT/Insert_Prestamo_ALMACENISTA.php?id=<?php echo $IdPrestamoE; ?>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
                                         <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                                         <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
                                         <path d="M16 5l3 3" />
-                                    </svg>Modificar</a>
-                                </td>
-                                <td>
-                                    <a class="btn btn-danger" onclick="eliminarRegistroRequisicion(<?php echo $IDRequisicionE; ?>)" href="javascript:void(0);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
-                                        <path d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16zm-9.489 5.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" stroke-width="0" fill="currentColor" />
-                                        <path d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z" stroke-width="0" fill="currentColor" />
-                                    </svg>Eliminar</a>
+                                    </svg>Salida</a>
                                 </td>
                             </tr>
             <?php
@@ -107,9 +82,9 @@
                     // Total de registros para paginaci��n
                     $sql_total = "SELECT COUNT(*) AS total 
                                 FROM 
-                                    RequisicionE RE 
+                                    PrestamoE PE 
                                 INNER JOIN 
-                                    Usuario U ON RE.IdUsuario = U.ID_Usuario
+                                    Usuario U ON PE.IdUsuario = U.ID_Usuario
                                 WHERE 
                                     U.Correo_Electronico = ?";
                     
@@ -183,7 +158,5 @@
         </ul>
     </nav>
 </div>
-
-<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Requisicion.js"></script>
 
 <?php include('footer.php'); ?>

@@ -1,4 +1,10 @@
 <?php include('head.php'); ?>
+<style>
+    .disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+</style>
 <!-- Contenedor de las alertas -->            
 <div class="table-responsive">    
     <center>
@@ -10,8 +16,8 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nombre Solicitante</th>
-                <th scope="col">Estatus</th>
                 <th scope="col">Fecha</th>
+                <th scope="col">Estatus</th>
                 <th scope="col">Justificación</th>
                 <th scope="col"><center>Acción</center></th>
             </tr>
@@ -60,8 +66,8 @@
                             <tr class="table-light">
                                 <td><?php echo $IdPrestamoE; ?></td>
                                 <td><?php echo $NombreCompleto;?></td>
-                                <td><?php echo $Estatus; ?></td>
                                 <td><?php echo $FchCreacion; ?></td>
+                                <td><?php echo $Estatus; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
                                 <td>
                                     <button class="btn btn-success" onclick="abrirModal(<?php echo $IdPrestamoE; ?>)">
@@ -79,9 +85,8 @@
                         echo "<tr><td colspan='10' class='text-center'>No hay registros</td></tr>";
                     }
                     
-                    // Total de registros para paginaci��n
-                    $sql_total = "SELECT COUNT(*) AS total FROM PrestamoE";
                     
+                    $sql_total = "SELECT COUNT(*) AS total FROM PrestamoE"; // Total de registros para paginaci��n
                     $stmt_total = $conexion->prepare($sql_total); // Preparar la consulta SQL para el total de registros
                     $stmt_total->execute(); // Ejecutar la consulta
                     $result_total = $stmt_total->get_result(); // Obtener los resultados de la consulta
@@ -171,6 +176,7 @@
     </div>
 </div>
 
+<script src="../../js/InvalidarBtnEstatus.js"></script>
 <script src="../../js/MostrarInfoPrestamoE.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Prestamo.js"></script>
 

@@ -124,7 +124,7 @@ if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
             <ul>
                 <li><a href="Requisicion_SUPERADMIN.php"><i class="fas fa-plus"></i>Crear Requisición</a></li>
                 <li><a href="Solicitud_SUPERADMIN.php"><i class="fas fa-clipboard-list"></i>Requisiciones</a></li>
-                <li><a href="Prestamo_SUPERADMIN.php"><i class="fas fa-check"></i>Prestamos</a></li>
+                <li><a href="Prestamo_SUPERADMIN.php"><i class="fas fa-clipboard-list"></i>Prestamos</a></li>
                 <li><a href="Ver_SUPERADMIN.php"><i class="fas fa-eye"></i>Ver Requisiciones</a></li>
                 <li><a href="Reportes_SUPERADMIN.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
             </ul>

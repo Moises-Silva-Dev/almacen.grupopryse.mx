@@ -1,9 +1,23 @@
 <?php
 session_start(); // Iniciar sesión
 setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
+date_default_timezone_set('America/Mexico_City'); // Establecer la zona horaria de México
 include('../../Modelo/Conexion.php'); // Incluir la conexión a la base de datos
+include('../../Modelo/Funciones/Funcion_Registro_Acceso.php'); // Incluir la función de registro de acceso
 
 try {
+    $fecha = date('Y-m-d'); // Obtener la fecha actual
+    $hora = date('H:i:s'); // Obtener la hora actual
+    $ip = $_SERVER['REMOTE_ADDR']; // Obtener IP
+    $id_mac = ''; // Puedes dejarlo vacío si no se obtiene
+
+    // Obtener Ciudad y País vía API externa (ej: ip-api.com)
+    $response = file_get_contents("http://ip-api.com/json/$ip");
+    $location = json_decode($response, true);
+
+    $ciudad = $location['city'] ?? 'Desconocido'; // Obtener ciudad, si no se encuentra, asignar 'Desconocido'
+    $pais = $location['country'] ?? 'Desconocido'; // Obtener país, si no se encuentra, asignar 'Desconocido'
+
     $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
 
     // Consulta para obtener conexión con la base de datos
@@ -38,9 +52,13 @@ try {
         $row = $result_usuario->fetch_assoc(); // Obtener la fila asociada
         $hashed_password = $row['Constrasena']; // Obtener la contraseña hashada
         $tipoUsuario = $row['ID_Tipo_Usuario']; // Obtener el tipo de usuario
+        $IdentificadorUsuario = $row['ID_Usuario']; // Obtener el identificador del usuario
 
         if (password_verify($Clave, $hashed_password)) { // Verificar la contraseña
             $_SESSION['usuario'] = $Correo; // Establecer la sesión del usuario
+
+            // Registrar acceso del usuario en la base de datos
+            registroAcceso($conexion, $IdentificadorUsuario, $fecha, $hora, $ip, $id_mac, $ciudad, $pais); 
 
             // Respuesta de éxito con la URL según tipo de usuario
             $urls = [

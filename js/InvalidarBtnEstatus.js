@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const status = row.children[3].innerText.trim();
 
             // Verifica si el estado es "Parcial" o "Surtido"
-            if (["Parcial", "Surtido"].includes(status)) {
+            if (["Parcial", "Surtido", "Prestamo Parcial", "Prestamo Surtido", "Devolución Parcial", "Devolución Surtido"].includes(status)) {
                 // Selecciona todos los elementos anchor (enlaces) con la clase "btn" dentro de la fila actual
                 const buttons = row.querySelectorAll("a.btn");
 
