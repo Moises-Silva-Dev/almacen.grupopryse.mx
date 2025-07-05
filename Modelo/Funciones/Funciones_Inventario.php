@@ -69,21 +69,26 @@ function BuscarProductoInventario($conexion, $idProducto, $idtall) {
 
 // Función para actualizar el inventario
 function ActualizarInventarioPorSalidaRequisicion($conexion, $Cant, $IdCProd, $Id_Talla) {
-    // Consulta para actualizar el inventario
-    $SetenciaActualizarInventarioPorSalidaRequisicion = "UPDATE Inventario SET Cantidad = Cantidad - ? WHERE IdCPro = ? AND IdCTal = ?";
+    // Buscar en el inventario
+    $Busqueda = BuscarProductoInventario($conexion, $IdCProd, $Id_Talla);
 
-    // Preparar la sentencia
-    $StmtActualizarInventarioPorSalidaRequisicion = $conexion->prepare($SetenciaActualizarInventarioPorSalidaRequisicion);
+    if ($Busqueda) {
+        // Consulta para actualizar el inventario
+        $SetenciaActualizarInventarioPorSalidaRequisicion = "UPDATE Inventario SET Cantidad = Cantidad - ? WHERE IdInv = ?";
 
-    // Ejecutar la sentencia
-    $StmtActualizarInventarioPorSalidaRequisicion->bind_param("iii", $Cant, $IdCProd, $Id_Talla);
+        // Preparar la sentencia
+        $StmtActualizarInventarioPorSalidaRequisicion = $conexion->prepare($SetenciaActualizarInventarioPorSalidaRequisicion);
 
-    // Ejecutar la sentencia
-    if ($StmtActualizarInventarioPorSalidaRequisicion->execute()){ 
-        return true; // Si se ejecuta correctamente, devuelve true
-    } else {
-        // Lanzar una excepción para activar el bloque catch
-        throw new Exception("Error en la ejecución de la consulta de inserción.");
+        // Ejecutar la sentencia
+        $StmtActualizarInventarioPorSalidaRequisicion->bind_param("ii", $Cant, $Busqueda['IdInv']);
+
+        // Ejecutar la sentencia
+        if ($StmtActualizarInventarioPorSalidaRequisicion->execute()){ 
+            return true; // Si se ejecuta correctamente, devuelve true
+        } else {
+            // Lanzar una excepción para activar el bloque catch
+            throw new Exception("Error en la ejecución de la consulta de inserción.");
+        }
     }
 }
 

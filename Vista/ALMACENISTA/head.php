@@ -117,6 +117,7 @@ if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
                 <li><a href="Almacen_ALMACENISTA.php"><i class="fas fa-boxes"></i>Entrada de Productos</a></li>
                 <li><a href="Salidas_ALMACENISTA.php"><i class="fas fa-box-open"></i>Salida de Almacén</a></li>
                 <li><a href="Prestamo_ALMACENISTA.php"><i class="fas fa-clipboard-list"></i>Salida de Prestamos</a></li>
+                <li><a href="Devolucion_ALMACENISTA.php"><i class="fas fa-undo"></i>Devoluciones</a></li>
                 <li><a href="Reportes_ALMACENISTA.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
             </ul>
         </nav>

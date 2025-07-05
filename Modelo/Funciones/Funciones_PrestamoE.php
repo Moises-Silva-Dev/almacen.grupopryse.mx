@@ -80,4 +80,39 @@ function CambiarEstatusPrestamoE($conexion, $fecha_alta, $idSolicitud) {
         throw new Exception("Error en la ejecución de la consulta de inserción.");
     }
 }
+
+// Función para actualizar el estatus de un préstamo después de una salida
+function ActualizarEstatusPrestamoESalida($conexion, $IdPrestamoE){
+    $SQLBuscarEstatus = $conexion->prepare("SELECT 
+        CASE 
+            WHEN SPD1.Cantidad = 0 THEN 'Pendiente'
+            WHEN SPD1.Cantidad < SUM(PD.Cantidad) THEN 'Parcial'
+            ELSE 'Surtido' END AS Estado
+        FROM 
+            PrestamoD PD
+        INNER JOIN 
+            (SELECT 
+                SPE.ID_PresE, SUM(SPD.Cantidad) Cantidad
+            FROM 
+                Salida_PresE SPE
+            INNER JOIN 
+                Salida_PresD SPD ON SPE.Id_SalPresE = SPD.IdSalPresE
+            WHERE 
+                SPE.ID_PresE = ?) SPD1 ON PD.IdPresE = SPD1.ID_PresE
+        WHERE 
+            PD.IdPresE = ?");
+            
+    $SQLBuscarEstatus->bind_param("ii", $IdPrestamoE, $IdPrestamoE); // Asegúrate de que el ID de la requisición sea el mismo en ambas partes de la consulta
+    $SQLBuscarEstatus->execute(); // Ejecutar la consulta
+    $result = $SQLBuscarEstatus->get_result(); // Obtener el resultado de la consulta
+    $row = $result->fetch_assoc(); // Obtener la fila del resultado
+    $estado = $row['Estado']; // Obtener el estado calculado
+
+    $SQLActualizarEstatus = $conexion->prepare("UPDATE PrestamoE SET Estatus = ? WHERE IdPrestamoE = ?"); // Preparar la consulta SQL para actualizar el estatus
+    $SQLActualizarEstatus->bind_param("si", $estado, $IdPrestamoE); // Vincular los parámetros
+    $SQLActualizarEstatus->execute(); // Ejecutar la consulta de actualización
+    $SQLActualizarEstatus->close(); // Cerrar la sentencia
+    $SQLBuscarEstatus->close(); // Cerrar la sentencia de búsqueda
+    return true; // Retornar true si la actualización fue exitosa
+}
 ?>

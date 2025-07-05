@@ -2,17 +2,27 @@
 <!-- Contenedor de las alertas -->            
 <div class="table-responsive">    
     <center>
-        <h2 class="mb-4">Prestamos Registrados</h2>
+        <h2 class="mb-4">Devoluciones Registrados</h2>
+        <!-- Botones -->
+        <a class="btn btn-primary" href="INSERT/Insert_Devolucion_ALMACENISTA.php">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                <path d="M16 19h6" />
+                <path d="M19 16v6" />
+                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+            </svg>Nuevo Prestamo</a>
     </center>
     <!-- Tabla para mostrar los registros -->
     <table class="table table-hover table-striped mt-4">
         <thead class="table-light">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Nombre Solicitante</th>
-                <th scope="col">Estatus</th>
-                <th scope="col">Fecha</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Telefono</th>
                 <th scope="col">Justificación</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Tipo</th>
                 <th scope="col"><center>Acción</center></th>
             </tr>
         </thead>
@@ -27,16 +37,12 @@
                     
                     // Consulta para obtener las requisiciones
                     $sql = "SELECT 
-                            PE.IdPrestamoE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                            PE.FchCreacion, PE.Justificacion, PE.Estatus
+                            DE.IdDevolucionE, DE.Nombre_Devuelve, DE.Telefono_Devuelve, DE.Justificacion,
+                            DE.Fch_Devolucion, DE.IdPrestE, DE.IdRequiE
                         FROM 
-                            PrestamoE PE
-                        INNER JOIN 
-                            Usuario U ON PE.IdUsuario = U.ID_Usuario
-                        WHERE
-                            PE.Estatus = 'Autorizado'
+                            DevolucionE DE
                         ORDER BY 
-                            PE.FchCreacion DESC
+                            DE.Fch_Devolucion DESC
                         LIMIT 
                             ? OFFSET ?";
 
@@ -49,30 +55,21 @@
                     if ($result->num_rows > 0) {
                         // Muestra los resultados en la tabla
                         while ($row = $result->fetch_assoc()) {
-                            $IdPrestamoE = htmlspecialchars($row['IdPrestamoE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Nombre = htmlspecialchars($row['Nombre'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Apellido_Paterno = htmlspecialchars($row['Apellido_Paterno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Apellido_Materno = htmlspecialchars($row['Apellido_Materno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $FchCreacion = htmlspecialchars($row['FchCreacion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Estatus = htmlspecialchars($row['Estatus'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                            $IdDevolucionE = htmlspecialchars($row['IdDevolucionE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                            $Nombre_Devuelve = htmlspecialchars($row['Nombre_Devuelve'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                            $Telefono_Devuelve = htmlspecialchars($row['Telefono_Devuelve'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
                             $Justificacion = htmlspecialchars($row['Justificacion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $NombreCompleto = $Nombre . ' ' . $Apellido_Paterno . ' ' . $Apellido_Materno; // Concatenar el nombre completo
+                            $Fch_Devolucion = htmlspecialchars($row['Fch_Devolucion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                            $IdPrestE = htmlspecialchars($row['IdPrestE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
+                            $IdRequiE = htmlspecialchars($row['IdRequiE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
             ?>
                             <tr class="table-light">
-                                <td><?php echo $IdPrestamoE; ?></td>
-                                <td><?php echo $NombreCompleto;?></td>
-                                <td><?php echo $Estatus; ?></td>
-                                <td><?php echo $FchCreacion; ?></td>
+                                <td><?php echo $IdDevolucionE; ?></td>
+                                <td><?php echo $Nombre_Devuelve;?></td>
+                                <td><?php echo $Telefono_Devuelve; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
-                                <td>
-                                    <a class="btn btn-primary" href="INSERT/Insert_Prestamo_ALMACENISTA.php?id=<?php echo $IdPrestamoE; ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
-                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                        <path d="M16 5l3 3" />
-                                    </svg>Salida</a>
-                                </td>
+                                <td><?php echo $Fch_Devolucion; ?></td>
+                                <td><?php if (isset($IdPrestE)){ echo "Requisición"; } elseif (isset($IdRequiE)){ echo "Prestamo"; } else { echo "No esta Vinculada"; } ?></td>
                             </tr>
             <?php
                         }
@@ -81,11 +78,7 @@
                     }
                     
                     // Total de registros para paginaci��n
-                    $sql_total = "SELECT COUNT(*) AS total 
-                                FROM 
-                                    PrestamoE PE 
-                                WHERE 
-                                    PE.Estatus = 'Autorizado'"; // Consulta para obtener el total de registros
+                    $sql_total = "SELECT COUNT(*) AS total FROM DevolucionE"; // Consulta para obtener el total de registros
                     
                     $stmt_total = $conexion->prepare($sql_total); // Preparar la consulta SQL para el total de registros
                     $stmt_total->execute(); // Ejecutar la consulta
