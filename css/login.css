@@ -1,7 +1,64 @@
-.divider:after,
-.divider:before {
-content: "";
-flex: 1;
-height: 1px;
-background: #eee;
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Loader con fondo animado */
+#loader {
+    position: fixed;
+    z-index: 9999;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(-45deg,rgb(131, 131, 131),rgb(0, 39, 97),rgb(131, 131, 131));
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.glow-wrapper {
+    padding: 30px;
+    border-radius: 50%;
+    box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.4);
+    animation: glow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 10px 5px rgb(255, 255, 255); }
+    100% { box-shadow: 0 0 40px 20px rgba(255, 255, 255, 0.6); }
+}
+
+.shield-logo {
+    max-width: 250px;
+    width: 100%;
+}
+
+@media (max-width: 576px) {
+    .shield-logo {
+        max-width: 160px;
+    }
+}
+
+#main-content {
+    display: none;
+    background-color:rgb(186, 224, 245);
+}
+
+h1 {
+    font-style: italic;
+}
+
+footer { 
+    background:rgb(0, 0, 0);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.2rem;
 }

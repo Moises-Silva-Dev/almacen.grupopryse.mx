@@ -11,7 +11,7 @@
                 <path d="M16 19h6" />
                 <path d="M19 16v6" />
                 <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-            </svg>Nuevo Prestamo</a>
+            </svg>Nueva Devolución</a>
     </center>
     <!-- Tabla para mostrar los registros -->
     <table class="table table-hover table-striped mt-4">
@@ -23,7 +23,6 @@
                 <th scope="col">Justificación</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Tipo</th>
-                <th scope="col"><center>Acción</center></th>
             </tr>
         </thead>
         <tbody>
@@ -69,7 +68,7 @@
                                 <td><?php echo $Telefono_Devuelve; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
                                 <td><?php echo $Fch_Devolucion; ?></td>
-                                <td><?php if (isset($IdPrestE)){ echo "Requisición"; } elseif (isset($IdRequiE)){ echo "Prestamo"; } else { echo "No esta Vinculada"; } ?></td>
+                                <td><?php if (!empty($IdPrestE)){ echo "Requisición"; } elseif (!empty($IdRequiE)){ echo "Prestamo"; } else { echo "No esta Vinculada"; } ?></td>
                             </tr>
             <?php
                         }

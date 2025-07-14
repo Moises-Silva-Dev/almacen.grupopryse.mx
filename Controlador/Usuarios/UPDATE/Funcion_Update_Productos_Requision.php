@@ -5,12 +5,11 @@ setlocale(LC_ALL, 'es_ES'); // Establece el idioma de la aplicación
 date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria de México
 
 // Incluir dependencias necesarias
-include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
-require_once("../../../Modelo/Funciones/Funciones_DevolucionD.php"); // Carga la clase de funciones de la entradaD
-require_once("../../../Modelo/Funciones/Funciones_DevolucionE.php"); // Carga la clase de funciones de la entradaE
-require_once("../../../Modelo/Funciones/Funciones_Inventario.php"); // Carga la clase de funciones de la inventario
-require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
-require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Carga la clase de funciones de usuarios
+include('../../../Modelo/Conexion.php'); // Conexión a la base de datos
+require_once("../../../Modelo/Funciones/Funciones_RequisicionD.php"); // Funciones para el borrador de requisicionD
+require_once("../../../Modelo/Funciones/Funciones_RequisicionE.php"); // Funciones para el borrador de requisicionE
+require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Funciones para el tipo de usuario
+require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Funciones para los usuarios
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
 
@@ -23,48 +22,46 @@ if (!$conexion || $conexion->connect_error) {
     exit; // Salir del script
 }
 
-// Verifica si se ha enviado el formulario
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recuperar datos del formulario
-    $Nombre_Devuelve = $_POST["Nombre_Devuelve"];
-    $Telefono_Devuelve = $_POST["Telefono_Devuelve"];
-    $Comentarios = $_POST['Comentarios'];
-    $Opcion = $_POST['Opcion']; 
-    $Identificador = $_POST['Identificador'];
-    $registro = date('Y-m-d H:i:s', time()); // Obtener la fecha y hora actual
-    $usuario = $_SESSION['usuario'];
-    
-    if (!$Nombre_Devuelve || !$Telefono_Devuelve || !$Comentarios || !$Opcion) { // Verificar que los campos no estén vacíos
+// Procesamiento del formulario cuando se recibe una solicitud POST
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Obtener datos del formulario
+    $id_RequisionE = $_POST['ID_RequisicionE'];
+    $usuario = $_SESSION['usuario']; // Obtiene el Correo del usuario actual
+
+    // Establecer la fecha y hora actual
+    $FchCreacion = date('Y-m-d H:i:s'); // Fecha y hora actual
+    $Estatus = 'Pendiente'; // Nuevo estatus
+
+    if (!$id_RequisionE) { // Verificar que los campos no estén vacíos
         echo json_encode([ // Devuelve un arreglo JSON con el mensaje de error
             "success" => false, // Indica que la operación no se realizó con éxito
-            "message" => "Datos inválidos. Por favor, revise la información enviada."
+            "message" => "Datos inválidos. Por favor, revise la información enviada." // Mensaje de error
         ]);
         exit; // Salir del script
     }
 
     // Comenzar la transacción
     $conexion->begin_transaction();
-    
+
     try {
         // Buscar el identificador del usuario
         $id_Usuario = ObtenerIdentificadorUsuario($conexion, $usuario);
 
-        if (!$id_Usuario) { // Verificar si se ha insertado correctamente la región
-            // Lanzar una excepción en caso de error en la inserción
-            throw new Exception("Error al buscar en la tabla usuario.");
+        if (!$id_Usuario) {
+            // Si no se encuentra el identificador del usuario, se devuelve un mensaje de error
+            throw new Exception("No se encontró el identificador del usuario");
         }
 
-        $id_DevolucionE = InsertarNuevaDevolucionE($conexion, $Nombre_Devuelve, $Telefono_Devuelve, $Comentarios, $registro, $id_Usuario, $Opcion, $Identificador);
-
-        if (!$id_DevolucionE) { // Verificar si se ha insertado correctamente la región
-            // Lanzar una excepción en caso de error en la inserción
-            throw new Exception("Error al insertar en la tabla entradaE.");
+        // Eliminar la requisición en la tabla RequisicionD
+        if (!EliminarRequisicionD($conexion, $id_RequisionE)) {
+            // Si la eliminación falla, se lanza una excepción
+            throw new Exception("Error al eliminar la requisiciónD");
         }
-        
+
         // Verifica si $_POST['datosTabla'] está definido
-        if (isset($_POST['datosTablaInsertDevolucion'])) {
+        if (isset($_POST['datosTabla'])) {
             // Decodifica los datos del formulario
-            $datosTabla = json_decode($_POST['datosTablaInsertDevolucion'], true);
+            $datosTabla = json_decode($_POST['datosTabla'], true);
 
             // Verifica si la decodificación fue exitosa
             if (json_last_error() === JSON_ERROR_NONE) {
@@ -78,30 +75,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $idtall = $datosTabla[$i]['idtall'];
                     $cant = $datosTabla[$i]['cant'];
 
-                    // Inserta en la tabla EntradaD
-                    if (!InsertarNuevaDevolucionD($conexion, $id_DevolucionE, $idProducto, $idtall, $cant)) {
-                        // Lanzar una excepción en caso de error en la inserción
-                        throw new Exception("Error al insertar en EntradaD");
-                    }
-
-                    // Inserta en la tabla Inventario
-                    if (!insertarInventario($conexion, $idProducto, $idtall, $cant)){
-                        // Lanzar una excepción en caso de error en la inserción
-                        throw new Exception("Error al insertar en Inventario");
+                    // Inserta en la tabla RequisicionD
+                    if (!InsertarNuevaRequisicionDAdmin($conexion, $id_RequisionE, $idProducto, $idtall, $cant)) {
+                        // Si la inserción falla, se lanza una excepción
+                        throw new Exception("Error al insertar en la tabla RequisicionD");
                     }
                 }
             } else {
-                // Lanzar una excepción en caso de error en la decodificación
+                // Maneja el caso en el que $_POST['datosTabla'] no es un JSON válido
                 throw new Exception("Los datos de la tabla no están en el formato JSON esperado.");
             }
         } else {
             // Maneja el caso en el que $_POST['datosTabla'] no está definido
             throw new Exception("No se recibieron datos de la tabla.");
-        }
-
-        if (!ModificarEstatusDevolucionE($conexion, $id_DevolucionE, $Identificador, $Opcion)) {
-            // Lanzar una excepción en caso de error al modificar el estatus
-            throw new Exception("Error al modificar el estatus de la devolución.");
         }
 
         // Si todo fue bien, hacer commit de la transacción
@@ -111,11 +97,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Respuesta de éxito con la URL según tipo de usuario
         $urls = [
-            1 => "../../../Vista/DEV/Almacen_Dev.php", // URL para el tipo de usuario 1
-            2 => "../../../Vista/SUPERADMIN/index_SUPERADMIN.php", // URL para el tipo de usuario 2
-            3 => "../../../Vista/ADMIN/index_ADMIN.php", // URL para el tipo de usuario 3
-            4 => "../../../Vista/USER/index_USER.php", // URL para el tipo de usuario 4
-            5 => "../../../Vista/ALMACENISTA/Devolucion_ALMACENISTA.php" // URL para el tipo de usuario 5
+            1 => "../../../Vista/DEV/index_DEV.php", // URL para el tipo de usuario 1
+            2 => "../../../Vista/SUPERADMIN/Solicitud_SUPERADMIN.php", // URL para el tipo de usuario 2
+            3 => "../../../Vista/ADMIN/Requisicion_ADMIN.php", // URL para el tipo de usuario 3
+            4 => "../../../Vista/USER/Solicitud_USER.php", // URL para el tipo de usuario 4
+            5 => "../../../Vista/ALMACENISTA/index_ALMACENISTA.php" // URL para el tipo de usuario 5
         ];
 
         echo json_encode([  // Enviar la respuesta en formato JSON

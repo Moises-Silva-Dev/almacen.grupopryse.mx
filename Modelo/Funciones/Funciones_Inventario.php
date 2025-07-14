@@ -94,34 +94,40 @@ function ActualizarInventarioPorSalidaRequisicion($conexion, $Cant, $IdCProd, $I
 
 // Función para actualizar el inventario
 function ActualizarInventario($conexion, $InformacionEntradaD){
-    // Consulta para actualizar el inventario
-    $SetenciaActualizarInventario = "UPDATE Inventario SET Cantidad = Cantidad - ? WHERE IdCPro = ? AND IdCTal = ?";
-
-    // Preparar la sentencia
-    $StmtActualizarInventario = $conexion->prepare($SetenciaActualizarInventario);
-
     // Obtiene la cantidad de filas en los datos de la tabla
     $numFilas = count($InformacionEntradaD);
 
     // Inicializa una variable para rastrear el éxito de la inserción
     $exito = true;
 
-    // Recorre cada registro en InformacionRequisicionD y ejecuta la consulta 
+    // Recorre cada registro en InformacionEntradaD y ejecuta la consulta 
     for ($i = 0; $i < $numFilas; $i++) {
         $idProductoEntradaD = intval($InformacionEntradaD[$i]['IdProd']);
         $idtallEntradaD = intval($InformacionEntradaD[$i]['IdTalla']);
         $cantEntradaD = intval($InformacionEntradaD[$i]['Cantidad']);
-    
-        // Vincular los parámetros
-        $StmtActualizarInventario->bind_param("iii", $cantEntradaD, $idProductoEntradaD, $idtallEntradaD);
-            
-        // Si alguna inserción falla, cambia la variable de éxito a false
-        if (!$StmtActualizarInventario->execute()) {
-            $exito = false;
-            break;
+
+        // Buscar en el inventario
+        $Busqueda = BuscarProductoInventario($conexion, $idProductoEntradaD, $idtallEntradaD);
+
+        if ($Busqueda) {
+            // Consulta para actualizar el inventario
+            $SetenciaActualizarInventario = "UPDATE Inventario SET Cantidad = Cantidad - ? WHERE IdInv = ?";
+
+            // Preparar la sentencia
+            $StmtActualizarInventario = $conexion->prepare($SetenciaActualizarInventario);
+        
+            // Vincular los parámetros
+            $StmtActualizarInventario->bind_param("ii", $cantEntradaD, $Busqueda['IdInv']);
+                
+            // Si alguna inserción falla, cambia la variable de éxito a false
+            if (!$StmtActualizarInventario->execute()) {
+                $exito = false;
+                break;
+            }
+            // Cerrar la sentencia
+            $StmtActualizarInventario->close();
         }
     }
-
     // Retorna true si todas las inserciones fueron exitosas, de lo contrario false
     return $exito;
 }
