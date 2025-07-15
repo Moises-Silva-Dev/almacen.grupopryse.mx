@@ -19,8 +19,8 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nombre Solicitante</th>
-                <th scope="col">Estatus</th>
                 <th scope="col">Fecha</th>
+                <th scope="col">Estatus</th>
                 <th scope="col">Justificación</th>
                 <th colspan="2" scope="col"><center>Acciones</center></th>
             </tr>
@@ -71,8 +71,8 @@
                             <tr class="table-light">
                                 <td><?php echo $IdPrestamoE; ?></td>
                                 <td><?php echo $NombreCompleto;?></td>
-                                <td><?php echo $Estatus; ?></td>
                                 <td><?php echo $FchCreacion; ?></td>
+                                <td><?php echo $Estatus; ?></td>
                                 <td><?php echo $Justificacion; ?></td>
                                 <td>
                                     <a class="btn btn-warning" href="Update/Update_Prestamo_ADMIN.php?id=<?php echo $IdPrestamoE; ?>">
