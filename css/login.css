@@ -1,9 +1,9 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Loader con fondo animado */
 #loader {
     position: fixed;
     z-index: 9999;
@@ -12,7 +12,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(-45deg,rgb(131, 131, 131),rgb(0, 39, 97),rgb(131, 131, 131));
+    background: linear-gradient(-45deg, rgb(131, 131, 131), rgb(0, 39, 97), rgb(131, 131, 131));
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
 }
@@ -28,6 +28,8 @@ html, body {
     border-radius: 50%;
     box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.4);
     animation: glow 2.5s ease-in-out infinite alternate;
+    max-width: 90vw;
+    max-height: 90vh;
 }
 
 @keyframes glow {
@@ -35,30 +37,72 @@ html, body {
     100% { box-shadow: 0 0 40px 20px rgba(255, 255, 255, 0.6); }
 }
 
-.shield-logo {
-    max-width: 250px;
-    width: 100%;
-}
-
-@media (max-width: 576px) {
-    .shield-logo {
-        max-width: 160px;
-    }
-}
-
 #main-content {
     display: none;
-    background-color:rgb(186, 224, 245);
 }
 
-h1 {
-    font-style: italic;
+.login-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
 }
 
-footer { 
-    background:rgb(0, 0, 0);
-    color: #fff;
-    padding: 20px;
+.left-side, .right-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 50vh;
+}
+
+.left-side {
+    background: linear-gradient(135deg, rgb(0, 0, 0), rgb(0, 39, 97), rgb(8, 147, 216));
+    color: white;
+    flex-direction: column;
+}
+
+.right-side {
+    background: white;
+    flex-direction: column;
     text-align: center;
-    font-size: 1.2rem;
+}
+
+.right-side h1 {
+    color: #ec407a;
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, #ff416c, #ff4b2b);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+footer {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+    .glow-wrapper img {
+        max-width: 150px;
+    }
+    footer {
+        position: relative;
+        margin-top: auto;
+    }
 }

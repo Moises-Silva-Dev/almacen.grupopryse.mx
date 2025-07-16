@@ -15,10 +15,10 @@
     <!-- Loader -->
     <div id="loader">
         <div class="glow-wrapper">
-            <img src="img/SUPERADMIN.png" alt="Logo Grupo PRYSE" class="img-fluid shield-logo mx-auto d-block">
+            <img src="img/SUPERADMIN.png" alt="Logo Grupo PRYSE" class="img-fluid mx-auto d-block" style="max-width: 250px; width: 100%; height: auto;">
         </div>
     </div>
-    <!-- Contenido principal -->
+    <!-- Contenido Principal -->
     <div id="main-content">
         <?php 
             if (isset($_GET['auth'])): // Verifica si se ha pasado el parámetro 'auth' en la URL
@@ -48,37 +48,30 @@
             endif; 
                 endif; 
         ?>
-        <section class="vh-100 d-flex align-items-center">
-            <div class="container py-5">
-                <div class="row justify-content-center align-items-center">
-                    <!-- Imagen -->
-                    <div class="col-lg-6 mb-4 text-center">
-                        <img src="img/Logo_Inventario.png" class="img-fluid w-100" alt="Decoración">
-                    </div>
-                    <!-- Formulario -->
-                    <div class="col-lg-5">
-                        <h1 class="mb-4 text-center">Bienvenido</h1>
-                        <form id="loginForm" method="POST" action="Controlador/Login/Login_V.php" class="needs-validation" novalidate>
-                            <div class="mb-3">
-                                <label for="validationCustom01" class="form-label">Correo Electrónico</label>
-                                <input type="email" name="correo" class="form-control" id="validationCustom01" placeholder="Ingresa tu correo" required>
-                                <div class="invalid-feedback">Por favor, ingresa un correo válido.</div>
-                            </div>
-                            <div class="mb-4">
-                                <label for="validationCustom02" class="form-label">Contraseña</label>
-                                <input type="password" name="contrasena" class="form-control" id="validationCustom02" placeholder="Contraseña" required>
-                                <div class="invalid-feedback">Por favor, ingresa tu contraseña.</div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg">Iniciar sesión</button>
-                            </div>
-                        </form>
-                    </div>
+        <div class="login-container">
+            <div class="left-side">
+                <div style="width: 100%; max-width: 350px;">
+                    <h2 class="text-center mb-4">Iniciar sesión</h2>
+                    <form id="loginForm" method="POST" action="Controlador/Login/Login_V.php" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo electrónico</label>
+                            <input type="email" name="correo" class="form-control" id="validationCustom01" placeholder="Ingresa tu correo" required>
+                            <div class="invalid-feedback">Por favor, ingresa un correo válido.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contrasena" class="form-label">Contraseña</label>
+                            <input type="password" name="contrasena" class="form-control" id="validationCustom02" placeholder="Ingresa tu Contraseña" required>
+                            <div class="invalid-feedback">Por favor, ingresa tu contraseña.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                    </form>
                 </div>
             </div>
-        </section>
-        <footer class="mt-auto">
-            <!-- Copyright -->
+            <div class="right-side">
+                <img src="img/Logo_Inventario.png" alt="Logo Grupo PRYSE" class="img-fluid mx-auto d-block" style="max-width: 250px; width: 100%; height: auto;">
+            </div>
+        </div>
+        <footer>
             © <?= date("Y") ?> Grupo PRYSE. Todos los derechos reservados.
         </footer>
     </div>
