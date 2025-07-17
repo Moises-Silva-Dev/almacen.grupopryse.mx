@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="right-side">
-                <img src="img/Logo_Inventario.png" alt="Logo Grupo PRYSE" class="img-fluid mx-auto d-block" style="max-width: 250px; width: 100%; height: auto;">
+                <img src="img/Logo_Inventario.png" alt="Logo Grupo PRYSE" class="img-fluid mx-auto d-block" style="max-width: 350px; width: 100%; height: auto;">
             </div>
         </div>
         <footer>
