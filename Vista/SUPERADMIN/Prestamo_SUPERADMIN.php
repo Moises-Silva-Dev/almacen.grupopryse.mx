@@ -177,7 +177,7 @@
 </div>
 
 <script src="../../js/InvalidarBtnEstatus.js"></script>
-<script src="../../js/MostrarInfoPrestamoE.js"></script>
+<script src="../../js/MostrarInfoPrestamoEAutorizar.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Prestamo.js"></script>
 
 <?php include('footer.php'); ?>
