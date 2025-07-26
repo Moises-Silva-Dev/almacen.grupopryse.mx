@@ -2,7 +2,7 @@
 function requisicionEnviar() {
     const id = document.getElementById('btnEnviar').getAttribute('data-id'); // Obtener el ID del préstamo desde el botón
     const formData = new FormData(); // Crear un objeto FormData
-    formData.append('Id', id); // Agregar el ID del préstamo al FormData
+    formData.append('Id', id); // Agregar el ID de la requisición al FormData
 
     // Mostrar pantalla de carga con opciones para conexiones lentas
     const loadingAlert = Swal.fire({ // Configurar alerta de carga

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $Estatus = 'Borrador_Modificado'; // Nuevo estatus
 
     if (!$id_RequisionE || !$Supervisor || !$ID_Cuenta || !$Region || !$NroElementos || !$Estado || 
-        !$Receptor || !$TelReceptor || !$Opcion || !$Justificacion || !$usuario) { // Verificar que los campos no estén vacíos
+        !$Receptor || !$TelReceptor || !$Opcion || !$Justificacion) { // Verificar que los campos no estén vacíos
         echo json_encode([ // Devuelve un arreglo JSON con el mensaje de error
             "success" => false, // Indica que la operación no se realizó con éxito
             "message" => "Datos inválidos. Por favor, revise la información enviada." // Mensaje de error

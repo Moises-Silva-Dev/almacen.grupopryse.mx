@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_SESSION['usuario']; // Obtiene el Correo del usuario actual
 
     if (!$Supervisor || !$ID_Cuenta || !$Region || !$NroElementos || !$Estado || 
-        !$Receptor || !$TelReceptor || !$Opcion || !$Justificacion || !$usuario) { // Verificar que los campos no estén vacíos
+        !$Receptor || !$TelReceptor || !$Opcion || !$Justificacion) { // Verificar que los campos no estén vacíos
         echo json_encode([ // Devuelve un arreglo JSON con el mensaje de error
             "success" => false, // Indica que la operación no se realizó con éxito
             "message" => "Datos inválidos. Por favor, revise la información enviada." // Muestra el mensaje de error

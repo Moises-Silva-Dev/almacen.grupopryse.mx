@@ -185,7 +185,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
             </svg>Guardar
         </button>
-        <a href="../Solicitud_ADMIN.php" class="btn btn-danger">
+        <a href="../Requisicion_ADMIN.php" class="btn btn-danger">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                 <path d="M4 7l16 0" />
@@ -228,7 +228,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                             <td><?php echo $row1['Descripcion']; ?></td>
                             <td><?php echo $row1['Especificacion']; ?></td>
                             <td data-id="<?php echo $row1['IdTalla']; ?>"><?php echo $row1['Talla']; ?></td>
-                            <td><?php echo $row1['Cantidad']; ?></td>
+                            <td>
+                                <input type="text" class="form-control" id="Cantidad" name="Cantidad" value="<?php echo $row1['Cantidad']; ?>" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" placeholder="Ingresa la Cantidad">
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-warning btn-anular">
                                 Eliminar
@@ -286,7 +288,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
 <script src="../../../js/Solicitud_Carga_CueRegEst.js" defer></script>
 <script type="module" src="../../../js/Busqueda_Requision_Productos.js" defer></script>
-<script src="../../../js/Update_Producto_datosTabla.js"></script>
+<script src="../../../js/Update_Productos_Requisicion_datosTabla.js"></script>
 <script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Productos_Requisicion.js"></script>
 <script src="../../../js/VistaTablaProductos.js"></script>
 
