@@ -191,7 +191,7 @@
 
 <script src="../../js/InvalidarBtnEstatus.js"></script>
 <script src="../../js/DescargarRequisicion.js"></script>
-<script src="../../js/MostrarInfoRequisicionE.js"></script>
+<script src="../../js/MostrarInfoRequisicionEAutorizar.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Requisicion.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_BtnSolicitarModificacion.js"></script>
 
