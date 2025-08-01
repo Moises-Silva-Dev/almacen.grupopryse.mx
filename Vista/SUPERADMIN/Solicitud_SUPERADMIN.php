@@ -92,7 +92,7 @@
                                 </svg>Solicitar Modificación</a>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger BtnDescargarRequisicion" data-id="<?php echo $IDRequisicionE; ?>">
+                                <button type="button" class="btn btn-danger BtnDescargarRequisicion_SUPERADMIN" data-id="<?php echo $IDRequisicionE; ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="1.5"> 
                                         <path d="M14 3v4a1 1 0 0 0 1 1h4"></path> 
                                         <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
@@ -190,7 +190,7 @@
 </div>
 
 <script src="../../js/InvalidarBtnEstatus.js"></script>
-<script src="../../js/DescargarRequisicion.js"></script>
+<script src="../../js/DescargarRequisicion_SUPERADMIN.js"></script>
 <script src="../../js/MostrarInfoRequisicionEAutorizar.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Autorizar_Requisicion.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_BtnSolicitarModificacion.js"></script>
