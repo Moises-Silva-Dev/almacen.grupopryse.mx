@@ -80,7 +80,7 @@ btnAgregar.addEventListener("click", function() {
         // Calcula la nueva cantidad sumando la cantidad actual y la cantidad nueva
         const nuevaCantidad = cantidadActual + cant;
         // Actualiza la cantidad en la fila existente
-        filaExistente.querySelector("td:nth-child(7)").textContent = nuevaCantidad;
+        inputCantidad.value = nuevaCantidad;
     } else {
         // Si la fila no existe, crea una nueva fila con los datos del producto
         const nuevaFila = `

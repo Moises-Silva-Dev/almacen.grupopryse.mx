@@ -26,6 +26,17 @@ if (!$conexion || $conexion->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener datos del formulario
     $id_RequisionE = $_POST['ID_RequisicionE'];
+    $Supervisor = $_POST['Supervisor'];
+    $ID_Cuenta = $_POST['ID_Cuenta'];
+    $Region = $_POST['Region'];
+    $CentroTrabajo = $_POST['CentroTrabajo'];
+    $NroElementos = $_POST['NroElementos'];
+    $Estado = $_POST['Estado'];
+    $Receptor = $_POST['Receptor'];
+    $TelReceptor = $_POST['TelReceptor'];
+    $RfcReceptor = $_POST['RfcReceptor'];
+    $Justificacion = $_POST['Justificacion'];
+    $Opcion = $_POST['Opcion'];
     $usuario = $_SESSION['usuario']; // Obtiene el Correo del usuario actual
 
     // Establecer la fecha y hora actual
@@ -50,6 +61,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!$id_Usuario) {
             // Si no se encuentra el identificador del usuario, se devuelve un mensaje de error
             throw new Exception("No se encontró el identificador del usuario");
+        }
+
+        // Actualizar la requisición en la tabla RequisicionE
+        if (!ActualizarRequisicionEAdmin($conexion, $FchCreacion, $Estatus, $Supervisor, $ID_Cuenta, $Region, $CentroTrabajo, $NroElementos, $Estado, $Receptor, $TelReceptor, $RfcReceptor, $Justificacion, $id_RequisionE)) {
+            // Si la actualización falla, se lanza una excepción
+            throw new Exception("Error al actualizar la requisiciónE");
+        }
+
+        // Si se seleccionó "Enviar a domicilio"
+        if ($Opcion == 'SI') {
+            // Captura los datos de envío
+            $Mpio = $_POST['Mpio'];
+            $Colonia = $_POST['Colonia'];
+            $Calle = $_POST['Calle'];
+            $Nro = $_POST['Nro'];
+            $CP = $_POST['CP'];
+
+            // Actualiza la requisición con los datos de envío
+            if (!ActualizarDomicilioRequisicionEAdmin($conexion, $Mpio, $Colonia, $Calle, $Nro, $CP, $id_RequisionE)) {
+                // Si la actualización falla, se lanza una excepción
+                throw new Exception("Error al actualizar la requisiciónE");
+            }
         }
 
         // Eliminar la requisición en la tabla RequisicionD

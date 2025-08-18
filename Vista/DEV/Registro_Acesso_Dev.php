@@ -37,6 +37,8 @@
                                 Registro_Acceso RA
                             INNER JOIN
                                 Usuario U ON RA.IdUsuario = U.ID_Usuario
+                            ORDER BY 
+                                RA.FchAcceso DESC, RA.HorAcceso DESC
                             LIMIT 
                                 ? OFFSET ?";
 

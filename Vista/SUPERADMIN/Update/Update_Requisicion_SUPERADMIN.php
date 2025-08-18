@@ -62,7 +62,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 ?>
 
 <div class="container mt-5">
-    <center><h2>Modificación Borrador Requisición</h2></center>
+    <center><h2>Modificación de Requisición</h2></center>
     <!-- Formulario -->
     <form id="FormUpdateRequisicion" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Requisicion.php" method="POST" enctype="multipart/form-data" novalidate>
 

@@ -71,6 +71,226 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     <div class="accordion" id="accordionExample">
         <div class="accordion-item">
+            <h2 class="accordion-header " id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Información General
+            </button>
+            </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <label for="Supervisor" class="form-label">Supervisor:</label>
+                            <input type="text" class="form-control" id="Supervisor" name="Supervisor" value="<?php echo $row['Supervisor']  ?>" placeholder="Ingresa el Nombre del Supervisor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el nombre del Supervisor.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ID_Cuenta" class="form-label">Cuenta:</label>
+                            <select class="form-select mb-3" id="ID_Cuenta" name="ID_Cuenta" required>
+                                <option value="" selected disabled>-- Seleccionar Cuenta --</option>
+                                    <?php
+                                        // Llamo el correo del usuario
+                                        $usuario = $_SESSION['usuario'];
+                
+                                        // Preparar la consulta
+                                        $stmt = $conexion->prepare("SELECT C.ID, C.NombreCuenta 
+                                                    FROM 
+                                                        Usuario U
+                                                    INNER JOIN 
+                                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
+                                                    INNER JOIN
+                                                        Cuenta C ON UC.ID_Cuenta = C.ID
+                                                    WHERE 
+                                                        U.Correo_Electronico = ?");
+                                            
+                                        // Vincular parámetros
+                                        $stmt->bind_param("s", $usuario);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                
+                                        while ($resultado = $result->fetch_assoc()) {
+                                            $selected = ($row['IdCuenta'] == $resultado['ID']) ? 'selected' : '';
+                                            echo "<option value='" . htmlspecialchars($resultado['ID']) . "' $selected>" . htmlspecialchars($resultado['NombreCuenta']) . "</option>";
+                                        }
+                
+                                        // Cerrar la declaración
+                                        $stmt->close();
+                                    ?>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona una opción.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Region" class="form-label">Región:</label>
+                            <select class="form-select mb-3" id="Region" name="Region" required>
+                                <option value="" selected disabled>-- Seleccionar Región --</option>
+                                    <?php
+                                        // Preparar la consulta
+                                        $stmt1 = $conexion->prepare("SELECT R.ID_Region, R.Nombre_Region 
+                                                    FROM 
+                                                        Usuario U
+                                                    INNER JOIN 
+                                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
+                                                    INNER JOIN
+                                                        Cuenta C ON UC.ID_Cuenta = C.ID
+                                                    INNER JOIN 
+                                                        Cuenta_Region CR ON C.ID = CR.ID_Cuentas
+                                                    INNER JOIN 
+                                                        Regiones R ON CR.ID_Regiones = R.ID_Region
+                                                    WHERE 
+                                                        U.Correo_Electronico = ?");
+                                                        
+                                        // Vincular parámetros
+                                        $stmt1->bind_param("s", $usuario);
+                                        $stmt1->execute();
+                                        $result1 = $stmt1->get_result();
+
+                                        while ($resultado1 = $result1->fetch_assoc()) {
+                                            $selected1 = ($row['IdRegion'] == $resultado1['ID_Region']) ? 'selected' : '';
+                                            echo "<option value='" . htmlspecialchars($resultado1['ID_Region']) . "' $selected1>" . htmlspecialchars($resultado1['Nombre_Region']) . "</option>";
+                                        }
+
+                                        // Cerrar la declaración
+                                        $stmt1->close();
+                                    ?>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona una opción.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="CentroTrabajo" class="form-label">Centro de Trabajo:</label>
+                            <input type="text" class="form-control" id="CentroTrabajo" name="CentroTrabajo" value="<?php echo $row['CentroTrabajo']  ?>" placeholder="Ingresa el Nombre del Centro de Trabajo">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el nombre del Centro de Trabajo.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="NroElementos" class="form-label">Numero de Elementos:</label>
+                            <input type="text" class="form-control" id="NroElementos" name="NroElementos" value="<?php echo $row['NroElementos']  ?>" placeholder="Ingresa el Numero de Elementos" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el numero de Elementos.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Estado" class="form-label">Estado:</label>
+                            <select class="form-select mb-3" id="Estado" name="Estado" required>
+                                <option value="" selected disabled>-- Seleccionar Estado --</option>
+                                    <?php
+                                        // Preparar la consulta
+                                        $stmt2 = $conexion->prepare("SELECT E.Id_Estado, E.Nombre_estado 
+                                                    FROM 
+                                                        Usuario U
+                                                    INNER JOIN 
+                                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
+                                                    INNER JOIN
+                                                        Cuenta C ON UC.ID_Cuenta = C.ID
+                                                    INNER JOIN 
+                                                        Cuenta_Region CR ON C.ID = CR.ID_Cuentas
+                                                    INNER JOIN 
+                                                        Regiones R ON CR.ID_Regiones = R.ID_Region
+                                                    INNER JOIN 
+                                                        Estado_Region ER ON R.ID_Region = ER.ID_Regiones
+                                                    INNER JOIN 
+                                                        Estados E ON ER.ID_Estados = E.Id_Estado
+                                                    WHERE
+                                                        U.Correo_Electronico = ?");
+                                                        
+                                        // Vincular parámetros
+                                        $stmt2->bind_param("s", $usuario);
+                                        $stmt2->execute();
+                                        $result2 = $stmt2->get_result();
+
+                                        while ($resultado2 = $result2->fetch_assoc()) {
+                                            $selected2 = ($row['IdEstado'] == $resultado2['Id_Estado']) ? 'selected' : '';
+                                            echo "<option value='" . htmlspecialchars($resultado2['Id_Estado']) . "' $selected2>" . htmlspecialchars($resultado2['Nombre_estado']) . "</option>";
+                                        }
+
+                                        // Cerrar la declaración
+                                        $stmt2->close();
+                                    ?>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona una opción.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Receptor" class="form-label">Nombre del Receptor:</label>
+                            <input type="text" class="form-control" id="Receptor" name="Receptor" value="<?php echo $row['Receptor']  ?>" placeholder="Ingresa el Nombre del Receptor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el Nombre del Receptor.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="num_tel" class="form-label">Número de Teléfono del Receptor:</label>
+                            <input type="tel" class="form-control" id="num_tel" name="TelReceptor" value="<?php echo $row['TelReceptor']  ?>" placeholder="Ingresa el Numero de Telefono del Receptor" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa tu Numero de Telefono.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="RFC" class="form-label">RFC del Receptor:</label>
+                            <input type="text" class="form-control" id="RFC" name="RfcReceptor" value="<?php echo $row['RfcReceptor']  ?>" maxlength="13" placeholder="Ingresa el RFC del Receptor">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa tu RFC.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Justificacion" class="form-label">Justificación:</label>
+                            <textarea name="Justificacion" id="Justificacion" class="form-control" placeholder="Ingresa la Justificación" required><?php echo $row['Justificacion'];  ?></textarea>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa la Justificación.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Opcion" class="form-label">¿Enviar a Domicilio?</label>
+                            <select class="form-select mb-3" id="Opcion" name="Opcion" required>
+                                <option value="" selected disabled>-- Seleccionar Opción --</option>
+                                <option value="SI">Si</option>
+                                <option value="NO">No</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona una opción.
+                            </div>
+                        </div>       
+                        <div id="Envio" class="mb-3" style="display: none;">
+                            <label for="Mpio" class="form-label">Municipio:</label>
+                            <input type="text" class="form-control" id="Mpio" name="Mpio" value="<?php echo $row['Mpio']  ?>" placeholder="Ingresa el Municipio">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el Municipio.
+                            </div>
+                        <br>
+                            <label for="Colonia" class="form-label">Colonia:</label>
+                            <input type="text" class="form-control" id="Colonia" name="Colonia" value="<?php echo $row['Colonia']  ?>" placeholder="Ingresa la Colonia">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa la colonia.
+                            </div>
+                        <br>
+                            <label for="Calle" class="form-label">Calle:</label>
+                            <input type="text" class="form-control" id="Calle" name="Calle" value="<?php echo $row['Calle']  ?>" placeholder="Ingresa el Nombre de la Calle">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el nombre de la calle.
+                            </div>
+                        <br>            
+                            <label for="Nro" class="form-label">Numero de Casa:</label>
+                            <input type="text" class="form-control" id="Nro" name="Nro" value="<?php echo $row['Nro']  ?>" placeholder="Ingresa el Numero de Casa">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el numero de casa.
+                            </div>
+                        <br>
+                            <label for="CP" class="form-label">Codigo Postal:</label>
+                            <input type="text" class="form-control" id="CP" name="CP" value="<?php echo $row['CP']  ?>" placeholder="Ingresa el Codigo Postal" maxlength="5" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;">
+                            <div class="invalid-feedback">
+                                Por favor, ingresa el codigo postal.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <div class="accordion-item">
             <h2 class="accordion-header" id="headingTwo">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                 Productos
@@ -286,6 +506,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     </div>
 </div>
 
+<script src="../../../js/Form_Envio.js"></script>
 <script src="../../../js/Solicitud_Carga_CueRegEst.js" defer></script>
 <script type="module" src="../../../js/Busqueda_Requision_Productos.js" defer></script>
 <script src="../../../js/Update_Productos_Requisicion_datosTabla.js"></script>
