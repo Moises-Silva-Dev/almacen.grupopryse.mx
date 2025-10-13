@@ -51,7 +51,7 @@
                             LEFT JOIN 
                                 Cuenta C ON UC.ID_Cuenta = C.ID
                             GROUP BY 
-                                U.ID_Usuario
+                                U.ID_Usuario DESC
                             LIMIT 
                                 ? OFFSET ?";
 
