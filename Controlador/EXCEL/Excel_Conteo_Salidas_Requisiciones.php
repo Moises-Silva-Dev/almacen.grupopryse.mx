@@ -36,11 +36,16 @@ try {
 
     // Consultar la base de datos para obtener la información de EntradaE
     $sqlE = "SELECT 
-                T1.IDRequisicionE AS Identificador_Requisicion, T1.FchCreacion AS Fecha_Creacion,
+                T1.IDRequisicionE AS Identificador_Requisicion, 
+                T1.FchCreacion AS Fecha_Creacion,
                 CONCAT(T2.Nombre, ' ', T2.Apellido_Paterno) AS Usuario, 
-                T3.NombreCuenta AS Cuenta, T4.Nombre_Region AS Region,
-                T5.Nombre_estado AS Estado, T6.IdCProd AS Identificador_Producto,
-                T7.Descripcion, T7.Especificacion, 
+                T3.NombreCuenta AS Cuenta, 
+                T4.Nombre_Region AS Region,
+                T5.Nombre_estado AS Estado, 
+                T6.IdCProd AS Identificador_Producto,
+                T7.Descripcion, 
+                T7.Especificacion, 
+                T8.Talla as Talla,
                 SUM(T6.Cantidad) AS Cantidad_Requerida,
                 COALESCE(
                     (SELECT 
@@ -57,7 +62,9 @@ try {
                                 Tb.ID_ReqE = T1.IDRequisicionE
                         ) 
                     AND 
-                        Ta.IdCProd = T6.IdCProd), 0
+                        Ta.IdCProd = T6.IdCProd
+                    AND 
+                        Ta.IdTallas = T6.IdTalla), 0
                 ) AS Cantidad_Salida
             FROM 
                 RequisicionE T1
@@ -73,14 +80,21 @@ try {
                 ON T6.IdReqE = T1.IDRequisicionE 
             INNER JOIN Producto T7 
                 ON T7.IdCProducto = T6.IdCProd 
+            INNER JOIN CTallas T8 
+                ON T8.IdCTallas = T6.IdTalla
             WHERE 
                 DATE(T1.FchCreacion) BETWEEN ? AND ?
             GROUP BY 
-                T1.IDRequisicionE, T1.FchCreacion,
+                T1.IDRequisicionE, 
+                T1.FchCreacion,
                 CONCAT(T2.Nombre, ' ', T2.Apellido_Paterno), 
-                T3.NombreCuenta, T4.Nombre_Region,
-                T5.Nombre_estado, T6.IdCProd,
-                T7.Descripcion, T7.Especificacion;";
+                T3.NombreCuenta, 
+                T4.Nombre_Region,
+                T5.Nombre_estado, 
+                T6.IdCProd,
+                T7.Descripcion, 
+                T7.Especificacion,
+                T8.Talla;";
                 
     // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
@@ -111,8 +125,9 @@ try {
         ->setCellValue('G1', 'Identificador de Prodcuto')
         ->setCellValue('H1', 'Descripción')
         ->setCellValue('I1', 'Especificación')
-        ->setCellValue('J1', 'Cantidad Pedida')
-        ->setCellValue('K1', 'Cantidad Salida');
+        ->setCellValue('J1', 'Talla')
+        ->setCellValue('K1', 'Cantidad Pedida')
+        ->setCellValue('L1', 'Cantidad Salida');
 
     // Insertar datos de EntradaE
     $row = 2;
@@ -126,8 +141,9 @@ try {
             ->setCellValue('G' . $row, $filaE['Identificador_Producto'])
             ->setCellValue('H' . $row, $filaE['Descripcion'])
             ->setCellValue('I' . $row, $filaE['Especificacion'])
-            ->setCellValue('J' . $row, $filaE['Cantidad_Requerida'])
-            ->setCellValue('K' . $row, $filaE['Cantidad_Salida']);
+            ->setCellValue('J' . $row, $filaE['Talla'])
+            ->setCellValue('K' . $row, $filaE['Cantidad_Requerida'])
+            ->setCellValue('L' . $row, $filaE['Cantidad_Salida']);
         $row++; // Incrementar el contador de filas
     }
 
