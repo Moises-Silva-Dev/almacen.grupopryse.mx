@@ -55,7 +55,7 @@
 </section>
 
 <!-- Sección de Gráfica -->
-<section class="chart-section">
+<section id="idTablaNotificacion" class="chart-section">
     <div class="chart-header">
         <h2 class="section-title">Requisiciones del Mes</h2>
         <div class="chart-controls">

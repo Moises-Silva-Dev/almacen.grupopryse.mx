@@ -356,7 +356,7 @@ class AlertsTable {
         banner.innerHTML = `
             <div class="banner-content">
                 <i class="fas fa-exclamation-triangle"></i>
-                <span>${cantidad} producto(s) con stock bajo</span>
+                <span>${cantidad} producto(s) con stock bajo.     <a class="fas fa-arrow-down" href="#idTablaNotificacion">Ver</a></span>
                 <button class="banner-close" onclick="this.parentElement.parentElement.remove()">
                     <i class="fas fa-times"></i>
                 </button>

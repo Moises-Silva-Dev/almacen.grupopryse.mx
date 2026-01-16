@@ -12,6 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
     <link rel="stylesheet" href="../../css/principal.css">
     <link rel="stylesheet" href="../../css/colores.css">
+    <link rel="stylesheet" href="../../css/sidebar.css">
+    <link rel="stylesheet" href="../../css/sidebar_menu.css">
+    <link rel="stylesheet" href="../../css/cards_informativas_dashboard.css">
+    <link rel="stylesheet" href="../../css/diseno_tabla_inventario.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+
     <link rel="stylesheet" href="../../css/boton.css">
     <link rel="stylesheet" href="../../css/reporte.css">
     <link rel="shortcut icon" href="../../img/2.png">
