@@ -11,18 +11,16 @@ try {
   }
 
   // Consulta para obtener el producto con cantidad menor o igual a 5 en inventario
-  $sql = "SELECT 
-            P.IdCProducto AS Identificador, 
-            P.Descripcion AS NombreProducto, 
-            T.Talla AS Talla
-          FROM 
-            Inventario I
-          INNER JOIN 
-            Producto P ON I.IdCPro = P.IdCProducto
-          INNER JOIN 
-            CTallas T ON I.IdCTal = T.IdCTallas
-          WHERE 
-            I.Cantidad <= 5";
+  $sql = "SELECT P.IdCProducto AS Identificador, 
+                P.Descripcion AS Descripcion, 
+                P.Especificacion AS Especificacion, 
+                T.Talla AS Talla, 
+                I.Cantidad 
+          FROM Inventario I 
+          INNER JOIN Producto P ON I.IdCPro = P.IdCProducto 
+          INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
+          WHERE I.Cantidad <= 20 
+          ORDER BY P.Descripcion, P.Especificacion ASC";
   
   // Preparar la consulta SQL
   $stmt = $conexion->prepare($sql);

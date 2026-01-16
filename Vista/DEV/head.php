@@ -1,127 +1,186 @@
-<?php
-include('../../Modelo/Loguearse.php'); // Incluir el archivo de Loguearse.php
-if(isset($_GET['cerrar_sesion'])) { // Verificar si se solicita cerrar sesión
-    session_destroy(); // Destruir la sesión
-    header("Location: ../../index.php"); // Redirigir al usuario a la página de inicio de sesión
-    exit();// Finalizar la ejecución del script
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Programador</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Bootstrap CSS -->
+    <title>Dashboard - Usuario Programador</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="../../css/principal.css" rel="stylesheet">
-    <link href="../../css/reporte.css" rel="stylesheet">
-    <link href="../../css/boton.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js y dependencias -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+    <link rel="stylesheet" href="../../css/principal.css">
+    <link rel="stylesheet" href="../../css/colores.css">
+    <link rel="stylesheet" href="../../css/boton.css">
+    <link rel="stylesheet" href="../../css/reporte.css">
     <link rel="shortcut icon" href="../../img/2.png">
 </head>
 <body>
-    <div class="container">
-        <!-- Navbar Horizontal -->
-        <nav class="navbar-horizontal">
-            <div class="logo">
-                <p><a style="color: white" href="index_DEV.php">Inicio</a></p>
-            </div>
-            <div class="user-section">
-                <a id="logout-btn" class="btn-logout" href="?cerrar_sesion=true">
-                    <i class="fas fa-sign-out-alt"></i>Salir
+    <?php
+    include('../../Modelo/Loguearse.php');
+    if(isset($_GET['cerrar_sesion'])) {
+        session_destroy();
+        header("Location: ../../index.php");
+        exit();
+    }
+    ?>
+    
+    <div class="dashboard-container">
+        <!-- Navbar Superior -->
+        <nav class="navbar-top">
+            <div class="navbar-brand">
+                <div class="logo-container">
+                    <i class="fas fa-boxes logo-icon"></i>
+                    <span class="logo-text">InventoryPro</span>
+                </div>
+                <a href="index_DEV.php" class="nav-home-link">
+                    <i class="fas fa-home"></i> Inicio
                 </a>
+            </div>
+            
+            <div class="navbar-controls">                
+                <!-- Botón Salir -->
+                <a id="logout-btn" class="btn-logout" href="?cerrar_sesion=true">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="logout-text">Salir</span>
+                </a>
+                
+                <!-- Botón Menú Móvil -->
                 <button id="menu-toggle" class="menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </nav>
-
-        <!-- Navbar Vertical -->
-        <nav class="navbar-vertical" id="navbar-vertical">
-            <div class="user-profile">
-                <?php            
-                    include('../../Modelo/Conexion.php'); // Incluir la conexión    
-                    if (isset($_SESSION['usuario'])) { // Verificar si el usuario ha iniciado sesión
-                        $conexion = (new Conectar())->conexion(); // Crear una instancia de la clase Conectar y obtener la conexión
-                        $usuario = $_SESSION['usuario']; // Obtener el correo electrónico del usuario desde la sesión
-                        
-                        try {
-                            // Preparar la consulta SQL para obtener los datos del usuario
-                            $sql = "SELECT 
-                                        U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                                        U.Correo_Electronico, TU.Tipo_Usuario,
-                                        COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta
-                                    FROM 
-                                        Usuario U
-                                    INNER JOIN 
-                                        Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
-                                    LEFT JOIN
-                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
-                                    LEFT JOIN
-                                        Cuenta C ON UC.ID_Cuenta = C.ID
-                                    WHERE 
-                                        U.Correo_Electronico = ?";
-                            
-                            $stmt = $conexion->prepare($sql); // Preparar la consulta SQL
-                            
-                            if (!$stmt) {
-                                throw new Exception("Error al preparar la consulta.");
-                            }
-                            
-                            $stmt->bind_param("s", $usuario); // Vincular el parámetro de la consulta
         
-                            if (!$stmt->execute()) { // Ejecutar la consulta
-                                throw new Exception("Error al ejecutar la consulta.");
-                            }
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Perfil de Usuario -->
+            <div class="user-profile-card">
+                <?php            
+                include('../../Modelo/Conexion.php');
+                if (isset($_SESSION['usuario'])) {
+                    $conexion = (new Conectar())->conexion();
+                    $usuario = $_SESSION['usuario'];
+                    
+                    try {
+                        $sql = "SELECT 
+                                    U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
+                                    U.Correo_Electronico, TU.Tipo_Usuario,
+                                    COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta
+                                FROM 
+                                    Usuario U
+                                INNER JOIN 
+                                    Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
+                                LEFT JOIN
+                                    Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
+                                LEFT JOIN
+                                    Cuenta C ON UC.ID_Cuenta = C.ID
+                                WHERE 
+                                    U.Correo_Electronico = ?";
+                        
+                        $stmt = $conexion->prepare($sql);
+                        $stmt->bind_param("s", $usuario);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
                             
-                            $result = $stmt->get_result(); // Obtener el resultado de la consulta
-                            
-                            if ($result->num_rows > 0) { // Verificar si se encontraron resultados
-                                $row = $result->fetch_assoc(); // Obtener los datos del usuario
-
-                                if ($row['Tipo_Usuario'] == 'Programador') {
-                                    echo '<img src="../../img/pro.png" alt="Usuario" class="profile-img">';
-                                } else {
-                                    echo '<img src="../../img/SUPERADMIN.png" alt="Usuario" class="profile-img">';
-                                }
-                                
-                                // Nombre completo
-                                $nombreCompleto = trim($row['Nombre'].' '.$row['Apellido_Paterno'].' '.$row['Apellido_Materno']);
-                                echo '<p class="profile-name"><strong>'.htmlspecialchars($nombreCompleto).'</strong></p>';
-                                
-                                // Tipo de usuario
-                                echo '<p class="profile-role"><i class="fas fa-user-tag"></i> '.htmlspecialchars($row['Tipo_Usuario']).'</p>';
-                                
-                                // Cuenta asociada (si existe)
-                                if (!empty($row['NombreCuenta']) && $row['NombreCuenta'] !== 'N/A') {
-                                    echo '<p class="profile-account"><i class="fas fa-building"></i> '.htmlspecialchars($row['NombreCuenta']).'</p>';
-                                }
+                            echo '<div class="profile-header">';
+                            if ($row['Tipo_Usuario'] == 'Programador') {
+                                echo '<img src="../../img/pro.png" alt="Usuario" class="profile-avatar">';
                             } else {
-                                echo '<p class="profile-message">No se encontraron datos del usuario.</p>';
+                                echo '<img src="../../img/SUPERADMIN.png" alt="Usuario" class="profile-avatar">';
                             }
-                        } catch (Exception $e) {
-                            echo '<p class="profile-error"><i class="fas fa-exclamation-circle"></i> Error al cargar los datos del perfil.</p>';
-                            // Opcional: registrar el error en un log
-                            // error_log('Error en perfil de usuario: ' . $e->getMessage());
-                        } finally {
-                            $stmt->close(); // Cerrar la consulta preparada
-                            $conexion->close(); // Cerrar la conexión a la base de datos
+                            echo '<div class="profile-info">';
+                            echo '<h4 class="profile-name">'.htmlspecialchars(trim($row['Nombre'].' '.$row['Apellido_Paterno'].' '.$row['Apellido_Materno'])).'</h4>';
+                            echo '<span class="profile-badge">'.htmlspecialchars($row['Tipo_Usuario']).'</span>';
+                            echo '</div></div>';
+                            
+                            echo '<div class="profile-details">';
+                            echo '<div class="profile-detail-item">';
+                            echo '<i class="fas fa-envelope"></i>';
+                            echo '<span>'.htmlspecialchars($row['Correo_Electronico']).'</span>';
+                            echo '</div>';
+                            
+                            if (!empty($row['NombreCuenta']) && $row['NombreCuenta'] !== 'N/A') {
+                                echo '<div class="profile-detail-item">';
+                                echo '<i class="fas fa-building"></i>';
+                                echo '<span>'.htmlspecialchars($row['NombreCuenta']).'</span>';
+                                echo '</div>';
+                            }
+                            echo '</div>';
                         }
-                    } else {
-                        echo '<p class="profile-message"><i class="fas fa-exclamation-triangle"></i> No se ha iniciado sesión.</p>';
+                        $stmt->close();
+                        $conexion->close();
+                    } catch (Exception $e) {
+                        echo '<div class="error-message">Error al cargar datos del perfil</div>';
                     }
+                }
                 ?>
             </div>
-            <ul>
-                <li><a href="Registro_Usuario_Dev.php"><i class="fas fa-user-plus"></i>Usuarios</a></li>
-                <li><a href="Producto_Dev.php"><i class="fas fa-store"></i>Productos</a></li>
-                <li><a href="Salidas_Dev.php"><i class="fas fa-box-open"></i>Salida de Almacén</a></li>
-                <li><a href="Almacen_Dev.php"><i class="fas fa-boxes"></i>Entrada de Productos</a></li>
-                <li><a href="Cuenta_Dev.php"><i class="fas fa-wallet"></i>Cuenta</a></li>
-                <li><a href="Regiones_Dev.php"><i class="fas fa-map-marked-alt"></i>Regiones</a></li>
-                <li><a href="Registro_Acesso_Dev.php"><i class="fas fa-users"></i>Registro de Acceso de Usuarios</a></li>
-                <li><a href="Reportes_Dev.php"><i class="fas fa-chart-bar"></i>Reportes</a></li>
-                <li><a href="Restauracion_SQL_Dev.php"><i class="fas fa-database"></i>Respaldos BD</a></li>
-            </ul>
-        </nav>
+            
+            <!-- Menú de Navegación -->
+            <nav class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="Registro_Usuario_Dev.php" class="menu-item">
+                            <i class="fas fa-user-plus menu-icon"></i>
+                            <span class="menu-text">Usuarios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Producto_Dev.php" class="menu-item">
+                            <i class="fas fa-store menu-icon"></i>
+                            <span class="menu-text">Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Salidas_Dev.php" class="menu-item">
+                            <i class="fas fa-box-open menu-icon"></i>
+                            <span class="menu-text">Salida de Almacén</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Almacen_Dev.php" class="menu-item">
+                            <i class="fas fa-boxes menu-icon"></i>
+                            <span class="menu-text">Entrada de Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Cuenta_Dev.php" class="menu-item">
+                            <i class="fas fa-wallet menu-icon"></i>
+                            <span class="menu-text">Cuenta</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Regiones_Dev.php" class="menu-item">
+                            <i class="fas fa-map-marked-alt menu-icon"></i>
+                            <span class="menu-text">Regiones</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Registro_Acesso_Dev.php" class="menu-item">
+                            <i class="fas fa-users menu-icon"></i>
+                            <span class="menu-text">Registro de Acceso</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Reportes_Dev.php" class="menu-item">
+                            <i class="fas fa-chart-bar menu-icon"></i>
+                            <span class="menu-text">Reportes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Restauracion_SQL_Dev.php" class="menu-item">
+                            <i class="fas fa-database menu-icon"></i>
+                            <span class="menu-text">Respaldos BD</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Contenido Principal -->
         <main class="main-content">
