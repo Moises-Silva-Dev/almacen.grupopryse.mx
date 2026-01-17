@@ -68,7 +68,7 @@
     </div>
 </section>
 
-<bR><bR><bR><bR>
+<br><br><br><br><br><br>
 
 <!-- Nueva Sección: Tabla de Alertas de Inventario -->
 <section class="alerts-section">

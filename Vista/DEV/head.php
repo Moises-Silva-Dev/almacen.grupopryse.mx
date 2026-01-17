@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../../css/sidebar.css">
     <link rel="stylesheet" href="../../css/sidebar_menu.css">
     <link rel="stylesheet" href="../../css/cards_informativas_dashboard.css">
+    <link rel="stylesheet" href="../../css/diseno_graficas.css">
     <link rel="stylesheet" href="../../css/diseno_tabla_inventario.css">
     <link rel="stylesheet" href="../../css/responsive.css">
 

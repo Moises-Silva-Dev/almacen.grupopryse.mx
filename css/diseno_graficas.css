@@ -1,0 +1,48 @@
+/* Sección de Gráfica */
+.chart-section {
+    background: var(--secondary-white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-chart-control {
+    padding: 0.5rem 1.2rem;
+    border: 2px solid var(--medium-gray);
+    background: transparent;
+    color: var(--dark-gray);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn-chart-control:hover {
+    border-color: var(--primary-turquoise);
+    color: var(--primary-navy);
+}
+
+.btn-chart-control.active {
+    background-color: var(--primary-turquoise);
+    border-color: var(--primary-turquoise);
+    color: var(--primary-navy);
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
