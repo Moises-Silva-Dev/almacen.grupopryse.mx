@@ -3,6 +3,7 @@
     background: var(--secondary-white);
     border-radius: var(--border-radius);
     padding: 2rem;
+    margin-bottom: 5.5rem;
     box-shadow: var(--shadow);
 }
 

@@ -55,7 +55,7 @@
 </section>
 
 <!-- Sección de Gráfica -->
-<section id="idTablaNotificacion" class="chart-section">
+<section class="chart-section">
     <div class="chart-header">
         <h2 class="section-title">Requisiciones del Mes</h2>
         <div class="chart-controls">
@@ -68,10 +68,8 @@
     </div>
 </section>
 
-<br><br><br><br><br><br>
-
 <!-- Nueva Sección: Tabla de Alertas de Inventario -->
-<section class="alerts-section">
+<section id="idTablaNotificacion" class="alerts-section">
     <div class="alerts-header">
         <h2 class="section-title">
             <i class="fas fa-exclamation-triangle warning-icon"></i>
