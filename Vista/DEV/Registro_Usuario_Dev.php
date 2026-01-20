@@ -108,100 +108,99 @@
                             </thead>
                             <tbody>
                                 <?php
-                                try {
+                                    try {
+                                        // En la parte superior del archivo, antes de la consulta principal
+                                        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-                                // En la parte superior del archivo, antes de la consulta principal
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+                                        // Consulta SQL modificada con búsqueda
+                                        $sql = "SELECT U.ID_Usuario, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, 
+                                                    U.Correo_Electronico, TU.Tipo_Usuario,
+                                                    COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta,
+                                                    EXISTS (SELECT 1 FROM RequisicionE WHERE IdUsuario = U.ID_Usuario) AS tieneRequisicionE,
+                                                    EXISTS (SELECT 1 FROM Borrador_RequisicionE WHERE BIdUsuario = U.ID_Usuario) AS tieneBorradorRequisicionE,
+                                                    EXISTS (SELECT 1 FROM EntradaE WHERE Usuario_Creacion = U.ID_Usuario) AS tieneEntradaE
+                                                FROM Usuario U
+                                                INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
+                                                LEFT JOIN Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
+                                                LEFT JOIN Cuenta C ON UC.ID_Cuenta = C.ID
+                                                WHERE 1=1";
 
-// Consulta SQL modificada con búsqueda
-$sql = "SELECT U.ID_Usuario, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, 
-               U.Correo_Electronico, TU.Tipo_Usuario,
-               COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta,
-               EXISTS (SELECT 1 FROM RequisicionE WHERE IdUsuario = U.ID_Usuario) AS tieneRequisicionE,
-               EXISTS (SELECT 1 FROM Borrador_RequisicionE WHERE BIdUsuario = U.ID_Usuario) AS tieneBorradorRequisicionE,
-               EXISTS (SELECT 1 FROM EntradaE WHERE Usuario_Creacion = U.ID_Usuario) AS tieneEntradaE
-        FROM Usuario U
-        INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
-        LEFT JOIN Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
-        LEFT JOIN Cuenta C ON UC.ID_Cuenta = C.ID
-        WHERE 1=1";
+                                        // Si hay búsqueda, agregar condiciones
+                                        if (!empty($search)) {
+                                            $searchTerm = "%$search%";
+                                            $sql .= " AND (
+                                                U.Nombre LIKE ? OR 
+                                                U.Apellido_Paterno LIKE ? OR 
+                                                U.Apellido_Materno LIKE ? OR 
+                                                U.Correo_Electronico LIKE ? OR 
+                                                TU.Tipo_Usuario LIKE ? OR 
+                                                C.NombreCuenta LIKE ?
+                                            )";
+                                        }
 
-// Si hay búsqueda, agregar condiciones
-if (!empty($search)) {
-    $searchTerm = "%$search%";
-    $sql .= " AND (
-        U.Nombre LIKE ? OR 
-        U.Apellido_Paterno LIKE ? OR 
-        U.Apellido_Materno LIKE ? OR 
-        U.Correo_Electronico LIKE ? OR 
-        TU.Tipo_Usuario LIKE ? OR 
-        C.NombreCuenta LIKE ?
-    )";
-}
+                                        $sql .= " GROUP BY U.ID_Usuario DESC LIMIT ? OFFSET ?";
 
-$sql .= " GROUP BY U.ID_Usuario DESC LIMIT ? OFFSET ?";
+                                        // Calcular total para paginación (incluyendo búsqueda)
+                                        $sql_total = "SELECT COUNT(DISTINCT U.ID_Usuario) as total
+                                                    FROM Usuario U
+                                                    INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
+                                                    LEFT JOIN Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
+                                                    LEFT JOIN Cuenta C ON UC.ID_Cuenta = C.ID";
 
-// Calcular total para paginación (incluyendo búsqueda)
-$sql_total = "SELECT COUNT(DISTINCT U.ID_Usuario) as total
-              FROM Usuario U
-              INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
-              LEFT JOIN Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
-              LEFT JOIN Cuenta C ON UC.ID_Cuenta = C.ID";
+                                        if (!empty($search)) {
+                                            $sql_total .= " WHERE (
+                                                U.Nombre LIKE ? OR 
+                                                U.Apellido_Paterno LIKE ? OR 
+                                                U.Apellido_Materno LIKE ? OR 
+                                                U.Correo_Electronico LIKE ? OR 
+                                                TU.Tipo_Usuario LIKE ? OR 
+                                                C.NombreCuenta LIKE ?
+                                            )";
+                                        }
 
-if (!empty($search)) {
-    $sql_total .= " WHERE (
-        U.Nombre LIKE ? OR 
-        U.Apellido_Paterno LIKE ? OR 
-        U.Apellido_Materno LIKE ? OR 
-        U.Correo_Electronico LIKE ? OR 
-        TU.Tipo_Usuario LIKE ? OR 
-        C.NombreCuenta LIKE ?
-    )";
-}
-
-                                    $conexion = (new Conectar())->conexion();
-                                    
-                                    $records_per_page = 10;
-                                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-                                    $offset = ($page - 1) * $records_per_page;
-                                    
-                                    // Preparar la consulta principal
-                                    $stmt = $conexion->prepare($sql);
-                                    
-                                    if (!empty($search)) {
-                                        $searchTerm = "%$search%";
-                                        $stmt->bind_param("ssssssii", 
-                                            $searchTerm, $searchTerm, $searchTerm, 
-                                            $searchTerm, $searchTerm, $searchTerm,
-                                            $records_per_page, $offset
-                                        );
-                                    } else {
-                                        $stmt->bind_param("ii", $records_per_page, $offset);
-                                    }
-                                    
-                                    $stmt->execute();
-                                    $query = $stmt->get_result();
-                                    
-                                    // Obtener total de registros (con búsqueda si aplica)
-                                    $stmt_total = $conexion->prepare($sql_total);
-                                    
-                                    if (!empty($search)) {
-                                        $stmt_total->bind_param("ssssss", 
-                                            $searchTerm, $searchTerm, $searchTerm, 
-                                            $searchTerm, $searchTerm, $searchTerm
-                                        );
-                                    }
-                                    
-                                    $stmt_total->execute();
-                                    $result_total = $stmt_total->get_result();
-                                    $total_rows = $result_total->fetch_assoc()['total'];
-                                    $total_pages = ceil($total_rows / $records_per_page);
-                                    
-                                    if ($query->num_rows > 0):
-                                        while ($row = $query->fetch_assoc()):
-                                            $tieneRegistros = $row['tieneRequisicionE'] || $row['tieneBorradorRequisicionE'] || $row['tieneEntradaE'];
-                                            $fullName = $row['Nombre'] . ' ' . $row['Apellido_Paterno'] . ' ' . $row['Apellido_Materno'];
-                                            $initials = strtoupper(substr($row['Nombre'], 0, 1) . substr($row['Apellido_Paterno'], 0, 1));
+                                        $conexion = (new Conectar())->conexion();
+                                        
+                                        $records_per_page = 10;
+                                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                                        $offset = ($page - 1) * $records_per_page;
+                                        
+                                        // Preparar la consulta principal
+                                        $stmt = $conexion->prepare($sql);
+                                        
+                                        if (!empty($search)) {
+                                            $searchTerm = "%$search%";
+                                            $stmt->bind_param("ssssssii", 
+                                                $searchTerm, $searchTerm, $searchTerm, 
+                                                $searchTerm, $searchTerm, $searchTerm,
+                                                $records_per_page, $offset
+                                            );
+                                        } else {
+                                            $stmt->bind_param("ii", $records_per_page, $offset);
+                                        }
+                                        
+                                        $stmt->execute();
+                                        $query = $stmt->get_result();
+                                        
+                                        // Obtener total de registros (con búsqueda si aplica)
+                                        $stmt_total = $conexion->prepare($sql_total);
+                                        
+                                        if (!empty($search)) {
+                                            $stmt_total->bind_param("ssssss", 
+                                                $searchTerm, $searchTerm, $searchTerm, 
+                                                $searchTerm, $searchTerm, $searchTerm
+                                            );
+                                        }
+                                        
+                                        $stmt_total->execute();
+                                        $result_total = $stmt_total->get_result();
+                                        $total_rows = $result_total->fetch_assoc()['total'];
+                                        $total_pages = ceil($total_rows / $records_per_page);
+                                        
+                                        if ($query->num_rows > 0):
+                                            while ($row = $query->fetch_assoc()):
+                                                $tieneRegistros = $row['tieneRequisicionE'] || $row['tieneBorradorRequisicionE'] || $row['tieneEntradaE'];
+                                                $fullName = $row['Nombre'] . ' ' . $row['Apellido_Paterno'] . ' ' . $row['Apellido_Materno'];
+                                                $initials = strtoupper(substr($row['Nombre'], 0, 1) . substr($row['Apellido_Paterno'], 0, 1));
                                 ?>
                                 <tr class="border-bottom border-light">
                                     <td class="py-3 px-4">
