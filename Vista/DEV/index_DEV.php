@@ -1,4 +1,10 @@
 <?php include('head.php'); ?>
+
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/cards_informativas_dashboard.css">
+<link rel="stylesheet" href="../../css/diseno_graficas.css">
+<link rel="stylesheet" href="../../css/diseno_tabla_inventario.css">
+
 <!-- Sección de Métricas -->
 <section class="metrics-section">
     <h2 class="section-title">Dashboard de Actividad</h2>
@@ -157,7 +163,6 @@
 
 <!-- Scripts -->
 <script src="../../js/Cards_Informativas_Dashboard.js"></script>
-<script src="../../js/Sidebar.js"></script>
 <script src="../../js/Graficas/GraficaConteoRequisicionesDia.js"></script>
 <script src="../../js/Notificacion_Alert_Inventario.js"></script>
 

@@ -1,191 +1,398 @@
 <?php include('head.php'); ?>
-<!-- Contenedor de las alertas -->            
-<div class="table-responsive">
-    <center>
-        <h2 class="mb-4">Usuarios Registrados</h2>
-        <!-- Botones -->
-        <a class="btn btn-primary mb-3" href="INSERT/Insert_Usuario_Dev.php">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                <path d="M16 19h6" />
-                <path d="M19 16v6" />
-                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-            </svg> Nuevo Usuario
-        </a>
-    </center>
-    <!-- Tabla para mostrar los registros -->
-    <table class="table table-hover table-striped mt-4">
-        <thead class="table-light">
-            <tr> 
-                <th scope="col">#</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido Paterno</th>
-                <th scope="col">Apellido Materno</th>
-                <th scope="col">Correo Electrónico</th>
-                <th scope="col">Rol</th>
-                <th scope="col">Cuenta</th>
-                <th colspan="3" scope="col"><center>Acciones</center></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                try{
-                    $conexion = (new Conectar())->conexion(); // Crear una nueva instancia de la clase Conectar y obtener la conexión
-                        
-                    $records_per_page = 10; // Número de registros por página
-                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1; // Obtener la página actual, por defecto es 1
-                    $offset = ($page - 1) * $records_per_page; // Calcular el offset para la consulta SQL
-                        
-                    // Consulta SQL para obtener los datos de la tabla Usuario
-                    $sql = "SELECT U.ID_Usuario, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, U.Correo_Electronico, TU.Tipo_Usuario,
-                                COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta,
-                                EXISTS (SELECT 1 FROM RequisicionE WHERE IdUsuario = U.ID_Usuario) AS tieneRequisicionE,
-                                EXISTS (SELECT 1 FROM Borrador_RequisicionE WHERE BIdUsuario = U.ID_Usuario) AS tieneBorradorRequisicionE,
-                                EXISTS (SELECT 1 FROM EntradaE WHERE Usuario_Creacion = U.ID_Usuario) AS tieneEntradaE
-                            FROM Usuario U
-                            INNER JOIN 
-                                Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
-                            LEFT JOIN 
-                                Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
-                            LEFT JOIN 
-                                Cuenta C ON UC.ID_Cuenta = C.ID
-                            GROUP BY 
-                                U.ID_Usuario DESC
-                            LIMIT 
-                                ? OFFSET ?";
 
-                    $stmt = $conexion->prepare($sql); // Preparar la consulta SQL
-                    $stmt->bind_param("ii", $records_per_page, $offset); // Vincular los parámetros a la consulta
-                    $stmt->execute(); // Ejecutar la consulta
-                    $query = $stmt->get_result(); // Obtener el resultado de la consulta
-                        
-                    // Total de registros
-                    $sql_total = "SELECT COUNT(*) FROM Usuario";
-                    $result_total = mysqli_query($conexion, $sql_total);
-                    $total_rows = mysqli_fetch_array($result_total)[0];
-                    $total_pages = ceil($total_rows / $records_per_page);
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/diseno_tablas_general.css">
 
-                    // Itera sobre los resultados de la consulta
-                    while ($row = mysqli_fetch_array($query)) {
-                        $tieneRegistros = $row['tieneRequisicionE'] || $row['tieneBorradorRequisicionE'] || $row['tieneEntradaE'];    
-                        $ID_Usuario = htmlspecialchars($row['ID_Usuario'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir
-                        $Nombre = htmlspecialchars($row['Nombre'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                        $Apellido_Paterno = htmlspecialchars($row['Apellido_Paterno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                        $Apellido_Materno = htmlspecialchars($row['Apellido_Materno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                        $Correo_Electronico = htmlspecialchars($row['Correo_Electronico'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                        $Tipo_Usuario = htmlspecialchars($row['Tipo_Usuario'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                        $NombreCuenta = htmlspecialchars($row['NombreCuenta'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XS
-                ?>
-                    <tr>
-                        <td><?php echo $ID_Usuario; ?></td>
-                        <td><?php echo $Nombre; ?></td>
-                        <td><?php echo $Apellido_Paterno; ?></td>
-                        <td><?php echo $Apellido_Materno; ?></td>
-                        <td><?php echo $Correo_Electronico; ?></td>
-                        <td><?php echo $Tipo_Usuario; ?></td>
-                        <td><?php echo $NombreCuenta; ?></td>
-                        <td>
-                            <a class="btn btn-sm btn-warning" href="Update/Update_Usuario_Dev.php?id=<?php echo $ID_Usuario; ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                    <path d="M16 5l3 3" />
-                                </svg>Modificar
-                            </a>
-                        </td>
-                        <td>
-                            <a class="btn btn-sm btn-success" href="Update/Update_Rol_Usuario_Dev.php?id=<?php echo $ID_Usuario; ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
-                                    <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
-                                </svg>Rol
-                            </a>
-                        </td>
-                        <td>
-                            <a class="btn btn-sm btn-danger <?php echo $tieneRegistros ? 'disabled' : ''; ?>" href="javascript:void(0);" 
-                                <?php if (!$tieneRegistros): ?>
-                                    onclick="eliminarRegistroUsuario(<?php echo htmlspecialchars($ID_Usuario); ?>)"
-                                <?php endif; ?>>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16zm-9.489 5.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" stroke-width="0" fill="currentColor" />
-                                    <path d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z" stroke-width="0" fill="currentColor" />
-                                </svg>Eliminar
-                            </a>
-                        </td>
-                    </tr>
-                <?php
-                    }
-                } catch (Exception $e) {
-                    error_log("Error en el sistema: " . $e->getMessage()); // Registrar el error en el log del servidor
-                    echo "<div class='alert alert-danger'>Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.</div>";                
-                } finally {
-                    $stmt->close(); // Cerrar la consulta preparada
-                    $conexion->close(); // Cierra la conexión a la base de datos
-                }
-            ?>
-        </tbody>
-    </table>
-    <!-- Paginación -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center flex-wrap text-center">
-            <!-- Botón anterior -->
-            <?php if ($page > 1): ?>
-                <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            <?php endif; ?>
+<div class="container-fluid py-4">
+    <!-- Encabezado -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-navy">
+                        <i class="fas fa-users me-2 text-turquoise"></i>
+                        Gestión de Usuarios
+                    </h1>
+                </div>
+                <a href="INSERT/Insert_Usuario_Dev.php" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-1"></i> Nuevo Usuario
+                </a>
+            </div>
+        </div>
+    </div>
 
-            <?php
-                $range = 2; // Número de páginas a mostrar a cada lado de la página actual
-                $show_dots_start = false; // Mostrar puntos suspensivos al inicio
-                $show_dots_end = false; // Mostrar puntos suspensivos al final
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mb-3 mb-md-0">
+                            <form method="GET" action="" class="search-form">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-navy border-navy text-white">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control form-control-lg border-navy" name="search" placeholder="Buscar por nombre, apellidos, correo, rol o cuenta..." value="<?php echo htmlspecialchars($search ?? ''); ?>" aria-label="Buscar usuarios">
+                                    <?php if (!empty($search)): ?>
+                                        <button type="button" class="btn btn-outline-secondary border-navy" onclick="clearSearch()" title="Limpiar búsqueda">Limpiar</button>
+                                    <?php endif; ?>
+                                    <button type="submit" class="btn btn-navy">Buscar</button>
+                                </div>
+                                <?php if (!empty($search)): ?>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        Resultados para: <strong>"<?php echo htmlspecialchars($search); ?>"</strong>
+                                        <a href="?" class="ms-2 text-turquoise text-decoration-none">
+                                            <i class="fas fa-times me-1">Limpiar filtro</i>
+                                        </a>
+                                    </small>
+                                </div>
+                                <?php endif; ?>
+                            </form>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button class="btn btn-outline-navy" onclick="refreshPage()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                if ($page > $range + 2) { // Si la página actual es mayor que el rango más 2
-                    echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>'; // Mostrar siempre la primera página
-                    $show_dots_start = true; // Mostrar puntos suspensivos al inicio
-                }
+    <!-- Tabla de usuarios -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-navy text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Lista de Usuarios
+                        </h5>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="py-3 px-4 border-bottom border-navy">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="selectAll">
+                                        </div>
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-id-card me-2"></i>ID
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-user me-2"></i>Usuario
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-envelope me-2"></i>Correo
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-user-tag me-2"></i>Rol
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-building me-2"></i>Cuenta
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy text-center">
+                                        <i class="fas fa-cogs me-2"></i>Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                try {
 
-                if ($show_dots_start) { // Si se deben mostrar puntos suspensivos al inicio
-                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Mostrar puntos suspensivos
-                }
+                                // En la parte superior del archivo, antes de la consulta principal
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-                for ($i = max(1, $page - $range); $i <= min($total_pages, $page + $range); $i++) { // Iterar desde la página actual menos el rango hasta la página actual más el rango
-                    $active = $i == $page ? 'active' : ''; // Marcar la página actual como activa
-                    echo "<li class='page-item $active'><a class='page-link' href='?page=$i'>$i</a></li>"; // Mostrar el número de página
-                }
+// Consulta SQL modificada con búsqueda
+$sql = "SELECT U.ID_Usuario, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, 
+               U.Correo_Electronico, TU.Tipo_Usuario,
+               COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta,
+               EXISTS (SELECT 1 FROM RequisicionE WHERE IdUsuario = U.ID_Usuario) AS tieneRequisicionE,
+               EXISTS (SELECT 1 FROM Borrador_RequisicionE WHERE BIdUsuario = U.ID_Usuario) AS tieneBorradorRequisicionE,
+               EXISTS (SELECT 1 FROM EntradaE WHERE Usuario_Creacion = U.ID_Usuario) AS tieneEntradaE
+        FROM Usuario U
+        INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
+        LEFT JOIN Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
+        LEFT JOIN Cuenta C ON UC.ID_Cuenta = C.ID
+        WHERE 1=1";
 
-                if ($page + $range < $total_pages - 1) { // Si la página actual más el rango es menor que la última página menos 1
-                    $show_dots_end = true; // Mostrar puntos suspensivos al final
-                }
+// Si hay búsqueda, agregar condiciones
+if (!empty($search)) {
+    $searchTerm = "%$search%";
+    $sql .= " AND (
+        U.Nombre LIKE ? OR 
+        U.Apellido_Paterno LIKE ? OR 
+        U.Apellido_Materno LIKE ? OR 
+        U.Correo_Electronico LIKE ? OR 
+        TU.Tipo_Usuario LIKE ? OR 
+        C.NombreCuenta LIKE ?
+    )";
+}
 
-                if ($show_dots_end) { // Si se deben mostrar puntos suspensivos al final
-                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Mostrar puntos suspensivos
-                }
+$sql .= " GROUP BY U.ID_Usuario DESC LIMIT ? OFFSET ?";
 
-                if ($page + $range < $total_pages) { // Si la página actual más el rango es menor que la última página
-                    echo '<li class="page-item"><a class="page-link" href="?page=' . $total_pages . '">' . $total_pages . '</a></li>'; // Mostrar siempre la última página
-                }
-            ?>
-            <!-- Botón siguiente -->
-            <?php if ($page < $total_pages): ?>
-                <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-        </ul>
-    </nav>
+// Calcular total para paginación (incluyendo búsqueda)
+$sql_total = "SELECT COUNT(DISTINCT U.ID_Usuario) as total
+              FROM Usuario U
+              INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID
+              LEFT JOIN Usuario_Cuenta UC ON UC.ID_Usuarios = U.ID_Usuario
+              LEFT JOIN Cuenta C ON UC.ID_Cuenta = C.ID";
+
+if (!empty($search)) {
+    $sql_total .= " WHERE (
+        U.Nombre LIKE ? OR 
+        U.Apellido_Paterno LIKE ? OR 
+        U.Apellido_Materno LIKE ? OR 
+        U.Correo_Electronico LIKE ? OR 
+        TU.Tipo_Usuario LIKE ? OR 
+        C.NombreCuenta LIKE ?
+    )";
+}
+
+                                    $conexion = (new Conectar())->conexion();
+                                    
+                                    $records_per_page = 10;
+                                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                                    $offset = ($page - 1) * $records_per_page;
+                                    
+                                    // Preparar la consulta principal
+                                    $stmt = $conexion->prepare($sql);
+                                    
+                                    if (!empty($search)) {
+                                        $searchTerm = "%$search%";
+                                        $stmt->bind_param("ssssssii", 
+                                            $searchTerm, $searchTerm, $searchTerm, 
+                                            $searchTerm, $searchTerm, $searchTerm,
+                                            $records_per_page, $offset
+                                        );
+                                    } else {
+                                        $stmt->bind_param("ii", $records_per_page, $offset);
+                                    }
+                                    
+                                    $stmt->execute();
+                                    $query = $stmt->get_result();
+                                    
+                                    // Obtener total de registros (con búsqueda si aplica)
+                                    $stmt_total = $conexion->prepare($sql_total);
+                                    
+                                    if (!empty($search)) {
+                                        $stmt_total->bind_param("ssssss", 
+                                            $searchTerm, $searchTerm, $searchTerm, 
+                                            $searchTerm, $searchTerm, $searchTerm
+                                        );
+                                    }
+                                    
+                                    $stmt_total->execute();
+                                    $result_total = $stmt_total->get_result();
+                                    $total_rows = $result_total->fetch_assoc()['total'];
+                                    $total_pages = ceil($total_rows / $records_per_page);
+                                    
+                                    if ($query->num_rows > 0):
+                                        while ($row = $query->fetch_assoc()):
+                                            $tieneRegistros = $row['tieneRequisicionE'] || $row['tieneBorradorRequisicionE'] || $row['tieneEntradaE'];
+                                            $fullName = $row['Nombre'] . ' ' . $row['Apellido_Paterno'] . ' ' . $row['Apellido_Materno'];
+                                            $initials = strtoupper(substr($row['Nombre'], 0, 1) . substr($row['Apellido_Paterno'], 0, 1));
+                                ?>
+                                <tr class="border-bottom border-light">
+                                    <td class="py-3 px-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input user-checkbox" type="checkbox" 
+                                                   value="<?php echo $row['ID_Usuario']; ?>">
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-navy rounded-pill">#<?php echo $row['ID_Usuario']; ?></span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-3">
+                                                <div class="avatar-title bg-turquoise text-white rounded-circle">
+                                                    <?php echo $initials; ?>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-navy"><?php echo htmlspecialchars($fullName); ?></h6>
+                                                <small class="text-muted">
+                                                    <?php echo htmlspecialchars($row['Apellido_Paterno'] . ' ' . $row['Apellido_Materno']); ?>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <a href="mailto:<?php echo $row['Correo_Electronico']; ?>" 
+                                           class="text-decoration-none text-navy">
+                                            <i class="fas fa-envelope me-2 text-turquoise"></i>
+                                            <?php echo htmlspecialchars($row['Correo_Electronico']); ?>
+                                        </a>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-light text-navy border border-navy">
+                                            <i class="fas fa-user-tag me-1"></i>
+                                            <?php echo htmlspecialchars($row['Tipo_Usuario']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-light text-navy">
+                                            <i class="fas fa-building me-1"></i>
+                                            <?php echo htmlspecialchars($row['NombreCuenta']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Botón Editar -->
+                                            <button class="btn btn-sm btn-outline-navy" 
+                                                    onclick="editUser(<?php echo $row['ID_Usuario']; ?>)"
+                                                    title="Editar usuario">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            
+                                            <!-- Botón Cambiar Rol -->
+                                            <button class="btn btn-sm btn-outline-turquoise"
+                                                    onclick="changeRole(<?php echo $row['ID_Usuario']; ?>)"
+                                                    title="Cambiar rol">
+                                                <i class="fas fa-user-edit"></i>
+                                            </button>
+                                            
+                                            <!-- Botón Eliminar -->
+                                            <button class="btn btn-sm btn-outline-danger <?php echo $tieneRegistros ? 'disabled' : ''; ?>" href="javascript:void(0);"
+                                                    <?php if (!$tieneRegistros): ?>
+                                                    onclick="eliminarRegistroUsuario(<?php echo $row['ID_Usuario']; ?>)"
+                                                    <?php endif; ?>>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                        endwhile;
+                                    else:
+                                ?>
+                                <tr>
+                                    <td colspan="7" class="py-5 text-center">
+                                        <div class="empty-state">
+                                            <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-navy">No se encontraron usuarios</h5>
+                                            <p class="text-muted">
+                                                <?php echo !empty($search) ? 
+                                                    'No hay resultados para tu búsqueda.' : 
+                                                    'No hay usuarios registrados en el sistema.'; ?>
+                                            </p>
+                                            <?php if (!empty($search)): ?>
+                                            <a href="?" class="btn btn-navy">
+                                                <i class="fas fa-times me-1"></i> Limpiar búsqueda
+                                            </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                    endif;
+                                } catch (Exception $e) {
+                                    error_log("Error en el sistema: " . $e->getMessage());
+                                } finally {
+                                    if (isset($stmt)) $stmt->close();
+                                    if (isset($stmt_total)) $stmt_total->close();
+                                    if (isset($conexion)) $conexion->close();
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginación -->
+                    <?php if ($total_pages > 1): ?>
+                    <div class="card-footer bg-white border-top border-navy">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    Mostrando <strong><?php echo min($records_per_page, $total_rows); ?></strong> 
+                                    de <strong><?php echo $total_rows; ?></strong> usuarios
+                                </small>
+                            </div>
+                            <nav aria-label="Paginación de usuarios">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <!-- Primera página -->
+                                    <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=1<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Página anterior -->
+                                    <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" 
+                                           href="?page=<?php echo $page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Números de página -->
+                                    <?php
+                                    $start = max(1, $page - 2);
+                                    $end = min($total_pages, $page + 2);
+                                    
+                                    for ($i = $start; $i <= $end; $i++):
+                                        $active = $i == $page ? 'active bg-navy' : '';
+                                    ?>
+                                    <li class="page-item <?php echo $active; ?>">
+                                        <a class="page-link text-navy" 
+                                           href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                    <?php endfor; ?>
+                                    
+                                    <!-- Página siguiente -->
+                                    <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" 
+                                           href="?page=<?php echo $page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Última página -->
+                                    <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" 
+                                           href="?page=<?php echo $total_pages; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <!-- Selector de página -->
+                            <div class="d-flex align-items-center">
+                                <small class="me-2 text-muted">Ir a:</small>
+                                <select class="form-select form-select-sm w-auto" 
+                                        onchange="goToPage(this.value)">
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <option value="<?php echo $i; ?>" <?php echo $i == $page ? 'selected' : ''; ?>>
+                                        Página <?php echo $i; ?>
+                                    </option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Incluye tus scripts necesarios -->
+<!-- JavaScript -->
+<script src="../../js/Tablas/Tabla_Usuarios.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Usuario.js"></script>
 
 <?php include('footer.php'); ?>

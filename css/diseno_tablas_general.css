@@ -1,0 +1,144 @@
+.bg-navy { background-color: var(--primary-navy) !important; }
+.text-navy { color: var(--primary-navy) !important; }
+.border-navy { border-color: var(--primary-navy) !important; }
+
+.btn-navy { 
+    background-color: var(--primary-navy) !important; 
+    border-color: var(--primary-navy) !important;
+    color: white !important;
+}
+
+.btn-navy:hover { 
+    background-color: #003366 !important;
+    border-color: #003366 !important;
+}
+
+.bg-turquoise { background-color: var(--primary-turquoise) !important; }
+.text-turquoise { color: var(--primary-turquoise) !important; }
+
+.btn-turquoise { 
+    background-color: var(--primary-turquoise) !important; 
+    border-color: var(--primary-turquoise) !important;
+    color: var(--primary-navy) !important;
+}
+.btn-turquoise:hover { 
+    background-color: #20C0B0 !important;
+    border-color: #20C0B0 !important;
+}
+
+.btn-outline-navy { 
+    color: var(--primary-navy) !important;
+    border-color: var(--primary-navy) !important;
+}
+.btn-outline-navy:hover { 
+    background-color: var(--primary-navy) !important;
+    color: white !important;
+}
+
+.btn-outline-turquoise { 
+    color: var(--primary-turquoise) !important;
+    border-color: var(--primary-turquoise) !important;
+}
+.btn-outline-turquoise:hover { 
+    background-color: var(--primary-turquoise) !important;
+    color: var(--primary-navy) !important;
+}
+
+/* Estilos para la tabla */
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0, 31, 63, 0.03) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Estilos para avatar */
+.avatar-sm {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-title {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Estilos para estado vacío */
+.empty-state {
+    padding: 3rem 1rem;
+}
+
+.empty-state i {
+    opacity: 0.3;
+}
+
+/* Estilos para la búsqueda */
+.search-form .input-group-text {
+    border-right: none;
+}
+
+.search-form .form-control {
+    border-left: none;
+    border-right: none;
+}
+
+.search-form .form-control:focus {
+    box-shadow: none;
+    border-color: var(--primary-navy);
+}
+
+/* Estilos para paginación */
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-turquoise);
+    border-color: var(--primary-navy);
+    color: white;
+}
+
+.pagination .page-link {
+    color: var(--primary-turquoise);
+    border: 1px solid var(--color-border);
+    margin: 0 2px;
+    border-radius: 4px;
+    min-width: 36px;
+    text-align: center;
+}
+
+.pagination .page-link:hover {
+    background-color: rgba(0, 31, 63, 0.05);
+    border-color: var(primary-turquoise);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+    
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+}

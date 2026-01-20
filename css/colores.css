@@ -6,12 +6,15 @@
     --light-gray: #F8F9FA;
     --medium-gray: #E9ECEF;
     --dark-gray: #495057;
+    --border-color: #DEE2E6;
+    --color-border: #E0E0E0;
     --accent-blue: #2A9FD6;
     --success-color: #28A745;
     --warning-color: #FFC107;
     --danger-color: #DC3545;
     --info-color: #17A2B8;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.15);
     --border-radius: 10px;
     --transition: all 0.3s ease;
 }
