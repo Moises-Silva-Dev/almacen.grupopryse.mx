@@ -205,8 +205,7 @@
                                 <tr class="border-bottom border-light">
                                     <td class="py-3 px-4">
                                         <div class="form-check">
-                                            <input class="form-check-input user-checkbox" type="checkbox" 
-                                                   value="<?php echo $row['ID_Usuario']; ?>">
+                                            <input class="form-check-input user-checkbox" type="checkbox" value="<?php echo $row['ID_Usuario']; ?>">
                                         </div>
                                     </td>
                                     <td class="py-3 px-4">
@@ -228,8 +227,7 @@
                                         </div>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <a href="mailto:<?php echo $row['Correo_Electronico']; ?>" 
-                                           class="text-decoration-none text-navy">
+                                        <a href="mailto:<?php echo $row['Correo_Electronico']; ?>" class="text-decoration-none text-navy">
                                             <i class="fas fa-envelope me-2 text-turquoise"></i>
                                             <?php echo htmlspecialchars($row['Correo_Electronico']); ?>
                                         </a>
@@ -329,8 +327,7 @@
                                     
                                     <!-- Página anterior -->
                                     <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
-                                        <a class="page-link text-navy" 
-                                           href="?page=<?php echo $page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
                                             <i class="fas fa-angle-left"></i>
                                         </a>
                                     </li>
@@ -344,8 +341,7 @@
                                         $active = $i == $page ? 'active bg-navy' : '';
                                     ?>
                                     <li class="page-item <?php echo $active; ?>">
-                                        <a class="page-link text-navy" 
-                                           href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
                                             <?php echo $i; ?>
                                         </a>
                                     </li>
@@ -353,16 +349,14 @@
                                     
                                     <!-- Página siguiente -->
                                     <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
-                                        <a class="page-link text-navy" 
-                                           href="?page=<?php echo $page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
                                             <i class="fas fa-angle-right"></i>
                                         </a>
                                     </li>
                                     
                                     <!-- Última página -->
                                     <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
-                                        <a class="page-link text-navy" 
-                                           href="?page=<?php echo $total_pages; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $total_pages; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
                                             <i class="fas fa-angle-double-right"></i>
                                         </a>
                                     </li>
