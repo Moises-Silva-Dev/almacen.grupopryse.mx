@@ -34,7 +34,7 @@
                                         <i class="fas fa-search"></i>
                                     </span>
                                     <input type="text" class="form-control form-control-lg border-navy" name="search" placeholder="Buscar por nombre, apellidos, correo, rol o cuenta..." value="<?php echo htmlspecialchars($search ?? ''); ?>" aria-label="Buscar usuarios">
-                                    <?php if (!empty($search)): ?>
+                                    <?php if (empty($search)): ?>
                                         <button type="button" class="btn btn-outline-secondary border-navy" onclick="clearSearch()" title="Limpiar búsqueda">Limpiar</button>
                                     <?php endif; ?>
                                     <button type="submit" class="btn btn-navy">Buscar</button>

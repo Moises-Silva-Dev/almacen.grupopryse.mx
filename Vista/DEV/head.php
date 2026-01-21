@@ -39,7 +39,7 @@
             <div class="navbar-brand">
                 <div class="logo-container">
                     <i class="fas fa-boxes logo-icon"></i>
-                    <span class="logo-text">InventoryPro</span>
+                    <span class="logo-text">SICOIN</span>
                 </div>
                 <a href="index_DEV.php" class="nav-home-link">
                     <i class="fas fa-home"></i> Inicio

@@ -34,7 +34,7 @@
                                         <i class="fas fa-search"></i>
                                     </span>
                                     <input type="text" class="form-control form-control-lg border-navy" name="search" placeholder="Buscar por nombre..." value="<?php echo htmlspecialchars($search ?? ''); ?>" aria-label="Buscar Cuentas">
-                                    <?php if (!empty($search)): ?>
+                                    <?php if (empty($search)): ?>
                                         <button type="button" class="btn btn-outline-secondary border-navy" onclick="clearSearch()" title="Limpiar búsqueda">Limpiar</button>
                                     <?php endif; ?>
                                     <button type="submit" class="btn btn-navy">Buscar</button>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-md-4 text-md-end">
                             <div class="d-flex align-items-center justify-content-end">
-                                <button class="btn btn-outline-navy" onclick="refreshPage()">
+                                <button class="btn btn-outline-navy" onclick="refreshPage()" title="Refrescar">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
                             </div>
