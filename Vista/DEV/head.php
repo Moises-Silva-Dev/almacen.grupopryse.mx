@@ -17,10 +17,6 @@
     <link rel="stylesheet" href="../../css/principal.css">
     <link rel="stylesheet" href="../../css/colores.css">
     <link rel="stylesheet" href="../../css/responsive.css">
-
-
-    <link rel="stylesheet" href="../../css/boton.css">
-    <link rel="stylesheet" href="../../css/reporte.css">
     <link rel="shortcut icon" href="../../img/SUPERADMIN.png">
 </head>
 <body>

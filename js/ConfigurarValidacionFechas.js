@@ -1,56 +1,70 @@
-//Codigo Javascript para actualizar los atributos 'min' y 'max' de las fechas en los formularios de entrada y salidas de almacen
-    function configurarValidacionFechas() {
-        // Obtener referencias al nombre del formulario
-        const entradasForm = document.getElementById('entradasFormFechas');
-        const salidasForm = document.getElementById('salidasFormFechas');
-        const solicitudForm = document.getElementById('solicitudFormFechas');
-
-        // Obtener referencias a los campos de fecha de ambos formularios
-        const fechaInicioEntradas = entradasForm.querySelector('#Fecha_Inicio');
-        const fechaFinEntradas = entradasForm.querySelector('#Fecha_Fin');
-        const fechaInicioSalidas = salidasForm.querySelector('#Fecha_Inicio');
-        const fechaFinSalidas = salidasForm.querySelector('#Fecha_Fin');
-        const fechaInicioSolicitud = solicitudForm.querySelector('#Fecha_Inicio');
-        const fechaFinSolicitud = solicitudForm.querySelector('#Fecha_Fin');
-
-        // Función para actualizar los atributos 'min' y 'max' de las fechas
-        function actualizarAtributosFecha(fechaInicio, fechaFin) {
-            fechaFin.min = fechaInicio.value; // Establecer el mínimo de Fecha_Fin como Fecha_Inicio seleccionada
-            fechaInicio.max = fechaFin.value; // Establecer el máximo de Fecha_Inicio como Fecha_Fin seleccionada
+// Configurar validación de fechas
+function configurarValidacionFechas() {
+    const forms = ['entradasFormFechas', 'salidasFormFechas', 'solicitudFormFechas', 'conteoSalidaSolicitudFormFechas'];
+    
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            const fechaInicio = form.querySelector('input[type="date"][name="Fecha_Inicio"]');
+            const fechaFin = form.querySelector('input[type="date"][name="Fecha_Fin"]');
+            
+            if (fechaInicio && fechaFin) {
+                fechaInicio.addEventListener('change', function() {
+                    if (this.value) {
+                        fechaFin.min = this.value;
+                    }
+                });
+                
+                fechaFin.addEventListener('change', function() {
+                    if (this.value) {
+                        fechaInicio.max = this.value;
+                    }
+                });
+            }
         }
-
-        // Evento para actualizar los atributos de Fecha_Fin en el formulario de Entradas
-        fechaInicioEntradas.addEventListener('change', function() {
-            actualizarAtributosFecha(fechaInicioEntradas, fechaFinEntradas);
-        });
-
-        // Evento para actualizar los atributos de Fecha_Inicio en el formulario de Entradas
-        fechaFinEntradas.addEventListener('change', function() {
-            actualizarAtributosFecha(fechaInicioEntradas, fechaFinEntradas);
-        });
-
-        // Evento para actualizar los atributos de Fecha_Fin en el formulario de Salidas
-        fechaInicioSalidas.addEventListener('change', function() {
-            actualizarAtributosFecha(fechaInicioSalidas, fechaFinSalidas);
-        });
-
-        // Evento para actualizar los atributos de Fecha_Inicio en el formulario de Salidas
-        fechaFinSalidas.addEventListener('change', function() {
-            actualizarAtributosFecha(fechaInicioSalidas, fechaFinSalidas);
-        });
-        
-        // Evento para actualizar los atributos de Fecha_Fin en el formulario de solicitud
-        fechaInicioSolicitud.addEventListener('change', function() {
-            actualizarAtributosFecha(fechaInicioSolicitud, fechaFinSolicitud);
-        });
-
-        // Evento para actualizar los atributos de Fecha_Inicio en el formulario de solicitud
-        fechaFinSolicitud.addEventListener('change', function() {
-            actualizarAtributosFecha(fechaInicioSolicitud, fechaFinSolicitud);
-        });
-    }
-
-    // Llamar a la función al cargar la página para configurar la validación de fechas
-    document.addEventListener('DOMContentLoaded', function() {
-        configurarValidacionFechas();
     });
+}
+
+// Validación de formularios
+function configurarValidaciones() {
+    // Validación para campos numéricos
+    const numericInputs = document.querySelectorAll('input[pattern="[0-9]+"]');
+    numericInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+            if (!/^\d*$/.test(e.target.value)) {
+                e.target.value = e.target.value.replace(/[^\d]/g, '');
+            }
+        });
+    });
+    
+    // Validación de formularios Bootstrap
+    const forms = document.querySelectorAll('.needs-validation');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+}
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', function() {
+    configurarValidacionFechas();
+    configurarValidaciones();
+    
+    // Inicializar tooltips de Bootstrap
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+// Función para mostrar modal de error (si mantienes tu modal)
+function mostrarError(mensaje) {
+    const modal = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
+    document.getElementById('errorMessage').textContent = mensaje;
+    modal.show();
+}

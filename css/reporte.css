@@ -1,74 +1,243 @@
-.accordion {
-  margin-bottom: 10px;
-
-  .accordion-btn {
-    position: relative;
-    background-color: #b0f2c2;
-    background-image: linear-gradient(122deg, #b0f2c2, #b0f2c2);
-    border: none;
-    padding: 15px 20px;
-    text-align: left;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
-    list-style-image: none;
-
-    &::-webkit-details-marker {
-      background: none;
-      color: transparent;
-    }
-
-    &::after {
-      content: "›";
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      font-size: 35px;
-      font-family: monospace;
-      width: 35px;
-      height: 35px;
-      text-align: center;
-      border-radius: 50%;
-      color: #000000;
-      border: 2px solid #000000;
-      transform: translate(0%, -50%) rotate(0deg);
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      padding-bottom: 4px;
-      padding-left: 2px;
-      justify-content: center;
-      font-weight: normal;
-      transition: all 0.3s ease;z
-    }
-  }
-
-  .accordion-content {
-    background-color: #e0bbe4;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
-
-    > * {
-      padding: 10px 20px;
-    }
-  }
-
-  &[open] {
-    .accordion-btn::after {
-      transform: translate(0%, -50%) rotate(90deg);
-    }
-
-    summary ~ * {
-      overflow: hidden;
-      animation: heightUp 1s ease-in-out;
-    }
-  }
+:root {
+    --color-navy: #001F3F;
+    --color-turquoise: #40E0D0;
+    --color-black: #1A1A1A;
+    --color-white: #FFFFFF;
+    --color-light-gray: #F8F9FA;
+    --color-border: #E0E0E0;
+    --color-light-navy: rgba(0, 31, 63, 0.9);
+    --color-light-turquoise: rgba(64, 224, 208, 0.1);
 }
 
-@keyframes heightUp {
-  0% {
-    max-height: 0;
-  }
-  100% {
-    max-height: 2000px;
-  }
+/* Acordeón personalizado */
+.accordion-button {
+    background: var(--color-light-navy) !important;
+    color: white !important;
+    border: none;
+    border-radius: 8px !important;
+    padding: 1.2rem !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--color-navy) !important;
+    box-shadow: none !important;
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 31, 63, 0.25) !important;
+    border-color: var(--color-navy) !important;
+}
+
+.report-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Tarjetas de reportes */
+.report-card {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.report-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.report-card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+}
+
+.report-card-header h6 {
+    margin: 0;
+    color: var(--color-navy);
+    font-weight: 600;
+}
+
+.report-card-body {
+    padding: 1.5rem;
+    background: white;
+}
+
+.info-card {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.info-card-header {
+    padding: 1rem 1.5rem;
+    background: var(--color-light-navy);
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.info-card-body {
+    padding: 1.5rem;
+    background: white;
+}
+
+/* Botones mejorados */
+.btn {
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #E74C3C, #C0392B);
+    border: none;
+    padding: 0.8rem 1.5rem;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #C0392B, #A93226);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28A745, #1E7E34);
+    border: none;
+    padding: 0.8rem 1.5rem;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #1E7E34, #145523);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #FFC107, #E0A800);
+    border: none;
+    color: #212529;
+    padding: 0.8rem 1.5rem;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #E0A800, #C69500);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+}
+
+.btn-outline-navy {
+    color: var(--color-navy);
+    border: 2px solid var(--color-navy);
+    font-weight: 600;
+}
+
+.btn-outline-navy:hover {
+    background-color: var(--color-navy);
+    color: white;
+    border-color: var(--color-navy);
+}
+
+/* Formularios */
+.form-control {
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.25rem rgba(64, 224, 208, 0.25);
+    outline: none;
+}
+
+.form-control.border-navy {
+    border-color: var(--color-navy);
+}
+
+.form-control.border-navy:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.25rem rgba(0, 31, 63, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--color-navy);
+    margin-bottom: 0.5rem;
+}
+
+.form-check-input:checked {
+    background-color: var(--color-navy);
+    border-color: var(--color-navy);
+}
+
+/* Badges */
+.badge {
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+}
+
+.badge.bg-navy {
+    background-color: var(--color-navy) !important;
+}
+
+.badge.bg-turquoise {
+    background-color: var(--color-turquoise) !important;
+    color: var(--color-navy) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .accordion-button {
+        padding: 0.8rem !important;
+    }
+    
+    .report-card-header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .report-card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.accordion-collapse.show {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Estilos para modales (si los mantienes) */
+.modal-header.bg-navy {
+    background-color: var(--color-navy) !important;
+    color: white;
+}
+
+.modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }
