@@ -188,9 +188,7 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" 
-                                                    onclick="editUser(<?php echo $row['ID']; ?>)"
-                                                    title="Editar usuario">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="editUser(<?php echo $row['ID']; ?>)" title="Editar usuario">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             
@@ -209,7 +207,7 @@
                                     <td colspan="5" class="py-5 text-center">
                                         <div class="empty-state">
                                             <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
-                                            <h5 class="text-navy">No se encontraron usuarios</h5>
+                                            <h5 class="text-navy">No se encontraron cuentas</h5>
                                             <p class="text-muted">
                                                 <?php echo !empty($search) ? 
                                                     'No hay resultados para tu búsqueda.' : 
@@ -244,7 +242,7 @@
                             <div>
                                 <small class="text-muted">
                                     Mostrando <strong><?php echo min($records_per_page, $total_rows); ?></strong> 
-                                    de <strong><?php echo $total_rows; ?></strong> usuarios
+                                    de <strong><?php echo $total_rows; ?></strong> productos
                                 </small>
                             </div>
                             <nav aria-label="Paginación de usuarios">

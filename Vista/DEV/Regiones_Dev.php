@@ -257,9 +257,7 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" 
-                                                    onclick="editRegion(<?php echo $ID_Region; ?>)"
-                                                    title="Editar región">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="editRegion(<?php echo $ID_Region; ?>)" title="Editar región">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             

@@ -247,16 +247,12 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" 
-                                                    onclick="editUser(<?php echo $row['ID_Usuario']; ?>)"
-                                                    title="Editar usuario">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="editUser(<?php echo $row['ID_Usuario']; ?>)" title="Editar usuario">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             
                                             <!-- Botón Cambiar Rol -->
-                                            <button class="btn btn-sm btn-outline-turquoise"
-                                                    onclick="changeRole(<?php echo $row['ID_Usuario']; ?>)"
-                                                    title="Cambiar rol">
+                                            <button class="btn btn-sm btn-outline-turquoise" onclick="changeRole(<?php echo $row['ID_Usuario']; ?>)" title="Cambiar rol">
                                                 <i class="fas fa-user-edit"></i>
                                             </button>
                                             
