@@ -280,7 +280,7 @@
                             <div>
                                 <small class="text-muted">
                                     Mostrando <strong><?php echo min($records_per_page, $total_rows); ?></strong> 
-                                    de <strong><?php echo $total_rows; ?></strong> usuarios
+                                    de <strong><?php echo $total_rows; ?></strong> salidas de almacén
                                 </small>
                             </div>
                             <nav aria-label="Paginación de usuarios">

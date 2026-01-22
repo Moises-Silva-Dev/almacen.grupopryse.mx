@@ -14,7 +14,7 @@ function confirmarEliminacion(archivo) {
         // Verifica si el usuario confirmó la acción
         if (result.isConfirmed) {
             // Realiza una solicitud HTTP GET al servidor para eliminar el archivo
-            fetch(`../../Controlador/DEV/DELETE/Funcion_Delete_SQL.php?archivo=${archivo}`, {
+            fetch(`../../Modelo/Eliminar_Base_De_Datos.php?archivo=${archivo}`, {
                 method: 'GET', // Especifica el método HTTP como GET
             })
                 // Convierte la respuesta a formato JSON
