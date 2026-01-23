@@ -19,6 +19,10 @@ function insertSalidaDev(id) {
     window.location.href = `INSERT/Insert_Salida_Dev.php?id=${id}`;
 }
 
+function insertSalidaAlmacenista(id) {
+    window.location.href = `INSERT/Insert_Salida_ALMACENISTA.php?id=${id}`;
+}
+
 // Función para seleccionar todos los checkboxes
 document.getElementById('selectAll').addEventListener('change', function(e) {
     const checkboxes = document.querySelectorAll('.user-checkbox');

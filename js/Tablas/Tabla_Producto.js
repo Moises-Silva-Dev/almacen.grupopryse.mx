@@ -24,8 +24,12 @@ document.getElementById('selectAll').addEventListener('change', function(e) {
 });
 
 // Funciones para acciones de usuario
-function editProducto(id) {
+function editProductoDev(id) {
     window.location.href = `Update/Update_Producto_Dev.php?id=${id}`;
+}
+
+function editProductoAlmacenista(id) {
+    window.location.href = `Update/Update_Producto_ALMACENISTA.php?id=${id}`;
 }
 
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.

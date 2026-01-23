@@ -28,6 +28,10 @@ function editEntradaDev(id) {
     window.location.href = `Update/Update_Entrada_Almacen_Dev.php?id=${id}`;
 }
 
+function editEntradaAlmacenita(id) {
+    window.location.href = `Update/Update_Entrada_Almacen_ALMACENISTA.php?id=${id}`;
+}
+
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
 function eliminarRegistroEntradaE(id) { 
     // Confirmación de SweetAlert

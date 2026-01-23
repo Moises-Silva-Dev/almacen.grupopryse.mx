@@ -37,7 +37,7 @@
                     <i class="fas fa-boxes logo-icon"></i>
                     <span class="logo-text">SICOIN</span>
                 </div>
-                <a href="index_DEV.php" class="nav-home-link">
+                <a href="index_ALMACENISTA.php" class="nav-home-link">
                     <i class="fas fa-home"></i> Inicio
                 </a>
             </div>

@@ -10,18 +10,6 @@
     <h2 class="section-title">Dashboard de Actividad</h2>
     
     <div class="metrics-grid">
-        <!-- Tarjeta 1: Productos Bajos -->
-        <div class="metric-card">
-            <div class="metric-icon metric-icon-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="metric-content">
-                <h3 class="metric-title">Requisiciones Pendientes</h3>
-                <div class="metric-value" id="productosBajoStock">0</div>
-                <p class="metric-description">Requisiciones pendientes por Autorizar</p>
-            </div>
-        </div>
-        
         <!-- Tarjeta 2: Entradas Hoy -->
         <div class="metric-card">
             <div class="metric-icon metric-icon-info">
@@ -55,6 +43,18 @@
                 <h3 class="metric-title">Usuarios Activos</h3>
                 <div class="metric-value" id="usuariosActivosHoy">0</div>
                 <p class="metric-description">Usuarios que accedieron hoy</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta 5: Requisiciones Autorizadas -->
+        <div class="metric-card">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="metric-content">
+                <h3 class="metric-title">Requisiciones Autorizadas</h3>
+                <div class="metric-value" id="requisicionesAutorizadasHoy">0</div>
+                <p class="metric-description">Requisiciones autorizadas</p>
             </div>
         </div>
     </div>

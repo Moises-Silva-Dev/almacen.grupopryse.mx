@@ -244,7 +244,7 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editProducto(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="editProductoDev(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             
