@@ -30,7 +30,7 @@
                                     <span class="input-group-text bg-navy border-navy text-white">
                                         <i class="fas fa-search"></i>
                                     </span>
-                                    <input type="text" class="form-control form-control-lg border-navy" name="search" placeholder="Buscar por nombre..." value="<?php echo htmlspecialchars($search ?? ''); ?>" aria-label="Buscar usuarios">
+                                    <input type="text" class="form-control form-control-lg border-navy" name="search" placeholder="Buscar por identificador, nombre, cuenta..." value="<?php echo htmlspecialchars($search ?? ''); ?>" aria-label="Buscar requisicion">
                                     <?php if (empty($search)): ?>
                                         <button type="button" class="btn btn-outline-secondary border-navy" onclick="clearSearch()" title="Limpiar búsqueda">Limpiar</button>
                                     <?php endif; ?>
