@@ -128,13 +128,13 @@
             <nav class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="Solicitud_SUPERADMIN.php" class="menu-item">
+                        <a href="Requisicion_SUPERADMIN.php" class="menu-item">
                             <i class="fas fa-plus menu-icon"></i>
                             <span class="menu-text">Crear Requisición</span>
                         </a>
                     </li>
                     <li>
-                        <a href="Requisicion_SUPERADMIN.php" class="menu-item">
+                        <a href="Solicitud_SUPERADMIN.php" class="menu-item">
                             <i class="fas fa-clipboard-list menu-icon"></i>
                             <span class="menu-text">Requisiciones</span>
                         </a>
