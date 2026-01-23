@@ -147,13 +147,13 @@
                     </li>
                     <li>
                         <a href="Prestamo_ALMACENISTA.php" class="menu-item">
-                            <i class="fas fa-wallet menu-icon"></i>
+                            <i class="fas fa-box-open menu-icon"></i>
                             <span class="menu-text">Salida de Prestamos</span>
                         </a>
                     </li>
                     <li>
                         <a href="Devolucion_ALMACENISTA.php" class="menu-item">
-                            <i class="fas fa-map-marked-alt menu-icon"></i>
+                            <i class="fas fa-box-open menu-icon"></i>
                             <span class="menu-text">Devoluciones</span>
                         </a>
                     </li>
