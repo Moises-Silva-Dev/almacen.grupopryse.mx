@@ -1,172 +1,360 @@
 <?php include('head.php'); ?>
-<!-- Contenedor de las alertas -->            
-<div class="table-responsive">    
-    <center>
-        <h2 class="mb-4">Requisiciones por Modificar</h2>
-    </center>
-    <!-- Tabla para mostrar los registros -->
-    <table id="tablaSolicitudes" class="table table-hover table-striped mt-4">
-        <thead class="table-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre Solicitante</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Estatus</th>
-                <th scope="col">Cuenta</th>
-                <th scope="col">Justificación</th>
-                <th scope="col"><center>Acción</center></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                try {
-                    $conexion = (new Conectar())->conexion(); // Crear una instancia de la clase Conectar y obtener la conexión
-                    $usuario = $_SESSION['usuario']; // Obtener el usuario de la sesión
+
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/diseno_tablas_general.css">
+
+<div class="container-fluid py-4">
+    <!-- Encabezado -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-navy">
+                        <i class="fas fa-users me-2 text-turquoise"></i>
+                        Modificar Productos de Requisiciones
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mb-3 mb-md-0">
+                            <form method="GET" action="" class="search-form">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-navy border-navy text-white">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control form-control-lg border-navy" name="search" placeholder="Buscar por identificador..." value="<?php echo htmlspecialchars($search ?? ''); ?>" aria-label="Buscar usuarios">
+                                    <?php if (empty($search)): ?>
+                                        <button type="button" class="btn btn-outline-secondary border-navy" onclick="clearSearch()" title="Limpiar búsqueda">Limpiar</button>
+                                    <?php endif; ?>
+                                    <button type="submit" class="btn btn-navy">Buscar</button>
+                                </div>
+                                <?php if (!empty($search)): ?>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        Resultados para: <strong>"<?php echo htmlspecialchars($search); ?>"</strong>
+                                        <a href="?" class="ms-2 text-turquoise text-decoration-none">
+                                            <i class="fas fa-times me-1">Limpiar filtro</i>
+                                        </a>
+                                    </small>
+                                </div>
+                                <?php endif; ?>
+                            </form>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button class="btn btn-outline-navy" onclick="refreshPage()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-navy text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Lista de Requisiciones
+                        </h5>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="py-3 px-4 border-bottom border-navy">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="selectAll">
+                                        </div>
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-id-card me-2"></i>ID
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-envelope me-2"></i>Fecha
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-user-tag me-2"></i>Estatus
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-building me-2"></i>Cuenta
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-file-alt me-2"></i>Justificación
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy text-center">
+                                        <i class="fas fa-cogs me-2"></i>Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    try {
+                                        // En la parte superior del archivo, antes de la consulta principal
+                                        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+                                        $usuario = $_SESSION['usuario']; // Obtener el usuario de la sesión
+
+                                        // Preparar la consulta SQL con LIMIT y OFFSET    
+                                        $sql = "SELECT 
+                                                    RE.IDRequisicionE, DATE(RE.FchCreacion) AS Fecha, 
+                                                    RE.Estatus, C.NombreCuenta, RE.Justificacion
+                                                FROM 
+                                                    RequisicionE RE
+                                                INNER JOIN 
+                                                    Usuario U ON RE.IdUsuario = U.ID_Usuario
+                                                INNER JOIN
+                                                    Cuenta C ON RE.IdCuenta = C.ID
+                                                WHERE
+                                                    (RE.Estatus = 'Pendiente' OR RE.Estatus = 'Autorizado') 
+                                                AND
+                                                    (U.Correo_Electronico = ?)";
+                                        
+                                        // Si hay búsqueda, agregar condiciones
+                                        if (!empty($search)) {
+                                            $searchTerm = "%$search%";
+                                            $sql .= " AND (RE.IDRequisicionE LIKE ?) AND (RE.Estatus = 'Pendiente' OR RE.Estatus = 'Autorizado') AND (U.Correo_Electronico = ?)";
+                                        }
+
+                                        $sql .= " GROUP BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
+                                        
+                                        // Consulta para obtener las requisiciones
+                                        $sql_total = "SELECT COUNT(*) AS Total
+                                            FROM 
+                                                RequisicionE RE
+                                            INNER JOIN 
+                                                Usuario U ON RE.IdUsuario = U.ID_Usuario
+                                            INNER JOIN
+                                                Cuenta C ON RE.IdCuenta = C.ID
+                                            WHERE 
+                                                (RE.Estatus = 'Pendiente' OR RE.Estatus = 'Autorizado')
+                                            AND
+                                                (U.Correo_Electronico = ?)";
+                                        
+                                        if (!empty($search)) {
+                                            $sql_total .= " AND (RE.IDRequisicionE LIKE ?) AND (RE.Estatus = 'Pendiente' OR RE.Estatus = 'Autorizado') AND (U.Correo_Electronico = ?)";
+                                        }
+
+                                        $conexion = (new Conectar())->conexion();
+                                        
+                                        $records_per_page = 10;
+                                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                                        $offset = ($page - 1) * $records_per_page;
+                                        
+                                        // Preparar la consulta principal
+                                        $stmt = $conexion->prepare($sql);
+                                        
+                                        if (!empty($search)) {
+                                            $searchTerm = "%$search%";
+                                            $stmt->bind_param("sssii", $usuario, $searchTerm, $usuario, $records_per_page, $offset);
+                                        } else {
+                                            $stmt->bind_param("sii", $usuario, $records_per_page, $offset);
+                                        }
+                                        
+                                        $stmt->execute();
+                                        $query = $stmt->get_result();
+                                        
+                                        // Obtener total de registros (con búsqueda si aplica)
+                                        $stmt_total = $conexion->prepare($sql_total);
+                                        
+                                        if (!empty($search)) {
+                                            $stmt_total->bind_param("sss", $usuario, $searchTerm, $usuario);
+                                        } else {
+                                            $stmt_total->bind_param("s", $usuario);
+                                        }
+                                        
+                                        $stmt_total->execute();
+                                        $result_total = $stmt_total->get_result();
+                                        $total_rows = $result_total->fetch_assoc()['total'];
+                                        $total_pages = ceil($total_rows / $records_per_page);
+
+                                        if ($query->num_rows > 0):
+                                            while ($row = $query->fetch_assoc()):
+                                ?>
+                                <tr class="border-bottom border-light">
+                                    <td class="py-3 px-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input user-checkbox" type="checkbox" value="<?php echo $row['IDRequisicionE']; ?>">
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-navy rounded-pill">#<?php echo $row['IDRequisicionE']; ?></span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-light text-navy">
+                                            <i class="fas fa-user me-1"></i>
+                                            <?php echo htmlspecialchars($row['Fecha']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <?php
+                                            $estatus = $row['Estatus'];
+                                            $badgeClass = '';
+                                            switch ($estatus) {
+                                                case 'Autorizado':
+                                                    $badgeClass = 'bg-success';
+                                                    break;
+                                                case 'Pendiente':
+                                                    $badgeClass = 'bg-warning text-dark';
+                                                    break;
+                                                default:
+                                                    $badgeClass = 'bg-secondary';
+                                            }
+                                        ?>
+                                        <span class="badge <?php echo $badgeClass; ?>">
+                                            <?php echo htmlspecialchars($estatus); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-light text-navy">
+                                            <i class="fas fa-building me-1"></i>
+                                            <?php echo htmlspecialchars($row['NombreCuenta']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-light text-navy">
+                                            <i class="fas fa-building me-1"></i>
+                                            <?php echo htmlspecialchars($row['Justificacion']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Botón Editar -->
+                                            <button class="btn btn-sm btn-outline-navy" onclick="editRequisicionProduct(<?php echo $row['IDRequisicionE']; ?>)" title="Editar productos de la requisición">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                        endwhile;
+                                    else:
+                                ?>
+                                <tr>
+                                    <td colspan="8" class="py-5 text-center">
+                                        <div class="empty-state">
+                                            <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-navy">No se encontraron requisiciones</h5>
+                                            <p class="text-muted">
+                                                <?php echo !empty($search) ? 
+                                                    'No hay resultados para tu búsqueda.' : 
+                                                    'No hay requisiciones registradas en el sistema.'; ?>
+                                            </p>
+                                            <?php if (!empty($search)): ?>
+                                            <a href="?" class="btn btn-navy">
+                                                <i class="fas fa-times me-1"></i> Limpiar búsqueda
+                                            </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                    endif;
+                                } catch (Exception $e) {
+                                    error_log("Error en el sistema: " . $e->getMessage());
+                                } finally {
+                                    if (isset($stmt)) $stmt->close();
+                                    if (isset($stmt_total)) $stmt_total->close();
+                                    if (isset($conexion)) $conexion->close();
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                     
-                    $records_per_page = 10; // Número de registros por página
-                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1; // Obtener el número de página actual, por defecto es 1
-                    $offset = ($page - 1) * $records_per_page; // Calcular el desplazamiento para la paginación
-                    
-                    // Consulta para obtener las requisiciones
-                    $sql = "SELECT 
-                            RE.IDRequisicionE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                            RE.FchCreacion, RE.Estatus, C.NombreCuenta, RE.CentroTrabajo, 
-                            RE.Justificacion, RE.Receptor 
-                        FROM 
-                            RequisicionE RE
-                        INNER JOIN 
-                            Usuario U ON RE.IdUsuario = U.ID_Usuario
-                        INNER JOIN
-                            Cuenta C ON RE.IdCuenta = C.ID
-                        WHERE 
-                            U.Correo_Electronico = ? AND RE.Estatus IN ('Pendiente', 'Autorizado')
-                        ORDER BY 
-                            RE.Estatus ASC
-                        LIMIT 
-                            ? OFFSET ?";
-
-                    $stmt = $conexion->prepare($sql);
-                    $stmt->bind_param("sii", $usuario, $records_per_page, $offset);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-
-                    // Verifica si hay resultados
-                    if ($result->num_rows > 0) {
-                        // Muestra los resultados en la tabla
-                        while ($row = $result->fetch_assoc()) {
-                            $IDRequisicionE = htmlspecialchars($row['IDRequisicionE'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Nombre = htmlspecialchars($row['Nombre'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Apellido_Paterno = htmlspecialchars($row['Apellido_Paterno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Apellido_Materno = htmlspecialchars($row['Apellido_Materno'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $FchCreacion = htmlspecialchars($row['FchCreacion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Estatus = htmlspecialchars($row['Estatus'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $NombreCuenta = htmlspecialchars($row['NombreCuenta'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $Justificacion = htmlspecialchars($row['Justificacion'], ENT_QUOTES, 'UTF-8'); // Escapar los datos para prevenir XSS
-                            $NombreCompleto = $Nombre . ' ' . $Apellido_Paterno . ' ' . $Apellido_Materno; // Concatenar el nombre completo
-            ?>
-                            <tr>
-                                <td><?php echo $IDRequisicionE; ?></td>
-                                <td><?php echo $NombreCompleto;?></td>
-                                <td><?php echo $FchCreacion; ?></td>
-                                <td><?php echo $Estatus; ?></td>
-                                <td><?php echo $NombreCuenta; ?></td>
-                                <td><?php echo $Justificacion; ?></td>
-                                <td>
-                                    <a class="btn btn-warning" href="Update/Update_Requisicion_ADMIN.php?id=<?php echo $IDRequisicionE; ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24V0H24z" fill="none"/>
-                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                        <path d="M16 5l3 3" />
-                                    </svg>Modificar</a>
-                                </td>
-                            </tr>
-            <?php
-                        }
-                    } else {
-                        echo "<tr><td colspan='10' class='text-center'>No hay registros</td></tr>";
-                    }
-                    
-                    // Total de registros para paginaci��n
-                    $sql_total = "SELECT COUNT(*) AS total 
-                                FROM 
-                                    RequisicionE RE 
-                                INNER JOIN 
-                                    Usuario U ON RE.IdUsuario = U.ID_Usuario
-                                WHERE 
-                                    U.Correo_Electronico = ? AND RE.Estatus IN ('Pendiente', 'Autorizado')";
-                    
-                    $stmt_total = $conexion->prepare($sql_total); // Preparar la consulta SQL para el total de registros
-                    $stmt_total->bind_param("s", $usuario); // Vincular el parámetro de la consultaa la variable $usuario
-                    $stmt_total->execute(); // Ejecutar la consulta
-                    $result_total = $stmt_total->get_result(); // Obtener los resultados de la consulta
-                    $total_rows = $result_total->fetch_assoc()['total']; // Obtener el total de registros
-                    $total_pages = ceil($total_rows / $records_per_page); // Calcular el total de paginas
-                } catch (Exception $e) {
-                    error_log("Error en el sistema: " . $e->getMessage()); // Registrar el error en el log del servidor
-                    echo '<tr><td colspan="8" class="text-center alert alert-danger">Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.</td></tr>'; // Mostrar un mensaje de error si ocurre una excepción
-                } finally {
-                    $stmt->close(); // Cerrar la sentencia preparada
-                    $stmt_total->close();
-                    $conexion->close(); // Cerrar la conexión a la base de datos
-                }
-            ?>
-        </tbody>
-    </table>
-    <!-- Paginación -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center flex-wrap text-center">
-            <!-- Botón anterior -->
-            <?php if ($page > 1): ?>
-                <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-            <?php
-                $range = 2; // Número de páginas a mostrar a cada lado de la página actual
-                $show_dots_start = false; // Mostrar puntos suspensivos al inicio
-                $show_dots_end = false; // Mostrar puntos suspensivos al final
-
-                if ($page > $range + 2) { // Si la página actual es mayor que el rango más 2
-                    echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>'; // Mostrar siempre la primera página
-                    $show_dots_start = true; // Mostrar puntos suspensivos al inicio
-                }
-
-                if ($show_dots_start) { // Si se deben mostrar puntos suspensivos al inicio
-                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Mostrar puntos suspensivos
-                }
-
-                for ($i = max(1, $page - $range); $i <= min($total_pages, $page + $range); $i++) { // Iterar desde la página actual menos el rango hasta la página actual más el rango
-                    $active = $i == $page ? 'active' : ''; // Marcar la página actual como activa
-                    echo "<li class='page-item $active'><a class='page-link' href='?page=$i'>$i</a></li>"; // Mostrar el número de página
-                }
-
-                if ($page + $range < $total_pages - 1) { // Si la página actual más el rango es menor que la última página menos 1
-                    $show_dots_end = true; // Mostrar puntos suspensivos al final
-                }
-
-                if ($show_dots_end) { // Si se deben mostrar puntos suspensivos al final
-                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Mostrar puntos suspensivos
-                }
-
-                if ($page + $range < $total_pages) { // Si la página actual más el rango es menor que la última página
-                    echo '<li class="page-item"><a class="page-link" href="?page=' . $total_pages . '">' . $total_pages . '</a></li>'; // Mostrar siempre la última página
-                }
-            ?>
-            <!-- Botón siguiente -->
-            <?php if ($page < $total_pages): ?>
-                <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-        </ul>
-    </nav>
+                    <!-- Paginación -->
+                    <?php if ($total_pages > 1): ?>
+                    <div class="card-footer bg-white border-top border-navy">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    Mostrando <strong><?php echo min($records_per_page, $total_rows); ?></strong> 
+                                    de <strong><?php echo $total_rows; ?></strong> requisiciones
+                                </small>
+                            </div>
+                            <nav aria-label="Paginación de usuarios">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <!-- Primera página -->
+                                    <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=1<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Página anterior -->
+                                    <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Números de página -->
+                                    <?php
+                                    $start = max(1, $page - 2);
+                                    $end = min($total_pages, $page + 2);
+                                    
+                                    for ($i = $start; $i <= $end; $i++):
+                                        $active = $i == $page ? 'active bg-navy' : '';
+                                    ?>
+                                    <li class="page-item <?php echo $active; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                    <?php endfor; ?>
+                                    
+                                    <!-- Página siguiente -->
+                                    <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Última página -->
+                                    <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $total_pages; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <!-- Selector de página -->
+                            <div class="d-flex align-items-center">
+                                <small class="me-2 text-muted">Ir a:</small>
+                                <select class="form-select form-select-sm w-auto" 
+                                        onchange="goToPage(this.value)">
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <option value="<?php echo $i; ?>" <?php echo $i == $page ? 'selected' : ''; ?>>
+                                        Página <?php echo $i; ?>
+                                    </option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<script src="../../js/InvalidarBtnEstatus.js"></script>
+<script src="../../js/Tablas/Tabla_Requisicion.js"></script>
 
 <?php include('footer.php'); ?>

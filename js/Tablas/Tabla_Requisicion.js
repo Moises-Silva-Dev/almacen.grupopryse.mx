@@ -28,6 +28,10 @@ function editRequisicionUser(id) {
     window.location.href = `Update/Update_Region_Dev.php?id=${id}`;
 }
 
+function editRequisicionProduct(id) {
+    window.location.href = `Update/Update_Requisicion_ADMIN.php?id=${id}`;
+}
+
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
 function eliminarRegistroRequisicion(id) { 
     console.log("Función llamada con ID:", id); // Verifica que la función se está llamando
