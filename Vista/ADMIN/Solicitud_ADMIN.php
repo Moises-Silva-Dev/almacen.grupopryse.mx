@@ -73,7 +73,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-list me-2"></i>
-                            Lista de Requisiciones
+                            Lista de Borradores de Requisiciones
                         </h5>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                                         if ($query->num_rows > 0):
                                             while ($row = $query->fetch_assoc()):
                                 ?>
-                            <tr class="border-bottom border-light">
+                                <tr class="border-bottom border-light">
                                     <td class="py-3 px-4">
                                         <div class="form-check">
                                             <input class="form-check-input user-checkbox" type="checkbox" value="<?php echo $row['BIDRequisicionE']; ?>">
@@ -379,6 +379,5 @@
 
 <script src="../../js/Tablas/Tabla_Borrador.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Enviar_Requisicion.js"></script>
-<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Borrador_Requisicion.js"></script>
 
 <?php include('footer.php'); ?>
