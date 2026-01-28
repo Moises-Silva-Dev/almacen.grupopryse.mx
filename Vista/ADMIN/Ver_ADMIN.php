@@ -1,274 +1,543 @@
 <?php include('head.php'); ?>
-<!-- Contenedor de las alertas -->            
-<div class="table-responsive">    
-    <center>
-        <h2 class="mb-4">Estado de Requisición</h2>
-    </center>
-    <!-- Formulario para seleccionar el estatus, alineado a la derecha -->
-    <form method="GET" class="form-inline d-flex justify-content-end mb-4">
-        <div class="form-group mb-2">
-            <label for="estatus" class="mr-2">Filtrar por estatus:</label>
+
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/diseno_tablas_general.css">
+
+<div class="container-fluid py-4">
+    <!-- Encabezado -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-navy">
+                        <i class="fas fa-clipboard-list me-2 text-turquoise"></i>
+                        Estado de Requisiciones
+                    </h1>
+                </div>
+                <button class="btn btn-turquoise" onclick="refreshPage()">
+                    <i class="fas fa-sync-alt me-1"></i> Actualizar
+                </button>
+            </div>
         </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <select class="form-select" id="estatus" name="estatus">
-                <option value="">Todos</option>
-                <option value="Pendiente" <?php echo isset($_GET['estatus']) && $_GET['estatus'] == 'Pendiente' ? 'selected' : ''; ?>>Pendiente</option>
-                <option value="Autorizado" <?php echo isset($_GET['estatus']) && $_GET['estatus'] == 'Autorizado' ? 'selected' : ''; ?>>Autorizado</option>
-                <option value="Parcial" <?php echo isset($_GET['estatus']) && $_GET['estatus'] == 'Parcial' ? 'selected' : ''; ?>>Parcial</option>
-                <option value="Surtido" <?php echo isset($_GET['estatus']) && $_GET['estatus'] == 'Surtido' ? 'selected' : ''; ?>>Surtido</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
-    </form>
-    
-    <!-- Tabla para mostrar los registros -->
-    <table id="tablaSolicitudes" class="table table-hover table-striped mt-4">
-        <thead class="table-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre Solicitante</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Estatus</th>
-                <th scope="col">Cuenta</th>
-                <th scope="col">Centro de Trabajo</th>
-                <th scope="col">Receptor</th>
-                <th colspan="2" scope="col"><center>Acciones</center></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                try {
-                    $usuario = $_SESSION['usuario']; // Obtener el correo electrónico del usuario desde la sesión
-                    $estatus_filtro = isset($_GET['estatus']) ? htmlspecialchars($_GET['estatus']) : ''; // Obtener el estatus del filtro, si existe
-        
-                    $conexion = (new Conectar())->conexion(); // Crear una nueva instancia de la clase Conectar y obtener la conexión a la base de datos
-        
-                    $records_per_page = 10; // Número de registros por página
-                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1; // Página actual, por defecto es 1
-                    $offset = ($page - 1) * $records_per_page; // Calcular el desplazamiento para la consulta SQL
+    </div>
 
-                    // Consulta principal con filtrado por estatus
-                    $sql = "SELECT RE.IDRequisicionE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                                RE.FchCreacion, RE.Estatus, C.NombreCuenta, RE.CentroTrabajo,
-                                RE.Receptor FROM RequisicionE RE
-                            INNER JOIN 
-                                Usuario U ON RE.IdUsuario = U.ID_Usuario
-                            INNER JOIN 
-                                Cuenta C ON RE.IdCuenta = C.ID
-                            WHERE 
-                                U.Correo_Electronico = ?";
-                    
-                    if (!empty($estatus_filtro)) { // Si hay filtro de estatus
-                        $sql .= " AND RE.Estatus = ?"; // Agregar filtro de estatus si existe
-                    }
-
-                    $sql .= " GROUP BY 
-                                RE.IDRequisicionE
-                            ORDER 
-                                BY RE.FchCreacion DESC 
-                            LIMIT 
-                                ? OFFSET ?";
-
-                    $stmt = $conexion->prepare($sql); // Preparar la consulta SQL
-                    if (!$stmt) { // Manejo de errores al preparar la consulta
-                        throw new Exception("Error al preparar la consulta: " . $conexion->error);
-                    }
-                    
-                    // Bind parameters según si hay filtro o no
-                    if (!empty($estatus_filtro)) {
-                        $stmt->bind_param("ssii", $usuario, $estatus_filtro, $records_per_page, $offset); // Si hay filtro de estatus, agregarlo al bind_param
-                    } else {
-                        $stmt->bind_param("sii", $usuario, $records_per_page, $offset); // Si no hay filtro de estatus, solo bind el usuario y los parámetros de paginación
-                    }
-                    
-                    $stmt->execute(); // Ejecutar la consulta preparada
-                    $result = $stmt->get_result(); // Obtener el resultado de la consulta ejecutada
-
-                    // Mostrar resultados
-                    while ($row = $result->fetch_assoc()) {
-                        $IDRequisicionE = htmlspecialchars($row['IDRequisicionE'], ENT_QUOTES, 'UTF-8');
-                        $Nombre = htmlspecialchars($row['Nombre'], ENT_QUOTES, 'UTF-8');
-                        $Apellido_Paterno = htmlspecialchars($row['Apellido_Paterno'], ENT_QUOTES, 'UTF-8');
-                        $Apellido_Materno = htmlspecialchars($row['Apellido_Materno'], ENT_QUOTES, 'UTF-8');
-                        $FchCreacion = htmlspecialchars($row['FchCreacion'], ENT_QUOTES, 'UTF-8');
-                        $Estatus = htmlspecialchars($row['Estatus'], ENT_QUOTES, 'UTF-8');
-                        $NombreCuenta = htmlspecialchars($row['NombreCuenta'], ENT_QUOTES, 'UTF-8');
-                        $CentroTrabajo = htmlspecialchars($row['CentroTrabajo'], ENT_QUOTES, 'UTF-8');
-                        $Receptor = htmlspecialchars($row['Receptor'], ENT_QUOTES, 'UTF-8');
-                        $NombreCompleto = $Nombre . ' ' . $Apellido_Paterno . ' ' . $Apellido_Materno; // Concatenar el nombre completo del solicitante
-            ?>
-                        <tr>
-                            <td><?php echo $IDRequisicionE; ?></td>
-                            <td><?php echo $NombreCompleto; ?></td>
-                            <td><?php echo $FchCreacion; ?></td>
-                            <td class="table-warning"><?php echo $Estatus; ?></td>
-                            <td><?php echo $NombreCuenta; ?></td>
-                            <td><?php echo $CentroTrabajo; ?></td>
-                            <td><?php echo $Receptor; ?></td>
-                            <td>
-                                <a class="btn btn-success" onclick="mostrarInfoRequisicion(<?php echo $IDRequisicionE; ?>)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M12 4c4.29 0 7.863 2.429 10.665 7.154l.22 .379l.045 .1l.03 .083l.014 .055l.014 .082l.011 .1v.11l-.014 .111a.992 .992 0 0 1 -.026 .11l-.039 .108l-.036 .075l-.016 .03c-2.764 4.836 -6.3 7.38 -10.555 7.499l-.313 .004c-4.396 0 -8.037 -2.549 -10.868 -7.504a1 1 0 0 1 0 -.992c2.831 -4.955 6.472 -7.504 10.868 -7.504zm0 5a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor" />
-                                </svg>Ver</a>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-warning BtnDescargarRequisicion" data-id="<?php echo $IDRequisicionE; ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="1.5"> 
-                                        <path d="M14 3v4a1 1 0 0 0 1 1h4"></path> 
-                                        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-                                        <path d="M12 17v-6"></path> 
-                                        <path d="M9.5 14.5l2.5 2.5l2.5 -2.5"></path> 
-                                    </svg>Descargar
-                                </button>
-                            </td>
-                        </tr>
-            <?php
-                    }
-                    
-                    // Consulta para el total de registros (con filtro si existe)
-                    $sql_total = "SELECT COUNT(*) AS total FROM RequisicionE RE
-                        INNER JOIN 
-                            Usuario U ON RE.IdUsuario = U.ID_Usuario
-                        WHERE 
-                            U.Correo_Electronico = ?"; 
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-navy text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter me-2"></i>
+                        Filtros de Búsqueda
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="GET" action="" class="row g-3" id="filterForm">
+                        <div class="col-md-6 col-lg-3">
+                            <label for="estatus" class="form-label text-navy">
+                                <i class="fas fa-tag me-1"></i> Filtrar por Estatus
+                            </label>
+                            <select class="form-select form-select-lg border-navy" id="estatus" name="estatus">
+                                <option value="">Todos los estatus</option>
+                                <?php
+                                $estatusOptions = [
+                                    'Pendiente' => 'Pendiente',
+                                    'Autorizado' => 'Autorizado',
+                                    'Parcial' => 'Parcial',
+                                    'Surtido' => 'Surtido'
+                                ];
+                                
+                                $selectedEstatus = $_GET['estatus'] ?? '';
+                                
+                                foreach ($estatusOptions as $value => $label) {
+                                    $selected = ($selectedEstatus == $value) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($value) . '" ' . $selected . '>' 
+                                        . htmlspecialchars($label) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
                         
-                    if (!empty($estatus_filtro)) { // Si hay filtro de estatus, agregar condición
-                        $sql_total .= " AND RE.Estatus = ?"; // Agregar filtro de estatus si existe
-                    }
+                        <div class="col-md-6 col-lg-2 d-flex align-items-end">
+                            <div class="d-grid w-100">
+                                <button type="submit" class="btn btn-navy btn-lg">
+                                    <i class="fas fa-search me-1"></i> Filtrar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                     
-                    $stmt_total = $conexion->prepare($sql_total); // Preparar la consulta para obtener el total de registros
-                    if (!$stmt_total) { // Manejo de errores al preparar la consulta
-                        throw new Exception("Error al preparar la consulta de conteo: " . $conexion->error); // Manejo de errores al preparar la consulta
-                    }
-                    
-                    if (!empty($estatus_filtro)) { // Si hay filtro de estatus, bind ambos parámetros
-                        $stmt_total->bind_param("ss", $usuario, $estatus_filtro); // Bind el usuario y el estatus si hay filtro
-                    } else { 
-                        $stmt_total->bind_param("s", $usuario); // Bind solo el usuario si no hay filtro de estatus
-                    }
-                    
-                    if (!$stmt_total->execute()) { // Manejo de errores al ejecutar la consulta
-                        throw new Exception("Error al ejecutar la consulta de conteo: " . $stmt_total->error); // Manejo de errores al ejecutar la consulta
-                    }
-                    
-                    $result_total = $stmt_total->get_result(); // Ejecutar la consulta para obtener el total de registros
-                    $total_data = $result_total->fetch_assoc(); // Obtener el total de registros
-                    $total_rows = $total_data['total']; // Obtener el total de registros
-                    $total_pages = ceil($total_rows / $records_per_page); // Cálculo de la cantidad de páginas         
-                } catch (Exception $e) {
-                    error_log("Error en el sistema: " . $e->getMessage()); // Registrar el error en el log del servidor
-                    echo '<tr><td colspan="8" class="text-center alert alert-danger">Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.</td></tr>'; // Mostrar un mensaje de error si ocurre una excepción
-                } finally {
-                    $stmt->close();
-                    $stmt_total->close();
-                    $conexion->close();
-                }
-            ?>
-        </tbody>
-    </table>
-    <!-- Paginación -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center flex-wrap text-center">
-            <!-- Botón anterior -->
-            <?php if ($page > 1): ?>
-                <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $page - 1; ?>&estatus=<?php echo htmlspecialchars($estatus_filtro); ?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-            <?php
-                $range = 2; // Cantidad de páginas a mostrar a la izquierda y derecha de la actual
-                $show_dots_start = false; // Flag para mostrar puntos suspensivos antes de la primera página
-                $show_dots_end = false; // Flag para mostrar puntos suspensivos después de la última página
-
-                if ($page > $range + 2) { // Si la página actual está más allá del rango inicial
-                    echo '<li class="page-item"><a class="page-link" href="?page=1&estatus=' . htmlspecialchars($estatus_filtro) . '">1</a></li>';
-                    $show_dots_start = true; // Indicar que se deben mostrar puntos suspensivos al inicio
-                }
-
-                if ($show_dots_start) { // Mostrar puntos suspensivos al inicio
-                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Puntos suspensivos
-                }
-
-                for ($i = max(1, $page - $range); $i <= min($total_pages, $page + $range); $i++) { // Mostrar páginas del rango central
-                    $active = $i == $page ? 'active' : ''; // Marcar la página actual como activa
-                    echo '<li class="page-item ' . $active . '">
-                            <a class="page-link" href="?page=' . $i . '&estatus=' . htmlspecialchars($estatus_filtro) . '">' . $i . '</a>
-                        </li>'; // Enlace a la página
-                }
-
-                if ($page + $range < $total_pages - 1) { // Si la página actual está más cerca del final que del rango
-                    $show_dots_end = true; // Indicar que se deben mostrar puntos suspensivos al final
-                }
-
-                if ($show_dots_end) { // Mostrar puntos suspensivos al final
-                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; // Puntos suspensivos
-                }
-
-                if ($page + $range < $total_pages) { // Si la página actual está más cerca del inicio que del rango
-                    echo '<li class="page-item"><a class="page-link" href="?page=' . $total_pages . '&estatus=' . htmlspecialchars($estatus_filtro) . '">' . $total_pages . '</a></li>'; // Enlace a la última página
-                }
-            ?>
-            <!-- Botón siguiente -->
-            <?php if ($page < $total_pages): ?>
-                <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $page + 1; ?>&estatus=<?php echo htmlspecialchars($estatus_filtro); ?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-        </ul>
-    </nav>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="requisicionModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLabel">Información de la Requisición</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <?php if (isset($selectedEstatus) && !empty($selectedEstatus)): ?>
+                    <div class="mt-3">
+                        <div class="alert alert-light border-navy d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-info-circle text-turquoise me-2"></i>
+                                <small class="text-muted">
+                                    Filtros activos: 
+                                    <span class="badge bg-turquoise me-2">Estatus: <?php echo htmlspecialchars($selectedEstatus); ?></span>
+                                </small>
+                            </div>
+                            <a href="?" class="btn btn-sm btn-outline-navy">
+                                <i class="fas fa-times me-1"></i> Limpiar filtros
+                            </a>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
-            <div class="modal-body">
-                <table class="table table-hover table-striped mt-4">
-                    <thead>
-                        <tr class="table-primary"> 
-                            <th colspan="2" scope="row"><center>Información General</center></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><th scope="row">Supervisor:</th><td id="infoSupervisor"></td></tr>
-                        <tr><th scope="row">Cuenta:</th><td id="infoCuenta"></td></tr>
-                        <tr><th scope="row">Región:</th><td id="infoRegion"></td></tr>
-                        <tr><th scope="row">Centro de Trabajo:</th><td id="infoCentroTrabajo"></td></tr>
-                        <tr><th scope="row">Número de Elementos:</th><td id="infoElementos"></td></tr>
-                        <tr><th scope="row">Nombre del Receptor:</th><td id="infoReceptor"></td></tr>
-                        <tr><th scope="row">Número de Teléfono del Receptor:</th><td id="infoTelReceptor"></td></tr>
-                        <tr><th scope="row">RFC del Receptor:</th><td id="infoRfcReceptor"></td></tr>
-                        <tr><th scope="row">Justificación:</th><td id="infoJustificacion"></td></tr>
-                        <tr><th scope="row">Dirección:</th><td id="infoDireccion"></td></tr>
-                    </tbody>
-                </table>
-                
-                <table class="table table-hover table-striped mt-4">
-                    <thead>
-                        <tr class="table-primary"> 
-                            <th colspan="5" scope="row"><center>Información del Producto</center></th>
-                        </tr>
-                    </thead>
-                    <tbody id="productosBody">
-                        <!-- Aquí se insertarán los productos dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Tabla de requisiciones -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-navy text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Lista de Requisiciones
+                            <?php if (isset($total_rows)): ?>
+                            <small class="ms-2 opacity-75">(<?php echo $total_rows; ?> registros)</small>
+                            <?php endif; ?>
+                        </h5>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="tablaSolicitudes">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="60" class="py-3 px-4 border-bottom border-navy"># ID</th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-user me-2"></i>Solicitante
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-calendar me-2"></i>Fecha
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-tag me-2"></i>Estatus
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-building me-2"></i>Cuenta
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-user-check me-2"></i>Receptor
+                                    </th>
+                                    <th width="180" class="py-3 px-4 border-bottom border-navy text-navy text-center">
+                                        <i class="fas fa-cogs me-2"></i>Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    try {
+                                        $conexion = (new Conectar())->conexion();
+                                        $usuario = $_SESSION['usuario']; // Obtener el correo electrónico del usuario desde la sesión
+                                        $estatus_filtro = $_GET['estatus'] ?? '';
+                                        
+                                        $records_per_page = 10;
+                                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+                                        $offset = ($page - 1) * $records_per_page;
+
+                                        // Consulta principal
+                                        $sql = "SELECT RE.IDRequisicionE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
+                                                    DATE(RE.FchCreacion) AS Fecha, RE.Estatus, C.NombreCuenta, RE.Receptor, RE.Estatus
+                                                FROM RequisicionE RE
+                                                INNER JOIN Usuario U ON RE.IdUsuario = U.ID_Usuario
+                                                INNER JOIN Cuenta C ON RE.IdCuenta = C.ID
+                                                WHERE U.Correo_Electronico = ?";
+                                        
+                                        $params = [$usuario];
+                                        $types = "s";
+                                        
+                                        // Agregar filtro por estatus
+                                        if (!empty($estatus_filtro)) {
+                                            $sql .= " AND RE.Estatus = ?";
+                                            $params[] = $estatus_filtro;
+                                            $types .= "s";
+                                        }
+                                        
+                                        // Agregar paginación
+                                        $sql .= " ORDER BY RE.FchCreacion DESC LIMIT ? OFFSET ?";
+                                        $params[] = $records_per_page;
+                                        $params[] = $offset;
+                                        $types .= "ii";
+
+                                        $stmt = $conexion->prepare($sql);
+                                        $stmt->bind_param($types, ...$params);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        
+                                        // Contadores para estadísticas
+                                        $pendientes = 0;
+                                        $autorizadas = 0;
+                                        $surtidas = 0;
+
+                                        if ($result->num_rows > 0):
+                                            while ($row = $result->fetch_assoc()):
+                                                // Actualizar contadores
+                                                switch ($row['Estatus']) {
+                                                    case 'Pendiente': $pendientes++; break;
+                                                    case 'Autorizado': $autorizadas++; break;
+                                                    case 'Surtido': $surtidas++; break;
+                                                }
+                                                
+                                                $IDRequisicionE = htmlspecialchars($row['IDRequisicionE']);
+                                                $NombreCompleto = htmlspecialchars($row['Nombre'] . ' ' . $row['Apellido_Paterno'] . ' ' . $row['Apellido_Materno']);
+                                                $FchCreacion = htmlspecialchars($row['Fecha']);
+                                                $Estatus = htmlspecialchars($row['Estatus']);
+                                                $NombreCuenta = htmlspecialchars($row['NombreCuenta']);
+                                                $Receptor = htmlspecialchars($row['Receptor']);
+                                                
+                                                // Determinar clase CSS según estatus
+                                                $estatusClass = '';
+                                                $estatusBadge = '';
+                                                switch ($Estatus) {
+                                                    case 'Pendiente':
+                                                        $estatusClass = 'bg-warning text-dark';
+                                                        $estatusBadge = 'warning';
+                                                        break;
+                                                    case 'Autorizado':
+                                                        $estatusClass = 'bg-success text-white';
+                                                        $estatusBadge = 'success';
+                                                        break;
+                                                    case 'Parcial':
+                                                        $estatusClass = 'bg-info text-white';
+                                                        $estatusBadge = 'info';
+                                                        break;
+                                                    case 'Surtido':
+                                                        $estatusClass = 'bg-primary text-white';
+                                                        $estatusBadge = 'primary';
+                                                        break;
+                                                    default:
+                                                        $estatusClass = 'bg-light text-dark';
+                                                        $estatusBadge = 'secondary';
+                                                }
+                                ?>
+                                <tr class="border-bottom border-light">
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-navy rounded-pill">#<?php echo $IDRequisicionE; ?></span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-3">
+                                                <div class="avatar-title bg-turquoise text-white rounded-circle">
+                                                    <?php echo strtoupper(substr($row['Nombre'], 0, 1) . substr($row['Apellido_Paterno'], 0, 1)); ?>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-navy"><?php echo $NombreCompleto; ?></h6>
+                                                <small class="text-muted">Solicitante</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="text-navy">
+                                            <i class="fas fa-calendar-day me-1 text-turquoise"></i>
+                                            <?php echo date('d/m/Y', strtotime($FchCreacion)); ?>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-<?php echo $estatusBadge; ?>">
+                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                                            <?php echo $Estatus; ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="badge bg-light text-navy border border-navy">
+                                            <i class="fas fa-building me-1"></i>
+                                            <?php echo $NombreCuenta; ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="text-navy">
+                                            <i class="fas fa-user-check me-1 text-turquoise"></i>
+                                            <?php echo $Receptor; ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Botón Ver Detalles -->
+                                            <button class="btn btn-sm btn-outline-navy" onclick="mostrarInfoRequisicion(<?php echo $IDRequisicionE; ?>)" title="Ver detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            
+                                            <!-- Botón Descargar -->
+                                            <button type="button" class="btn btn-sm btn-outline-danger BtnDescargarRequisicion" data-id="<?php echo $IDRequisicionE; ?>" title="Descargar requisición">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                            endwhile;
+                                        else:
+                                ?>
+                                <tr>
+                                    <td colspan="8" class="py-5 text-center">
+                                        <div class="empty-state">
+                                            <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-navy">No se encontraron requisiciones</h5>
+                                            <p class="text-muted">
+                                                No hay requisiciones con los filtros seleccionados.
+                                            </p>
+                                            <a href="?" class="btn btn-navy">
+                                                <i class="fas fa-times me-1"></i> Limpiar filtros
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                        endif;
+
+                                        // Consulta para total de registros
+                                        $sql_total = "SELECT COUNT(*) AS total FROM RequisicionE RE 
+                                                    INNER JOIN Cuenta C ON RE.IdCuenta = C.ID 
+                                                    INNER JOIN Usuario U ON RE.IdUsuario = U.ID_Usuario
+                                                    WHERE U.Correo_Electronico = ?";
+                                        
+                                        $params_total = [$usuario];
+                                        $types_total = "s";
+                                        
+                                        if (!empty($estatus_filtro)) {
+                                            $sql_total .= " AND RE.Estatus = ?";
+                                            $params_total[] = $estatus_filtro;
+                                            $types_total .= "s";
+                                        }
+                                        
+                                        $stmt_total = $conexion->prepare($sql_total);
+                                        $stmt_total->bind_param($types_total, ...$params_total);
+                                        $stmt_total->execute();
+                                        $result_total = $stmt_total->get_result();
+                                        $total_rows = $result_total->fetch_assoc()['total'];
+                                        $total_pages = ceil($total_rows / $records_per_page);
+
+                                        $stmt->close();
+                                        $stmt_total->close();
+                                        
+                                    } catch (Exception $e) {
+                                        error_log("Error en el sistema: " . $e->getMessage());
+                                        echo '<tr><td colspan="8" class="py-5 text-center">
+                                                <div class="alert alert-danger">
+                                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                                    Ocurrió un error al procesar la solicitud.
+                                                </div>
+                                            </td></tr>';
+                                    }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginación -->
+                    <?php if (isset($total_pages) && $total_pages > 1): ?>
+                    <div class="card-footer bg-white border-top border-navy">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                            <div class="mb-2 mb-md-0">
+                                <small class="text-muted">
+                                    Mostrando 
+                                    <strong><?php echo min($records_per_page, ($result->num_rows ?? 0)); ?></strong> 
+                                    de <strong><?php echo $total_rows ?? 0; ?></strong> requisiciones
+                                </small>
+                            </div>
+                            
+                            <nav aria-label="Paginación de requisiciones" class="mb-2 mb-md-0">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <?php
+                                    // Construir parámetros de URL para paginación
+                                    $urlParams = [];
+                                    if (!empty($cuenta_filtro)) $urlParams['cuenta'] = $cuenta_filtro;
+                                    if (!empty($estatus_filtro)) $urlParams['estatus'] = $estatus_filtro;
+                                    $queryString = http_build_query($urlParams);
+                                    ?>
+                                    
+                                    <!-- Primera página -->
+                                    <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=1<?php echo $queryString ? '&' . $queryString : ''; ?>">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Página anterior -->
+                                    <li class="page-item <?php echo $page == 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $page - 1; ?><?php echo $queryString ? '&' . $queryString : ''; ?>">
+                                            <i class="fas fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Números de página -->
+                                    <?php
+                                    $start = max(1, $page - 2);
+                                    $end = min($total_pages, $page + 2);
+                                    
+                                    for ($i = $start; $i <= $end; $i++):
+                                        $active = $i == $page ? 'active bg-navy' : '';
+                                    ?>
+                                    <li class="page-item <?php echo $active; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $i; ?><?php echo $queryString ? '&' . $queryString : ''; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                    <?php endfor; ?>
+                                    
+                                    <!-- Página siguiente -->
+                                    <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $page + 1; ?><?php echo $queryString ? '&' . $queryString : ''; ?>">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Última página -->
+                                    <li class="page-item <?php echo $page == $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link text-navy" href="?page=<?php echo $total_pages; ?><?php echo $queryString ? '&' . $queryString : ''; ?>">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <!-- Selector de página -->
+                            <div class="d-flex align-items-center">
+                                <small class="me-2 text-muted d-none d-md-inline">Ir a:</small>
+                                <select class="form-select form-select-sm w-auto" 
+                                        onchange="goToPage(this.value)"
+                                        id="pageSelector">
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <option value="<?php echo $i; ?>" <?php echo $i == $page ? 'selected' : ''; ?>>
+                                        Página <?php echo $i; ?>
+                                    </option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal para detalles de requisición -->
+<div class="modal fade" id="requisicionModal" tabindex="-1" aria-labelledby="requisicionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="requisicionModalLabel">
+                    <i class="fas fa-clipboard-list me-2"></i>
+                    Detalles de la Requisición
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light text-navy">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Información General
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th><i class="fas fa-user me-2 text-turquoise"></i>Solicitante:</th>
+                                            <td id="infoSupervisor"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-building me-2 text-turquoise"></i>Cuenta:</th>
+                                            <td id="infoCuenta"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-building me-2 text-turquoise"></i>Región:</th>
+                                            <td id="infoRegion"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-map-marker-alt me-2 text-turquoise"></i>Centro de Trabajo:</th>
+                                            <td id="infoCentroTrabajo"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-map-marker-alt me-2 text-turquoise"></i>Número de Elementos:</th>
+                                            <td id="infoElementos"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light text-navy">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    Información Adicional
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th><i class="fas fa-user-check me-2 text-turquoise"></i>Receptor:</th>
+                                            <td id="infoReceptor"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-phone me-2 text-turquoise"></i>Teléfono Receptor:</th>
+                                            <td id="infoTelReceptor"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-id-card me-2 text-turquoise"></i>RFC Receptor:</th>
+                                            <td id="infoRfcReceptor"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-map me-2 text-turquoise"></i>Justificación:</th>
+                                            <td id="infoJustificacion"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-map me-2 text-turquoise"></i>Dirección:</th>
+                                            <td id="infoDireccion"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light text-navy">
+                        <h6 class="mb-0">
+                            <i class="fas fa-boxes me-2"></i>
+                            Productos Solicitados
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                </thead>
+                                <tbody id="productosBody">
+                                    <!-- Productos se cargarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="../../js/DescargarRequisicion.js"></script>
 <script src="../../js/MostrarInfoRequisicion.js"></script>
