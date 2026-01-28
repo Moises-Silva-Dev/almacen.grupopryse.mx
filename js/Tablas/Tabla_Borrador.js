@@ -1,3 +1,33 @@
+// Función para limpiar búsqueda
+function clearSearch() {
+    window.location.href = window.location.pathname;
+}
+
+// Función para refrescar página
+function refreshPage() {
+    window.location.reload();
+}
+
+// Función para ir a página específica
+function goToPage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    window.location.href = url.toString();
+}
+
+// Función para seleccionar todos los checkboxes
+document.getElementById('selectAll').addEventListener('change', function(e) {
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = e.target.checked;
+    });
+});
+
+// Funciones para acciones de región
+function editBorradorUser(id) {
+    window.location.href = `Update/Update_Solicitud_ADMIN.php?id=${id}`;
+}
+
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
 function eliminarRegistroBorradorRequisicion(id) { 
     // Confirmación de SweetAlert
@@ -49,4 +79,25 @@ function eliminarRegistroBorradorRequisicion(id) {
             });
         }
     });
+}
+
+// Función para abrir el modal y cargar la información del préstamo
+function abrirModal(idRequisicion) {
+    document.getElementById('modalRequisicion').style.display = 'block'; // Muestra el modal
+    document.getElementById('contenidoRequisicion').innerHTML = 'Cargando datos...'; // Carga los datos en el contenido del modal
+
+    fetch('../../Controlador/GET/getObtenerInfoBorradorRequisicion.php?id=' + idRequisicion) // Realiza la solicitud GET
+    .then(response => response.text()) // Convierte la respuesta a texto
+    .then(data => {
+        document.getElementById('contenidoRequisicion').innerHTML = data; // Carga los datos en el contenido del modal
+        document.getElementById('btnEnviar').setAttribute('data-id', idRequisicion); // Asigna el ID del préstamo al botón de autorizar
+    })
+    .catch(error => { // Manejo de errores en la solicitud 
+        document.getElementById('contenidoRequisicion').innerHTML = 'Error al obtener los datos.'; // Manejo de errores
+    });
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+    document.getElementById('modalRequisicion').style.display = 'none'; // Oculta el modal
 }

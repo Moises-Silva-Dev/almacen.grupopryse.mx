@@ -173,7 +173,7 @@
                                         $stmt_total = $conexion->prepare($sql_total);
                                         
                                         if (!empty($search)) {
-                                            $stmt_total->bind_param("ss", $usuario, $searchTerm, $searchTerm, $usuario);
+                                            $stmt_total->bind_param("ssss", $usuario, $searchTerm, $searchTerm, $usuario);
                                         } else {
                                             $stmt_total->bind_param("s", $usuario);
                                         }

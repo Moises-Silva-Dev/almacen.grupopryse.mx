@@ -136,13 +136,13 @@
                     <li>
                         <a href="Prestamo_ADMIN.php" class="menu-item">
                             <i class="fas fas fa-pencil menu-icon"></i>
-                            <span class="menu-text">Crear Requisición</span>
+                            <span class="menu-text">Crear Prestamo</span>
                         </a>
                     </li>
                     <li>
                         <a href="Requisicion_ADMIN.php" class="menu-item">
                             <i class="fas fa-edit menu-icon"></i>
-                            <span class="menu-text">Crear Requisición</span>
+                            <span class="menu-text">Modificar Productos de Requisiciones</span>
                         </a>
                     </li>
                     <li>
