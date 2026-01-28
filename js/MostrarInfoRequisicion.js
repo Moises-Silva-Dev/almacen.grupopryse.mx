@@ -1,3 +1,33 @@
+// Función para refrescar página
+function refreshPage() {
+    window.location.reload();
+}
+
+// Función para ir a página específica
+function goToPage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    window.location.href = url.toString();
+}
+
+// Actualizar contadores cuando se cargue la página
+document.addEventListener('DOMContentLoaded', function() {    
+    // Configurar eventos para descargar
+    document.querySelectorAll('.BtnDescargarRequisicion').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            // Tu lógica actual para descargar
+            alert('Descargando requisición #' + id);
+        });
+    });
+    
+    // Auto-enfocar el select de cuenta
+    const cuentaSelect = document.getElementById('cuenta');
+    if (cuentaSelect) {
+        cuentaSelect.focus();
+    }
+});
+
 // Función para formatear la dirección
 function formatearDireccion(data) {
     // Verificar si los datos de dirección están disponibles

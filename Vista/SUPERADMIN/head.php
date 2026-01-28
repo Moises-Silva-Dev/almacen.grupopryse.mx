@@ -148,7 +148,7 @@
                     <li>
                         <a href="Ver_SUPERADMIN.php" class="menu-item">
                             <i class="fas fa-eye menu-icon"></i>
-                            <span class="menu-text">Ver Requisicione</span>
+                            <span class="menu-text">Ver Requisiciones</span>
                         </a>
                     </li>
                     <li>

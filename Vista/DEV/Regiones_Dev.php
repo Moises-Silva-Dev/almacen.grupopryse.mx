@@ -35,27 +35,24 @@
                                         <label for="cuenta" class="form-label fw-semibold text-navy">
                                             <i class="fas fa-filter me-1"></i> Filtrar por cuenta:
                                         </label>
-                                        <select class="form-select form-select-lg border-navy" 
-                                                id="cuenta" 
-                                                name="cuenta"
-                                                onchange="this.form.submit()">
+                                        <select class="form-select form-select-lg border-navy" id="cuenta" name="cuenta" onchange="this.form.submit()">
                                             <option value="">-- Seleccionar cuenta --</option>
-                                            <?php
-                                            try {
-                                                $conexion = (new Conectar())->conexion();
-                                                $sqlCuentas = "SELECT ID, NombreCuenta FROM Cuenta ORDER BY NombreCuenta";
-                                                $resultCuentas = $conexion->query($sqlCuentas);
-                                                
-                                                $selectedCuenta = isset($_GET['cuenta']) ? (int)$_GET['cuenta'] : 0;
-                                                
-                                                while ($rowC = $resultCuentas->fetch_assoc()) {
-                                                    $selected = $rowC['ID'] == $selectedCuenta ? 'selected' : '';
-                                                    echo '<option value="' . $rowC['ID'] . '" ' . $selected . '>' . htmlspecialchars($rowC['NombreCuenta']) . '</option>';
-                                                }
-                                            } catch (Exception $e) {
-                                                error_log("Error al cargar cuentas: " . $e->getMessage());
-                                            }
-                                            ?>
+                                                <?php
+                                                    try {
+                                                        $conexion = (new Conectar())->conexion();
+                                                        $sqlCuentas = "SELECT ID, NombreCuenta FROM Cuenta ORDER BY NombreCuenta";
+                                                        $resultCuentas = $conexion->query($sqlCuentas);
+                                                        
+                                                        $selectedCuenta = isset($_GET['cuenta']) ? (int)$_GET['cuenta'] : 0;
+                                                        
+                                                        while ($rowC = $resultCuentas->fetch_assoc()) {
+                                                            $selected = $rowC['ID'] == $selectedCuenta ? 'selected' : '';
+                                                            echo '<option value="' . $rowC['ID'] . '" ' . $selected . '>' . htmlspecialchars($rowC['NombreCuenta']) . '</option>';
+                                                        }
+                                                    } catch (Exception $e) {
+                                                        error_log("Error al cargar cuentas: " . $e->getMessage());
+                                                    }
+                                                ?>
                                         </select>
                                     </div>
                                 </div>
