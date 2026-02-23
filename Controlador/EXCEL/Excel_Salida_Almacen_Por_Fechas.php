@@ -59,7 +59,10 @@ try {
             WHERE 
                 DATE(SE.FchSalidad) BETWEEN ? AND ? 
             GROUP BY 
-                SE.Id_SalE";
+                SE.Id_SalE, SE.FchSalidad, SE.ID_ReqE, 
+                U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, 
+                C.NombreCuenta, RE.FchCreacion, RE.Estatus, 
+                U2.Nombre, U2.Apellido_Paterno, U2.Apellido_Materno";
                 
     // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);

@@ -45,56 +45,41 @@ try {
                 T6.IdCProd AS Identificador_Producto,
                 T7.Descripcion, 
                 T7.Especificacion, 
-                T8.Talla as Talla,
+                T8.Talla AS Talla,
                 SUM(T6.Cantidad) AS Cantidad_Requerida,
                 COALESCE(
-                    (SELECT 
-                        SUM(Ta.Cantidad) 
-                    FROM 
-                        Salida_D Ta 
-                    WHERE 
-                        Ta.Id IN (
-                            SELECT 
-                                Tb.Id_SalE 
-                            FROM 
-                                Salida_E Tb 
-                            WHERE 
-                                Tb.ID_ReqE = T1.IDRequisicionE
-                        ) 
-                    AND 
-                        Ta.IdCProd = T6.IdCProd
-                    AND 
-                        Ta.IdTallas = T6.IdTalla), 0
+                    (SELECT SUM(Ta.Cantidad) 
+                    FROM Salida_D Ta 
+                    INNER JOIN Salida_E Tb ON Ta.Id = Tb.Id_SalE 
+                    WHERE Tb.ID_ReqE = T1.IDRequisicionE
+                    AND Ta.IdCProd = T6.IdCProd
+                    AND Ta.IdTallas = T6.IdTalla -- Esta columna debe estar en el GROUP BY
+                    ), 0
                 ) AS Cantidad_Salida
             FROM 
                 RequisicionE T1
-            INNER JOIN Usuario T2 
-                ON T2.ID_Usuario = T1.IdUsuario 
-            INNER JOIN Cuenta T3 
-                ON T3.ID = T1.IdCuenta 
-            INNER JOIN Regiones T4 
-                ON T4.ID_Region = T1.IdRegion 
-            INNER JOIN Estados T5 
-                ON T5.Id_Estado = T1.IdEstado 
-            INNER JOIN RequisicionD T6 
-                ON T6.IdReqE = T1.IDRequisicionE 
-            INNER JOIN Producto T7 
-                ON T7.IdCProducto = T6.IdCProd 
-            INNER JOIN CTallas T8 
-                ON T8.IdCTallas = T6.IdTalla
+            INNER JOIN Usuario T2 ON T2.ID_Usuario = T1.IdUsuario 
+            INNER JOIN Cuenta T3 ON T3.ID = T1.IdCuenta 
+            INNER JOIN Regiones T4 ON T4.ID_Region = T1.IdRegion 
+            INNER JOIN Estados T5 ON T5.Id_Estado = T1.IdEstado 
+            INNER JOIN RequisicionD T6 ON T6.IdReqE = T1.IDRequisicionE 
+            INNER JOIN Producto T7 ON T7.IdCProducto = T6.IdCProd 
+            INNER JOIN CTallas T8 ON T8.IdCTallas = T6.IdTalla
             WHERE 
                 DATE(T1.FchCreacion) BETWEEN ? AND ?
             GROUP BY 
                 T1.IDRequisicionE, 
                 T1.FchCreacion,
-                CONCAT(T2.Nombre, ' ', T2.Apellido_Paterno), 
+                T2.Nombre, 
+                T2.Apellido_Paterno, 
                 T3.NombreCuenta, 
                 T4.Nombre_Region,
                 T5.Nombre_estado, 
                 T6.IdCProd,
+                T6.IdTalla, -- INDISPENSABLE: Se agregó para que la subconsulta funcione
                 T7.Descripcion, 
                 T7.Especificacion,
-                T8.Talla;";
+                T8.Talla";
                 
     // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);

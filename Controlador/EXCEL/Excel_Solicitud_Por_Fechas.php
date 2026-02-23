@@ -35,7 +35,7 @@ try {
     $fecha_fin = date("Y-m-d", strtotime($fecha_fin));
 
     // Consultar la base de datos para obtener la información de EntradaE
-    $sqlE = "SELECT 
+    $sqlE = "SELECT DISTINCT
                 C.NombreCuenta, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, RE.IDRequisicionE,
                 DATE_FORMAT(RE.FchCreacion, '%Y-%m-%d') AS Fecha,
                 DATE_FORMAT(RE.FchCreacion, '%H:%i') AS HoraMinutos, RE.Estatus, 
@@ -49,9 +49,7 @@ try {
             INNER JOIN 
                 Cuenta C ON RE.IdCuenta = C.ID
             WHERE 
-                DATE(RE.FchCreacion) BETWEEN ? AND ?
-            GROUP BY
-                RE.IDRequisicionE";
+                DATE(RE.FchCreacion) BETWEEN ? AND ?";
                 
     // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
