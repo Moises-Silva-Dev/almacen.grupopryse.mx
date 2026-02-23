@@ -51,7 +51,7 @@ try {
     $fecha_fin = date("Y-m-d", strtotime($fecha_fin));
     
     // Consultar la base de datos para obtener la información de Salida_D
-    $sqlD = "SELECT 
+    $sqlD = "SELECT DISTINCT
                 SE.Id_SalE, 
                 DATE(SE.FchSalidad) AS FchSalida, 
                 SE.ID_ReqE, 
@@ -77,9 +77,7 @@ try {
             INNER JOIN 
                 Usuario U2 ON U2.ID_Usuario = SE.ID_Usuario_Salida
             WHERE 
-                DATE(SE.FchSalidad) BETWEEN ? AND ? 
-            GROUP BY 
-                SE.Id_SalE;";
+                DATE(SE.FchSalidad) BETWEEN ? AND ?";
 
     // Preparar y ejecutar la consulta para Salida_D
     $stmtD = $conexion->prepare($sqlD);

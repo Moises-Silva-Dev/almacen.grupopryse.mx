@@ -62,9 +62,7 @@ try {
             INNER JOIN 
                 Regiones R on RE.IdRegion = R.ID_Region
             WHERE 
-                RE.IDRequisicionE = ?
-            GROUP BY 
-                IDRequisicionE";
+                RE.IDRequisicionE = ?";
 
     // Preparar y ejecutar la consulta para Salida_E
     $stmtE = $conexion->prepare($sqlE);

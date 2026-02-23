@@ -65,9 +65,7 @@ try {
             INNER JOIN 
                 Cuenta C ON RE.IdCuenta = C.ID
             WHERE 
-                DATE(RE.FchCreacion) BETWEEN ? AND ?
-            GROUP BY
-                RE.IDRequisicionE";
+                DATE(RE.FchCreacion) BETWEEN ? AND ?";
 
     // Preparar y ejecutar la consulta
     $stmtD = $conexion->prepare($sqlS);

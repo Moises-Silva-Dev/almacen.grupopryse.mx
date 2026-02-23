@@ -74,9 +74,7 @@ try {
             INNER JOIN 
                 Regiones R on RE.IdRegion = R.ID_Region
             WHERE 
-                RE.IDRequisicionE = ?
-            GROUP BY 
-                IDRequisicionE";
+                RE.IDRequisicionE = ?";
 
     // Preparar y ejecutar la consulta para Salida_E
     $stmtE = $conexion->prepare($sqlE);
@@ -98,13 +96,13 @@ try {
     $stmtProductos = $conexion->prepare("SELECT 
                                             RE.IDRequisicionE AS Requisicion_ID,
                                             P.IdCProducto AS Producto_ID,
-                                            P.IMG AS Imagen_Producto,
-                                            CE.Nombre_Empresa AS Empresa,
-                                            P.Descripcion AS Descripcion_Producto,
-                                            P.Especificacion AS Especificacion_Producto,
-                                            CC.Descrp AS Categoria,
-                                            CT.Talla AS Talla,
-                                            RD.Cantidad AS Cantidad_Solicitada,
+                                            ANY_VALUE(P.IMG) AS Imagen_Producto,
+                                            ANY_VALUE(CE.Nombre_Empresa) AS Empresa,
+                                            ANY_VALUE(P.Descripcion) AS Descripcion_Producto,
+                                            ANY_VALUE(P.Especificacion) AS Especificacion_Producto,
+                                            ANY_VALUE(CC.Descrp) AS Categoria,
+                                            ANY_VALUE(CT.Talla) AS Talla,
+                                            ANY_VALUE(RD.Cantidad) AS Cantidad_Solicitada,
                                             IFNULL(SUM(SD.Cantidad), 0) AS Cantidad_Salida
                                         FROM 
                                             RequisicionE RE
@@ -127,8 +125,7 @@ try {
                                         WHERE 
                                             RE.IDRequisicionE = ?
                                         GROUP BY 
-                                            RE.IDRequisicionE, P.IdCProducto, P.IMG, CE.Nombre_Empresa, 
-                                            P.Descripcion, P.Especificacion, CC.Descrp, CT.Talla, RD.Cantidad;");
+                                            RE.IDRequisicionE, P.IdCProducto");
                                             
     if (!$stmtProductos) {
         throw new Exception("Error en la preparación de la consulta de productos: " . $conexion->error);

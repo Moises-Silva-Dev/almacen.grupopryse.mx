@@ -52,51 +52,37 @@ try {
 
     // Consultar la base de datos para obtener la información de EntradaE
     $sqlE = "SELECT 
-                T1.IDRequisicionE AS Identificador_Requisicion, T1.FchCreacion AS Fecha_Creacion,
-                CONCAT(T2.Nombre, ' ', T2.Apellido_Paterno) AS Usuario, 
-                T3.NombreCuenta AS Cuenta, T4.Nombre_Region AS Region,
-                T5.Nombre_estado AS Estado, T6.IdCProd AS Identificador_Producto,
-                T7.Descripcion, T7.Especificacion, 
+                T1.IDRequisicionE AS Identificador_Requisicion, 
+                T1.FchCreacion AS Fecha_Creacion,
+                ANY_VALUE(CONCAT(T2.Nombre, ' ', T2.Apellido_Paterno)) AS Usuario, 
+                ANY_VALUE(T3.NombreCuenta) AS Cuenta, 
+                ANY_VALUE(T4.Nombre_Region) AS Region,
+                ANY_VALUE(T5.Nombre_estado) AS Estado, 
+                T6.IdCProd AS Identificador_Producto,
+                ANY_VALUE(T7.Descripcion) AS Descripcion, 
+                ANY_VALUE(T7.Especificacion) AS Especificacion, 
                 SUM(T6.Cantidad) AS Cantidad_Requerida,
                 COALESCE(
-                    (SELECT 
-                        SUM(Ta.Cantidad) 
-                    FROM 
-                        Salida_D Ta 
-                    WHERE 
-                        Ta.Id IN (
-                            SELECT 
-                                Tb.Id_SalE 
-                            FROM 
-                                Salida_E Tb 
-                            WHERE 
-                                Tb.ID_ReqE = T1.IDRequisicionE
-                        ) 
-                    AND 
-                        Ta.IdCProd = T6.IdCProd), 0
+                    (SELECT SUM(Ta.Cantidad) 
+                    FROM Salida_D Ta 
+                    INNER JOIN Salida_E Tb ON Ta.Id = Tb.Id_SalE 
+                    WHERE Tb.ID_ReqE = T1.IDRequisicionE 
+                    AND Ta.IdCProd = T6.IdCProd
+                    ), 0
                 ) AS Cantidad_Salida
             FROM 
                 RequisicionE T1
-            INNER JOIN Usuario T2 
-                ON T2.ID_Usuario = T1.IdUsuario 
-            INNER JOIN Cuenta T3 
-                ON T3.ID = T1.IdCuenta 
-            INNER JOIN Regiones T4 
-                ON T4.ID_Region = T1.IdRegion 
-            INNER JOIN Estados T5 
-                ON T5.Id_Estado = T1.IdEstado 
-            INNER JOIN RequisicionD T6 
-                ON T6.IdReqE = T1.IDRequisicionE 
-            INNER JOIN Producto T7 
-                ON T7.IdCProducto = T6.IdCProd 
+            INNER JOIN Usuario T2 ON T2.ID_Usuario = T1.IdUsuario 
+            INNER JOIN Cuenta T3 ON T3.ID = T1.IdCuenta 
+            INNER JOIN Regiones T4 ON T4.ID_Region = T1.IdRegion 
+            INNER JOIN Estados T5 ON T5.Id_Estado = T1.IdEstado 
+            INNER JOIN RequisicionD T6 ON T6.IdReqE = T1.IDRequisicionE 
+            INNER JOIN Producto T7 ON T7.IdCProducto = T6.IdCProd 
             WHERE 
                 DATE(T1.FchCreacion) BETWEEN ? AND ?
             GROUP BY 
-                T1.IDRequisicionE, T1.FchCreacion,
-                CONCAT(T2.Nombre, ' ', T2.Apellido_Paterno), 
-                T3.NombreCuenta, T4.Nombre_Region,
-                T5.Nombre_estado, T6.IdCProd,
-                T7.Descripcion, T7.Especificacion;";
+                T1.IDRequisicionE, 
+                T6.IdCProd";
 
     // Preparar y ejecutar la consulta para EntradaE
     $stmtE = $conexion->prepare($sqlE);

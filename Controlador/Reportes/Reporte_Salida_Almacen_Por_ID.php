@@ -46,17 +46,15 @@ try {
     }
     
     // Consultar la base de datos para obtener la información de Salida_E
-    $sqlE = "SELECT 
+    $sqlE = "SELECT
                 C.NombreCuenta, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, 
                 SE.ID_ReqE, RE.FchCreacion, RE.CentroTrabajo, RE.Estatus, 
                 E.Nombre_estado, RE.Mpio, RE.Colonia, RE.Calle, RE.Nro, RE.CP,
                 U2.Nombre AS Nombre2, U2.Apellido_Paterno AS Apellido_Paterno2, U2.Apellido_Materno AS Apellido_Materno2
             FROM 
-                Salida_D SD 
+                Salida_E SE 
             INNER JOIN 
-                Salida_E SE ON SE.Id_SalE = SD.Id 
-            INNER JOIN 
-                RequisicionE RE ON RE.IDRequisicionE = SE.Id_ReqE
+                RequisicionE RE ON RE.IDRequisicionE = SE.ID_ReqE
             INNER JOIN 
                 Estados E ON E.Id_Estado = RE.IdEstado
             INNER JOIN 
@@ -66,9 +64,7 @@ try {
             INNER JOIN 
                 Usuario U2 ON U2.ID_Usuario = SE.ID_Usuario_Salida
             WHERE 
-                RE.IDRequisicionE = ?
-            GROUP BY 
-                RE.IDRequisicionE;";
+                RE.IDRequisicionE = ?";
                 
     // Preparar y ejecutar la consulta para Salida_E
     $stmtE = $conexion->prepare($sqlE);
@@ -105,7 +101,7 @@ try {
         WHERE
             se.Id_SalE = ?
         ORDER BY 
-            p.Descripcion;");
+            p.Descripcion");
     
     if (!$stmtProductos) {
         throw new Exception("Error en la preparación de la consulta de productos: " . $conexion->error);

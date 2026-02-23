@@ -61,10 +61,27 @@ try {
 
     // Consultar la base de datos para obtener la información de Salida_E
     $sqlE = "SELECT 
-                C.NombreCuenta, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, RE.IDRequisicionE,
-                RE.FchCreacion, RE.Estatus, RE.Supervisor, R.Nombre_Region, RE.CentroTrabajo, 
-                RE.NroElementos, RE.Receptor, RE.TelReceptor, RE.RfcReceptor, RE.Justificacion,
-                E.Nombre_estado, RE.Mpio, RE.Colonia, RE.Calle, RE.Nro, RE.CP
+                C.NombreCuenta, 
+                U.Nombre, 
+                U.Apellido_Paterno, 
+                U.Apellido_Materno, 
+                RE.IDRequisicionE,
+                RE.FchCreacion, 
+                RE.Estatus, 
+                RE.Supervisor, 
+                R.Nombre_Region, 
+                RE.CentroTrabajo, 
+                RE.NroElementos, 
+                RE.Receptor, 
+                RE.TelReceptor, 
+                RE.RfcReceptor, 
+                RE.Justificacion,
+                E.Nombre_estado, 
+                RE.Mpio, 
+                RE.Colonia, 
+                RE.Calle, 
+                RE.Nro, 
+                RE.CP
             FROM 
                 RequisicionE RE
             INNER JOIN 
@@ -72,13 +89,13 @@ try {
             INNER JOIN 
                 Cuenta C ON RE.IdCuenta = C.ID
             INNER JOIN 
-                Estados E on RE.IdEstado = E.Id_Estado
+                Estados E ON RE.IdEstado = E.Id_Estado
             INNER JOIN 
-                Regiones R on RE.IdRegion = R.ID_Region
+                Regiones R ON RE.IdRegion = R.ID_Region
             WHERE 
-                RE.IDRequisicionE IN (SELECT IDRequisicionE FROM RequisicionE WHERE IdUsuario = ?)
-            GROUP BY 
-                IDRequisicionE";
+                RE.IdUsuario = ? -- Filtro directo, mucho más rápido
+            ORDER BY 
+                RE.FchCreacion DESC";
 
     // Preparar y ejecutar la consulta para Salida_E
     $stmtE = $conexion->prepare($sqlE);

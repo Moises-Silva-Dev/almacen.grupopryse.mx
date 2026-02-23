@@ -51,9 +51,8 @@ try {
                 EE.Fecha_Creacion, EE.Proveedor, EE.Receptor, EE.Comentarios, EE.Estatus 
             FROM 
                 EntradaE EE
-            INNER JOIN 
-                Usuario U ON EE.Usuario_Creacion = U.ID_Usuario
-            WHERE IdEntE = ?;";
+            INNER JOIN Usuario U ON EE.Usuario_Creacion = U.ID_Usuario
+            WHERE EE.IdEntE = ?;";
 
     // Preparar y ejecutar la consulta para EntradaE
     $stmtE = $conexion->prepare($sqlE);
@@ -94,7 +93,7 @@ try {
             INNER JOIN 
                 CTipoTallas CTT ON P.IdCTipTal = CTT.IdCTipTall 
             WHERE 
-                IdEntE = ?;";
+                EE.IdEntE = ?";
                 
     // Preparar y ejecutar la consulta para EntradaD
     $stmtD = $conexion->prepare($sqlD);
