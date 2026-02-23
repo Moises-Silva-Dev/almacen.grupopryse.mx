@@ -99,7 +99,7 @@ try {
         INNER JOIN
             CTallas ct ON sd.IdTallas = ct.IdCTallas
         WHERE
-            se.Id_SalE = ?
+            se.ID_ReqE = ?
         ORDER BY 
             p.Descripcion");
     

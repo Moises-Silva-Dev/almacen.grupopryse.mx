@@ -95,12 +95,12 @@ try {
     // Obtener datos de los productos relacionados con la requisición
     $stmtProductos = $conexion->prepare("SELECT 
                                             RE.IDRequisicionE AS Requisicion_ID,
-                                            CE.Nombre_Empresa AS Empresa,
-                                            P.Descripcion AS Descripcion_Producto,
-                                            P.Especificacion AS Especificacion_Producto,
-                                            CC.Descrp AS Categoria,
-                                            CT.Talla AS Talla,
-                                            RD.Cantidad AS Cantidad_Solicitada
+                                            ANY_VALUE(CE.Nombre_Empresa) AS Empresa,
+                                            ANY_VALUE(P.Descripcion) AS Descripcion_Producto,
+                                            ANY_VALUE(P.Especificacion) AS Especificacion_Producto,
+                                            ANY_VALUE(CC.Descrp) AS Categoria,
+                                            ANY_VALUE(CT.Talla) AS Talla,
+                                            SUM(RD.Cantidad) AS Cantidad_Solicitada -- Se quita ANY_VALUE de la suma y se quita coma
                                         FROM 
                                             RequisicionE RE
                                         INNER JOIN 
@@ -112,14 +112,11 @@ try {
                                         INNER JOIN 
                                             CCategorias CC ON P.IdCCat = CC.IdCCate
                                         INNER JOIN 
-                                            CTipoTallas CTT ON CT.IdCTipTal = CTT.IdCTipTall
-                                        INNER JOIN 
                                             CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa
                                         WHERE 
                                             RE.IDRequisicionE = ?
                                         GROUP BY 
-                                            RE.IDRequisicionE, CE.Nombre_Empresa, P.Descripcion, 
-                                            P.Especificacion, CT.Talla, RD.Cantidad;");
+                                            RE.IDRequisicionE, RD.IdCProd, RD.IdTalla");
                                             
     if (!$stmtProductos) {
         throw new Exception("Error en la preparación de la consulta de productos: " . $conexion->error);
@@ -132,11 +129,11 @@ try {
     // Obtener datos la suma de productos relacionados con la requisición
     $stmtSumaProductos = $conexion->prepare("SELECT 
                                                 RE.IDRequisicionE AS Requisicion_ID,
-                                                CE.Nombre_Empresa AS Empresa,
-                                                P.Descripcion AS Descripcion_Producto,
-                                                P.Especificacion AS Especificacion_Producto,
-                                                CC.Descrp AS Categoria,
-                                                SUM(RD.Cantidad) AS Cantidad_Solicitada
+                                                ANY_VALUE(CE.Nombre_Empresa) AS Empresa,
+                                                ANY_VALUE(P.Descripcion) AS Descripcion_Producto,
+                                                ANY_VALUE(P.Especificacion) AS Especificacion_Producto,
+                                                ANY_VALUE(CC.Descrp) AS Categoria,
+                                                SUM(RD.Cantidad) AS Cantidad_Solicitada -- SUM sin ANY_VALUE
                                             FROM 
                                                 RequisicionE RE
                                             INNER JOIN 
@@ -144,18 +141,14 @@ try {
                                             INNER JOIN 
                                                 Producto P ON RD.IdCProd = P.IdCProducto
                                             INNER JOIN 
-                                                CTallas CT ON RD.IdTalla = CT.IdCTallas
-                                            INNER JOIN 
                                                 CCategorias CC ON P.IdCCat = CC.IdCCate
-                                            INNER JOIN 
-                                                CTipoTallas CTT ON CT.IdCTipTal = CTT.IdCTipTall
                                             INNER JOIN 
                                                 CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa
                                             WHERE 
                                                 RE.IDRequisicionE = ?
                                             GROUP BY 
-                                                RE.IDRequisicionE, CE.Nombre_Empresa, 
-                                                P.Descripcion, P.Especificacion, CC.Descrp");
+                                                RE.IDRequisicionE, RD.IdCProd");
+                                                
     if (!$stmtSumaProductos) {
         throw new Exception("Error en la preparación de la consulta de suma de productos: " . $conexion->error);
     }
