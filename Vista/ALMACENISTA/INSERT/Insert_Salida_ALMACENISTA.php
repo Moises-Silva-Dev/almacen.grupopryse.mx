@@ -17,7 +17,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         INNER JOIN Estados E on RE.IdEstado = E.Id_Estado
         INNER JOIN Regiones R on RE.IdRegion = R.ID_Region
         INNER JOIN Cuenta C on RE.IdCuenta = C.ID
-    WHERE RE.IDRequisicionE = ?;");
+    WHERE RE.IDRequisicionE = ?");
 
     $sql1->bind_param("i", $requisicion_id);
     $sql1->execute();
@@ -25,9 +25,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $row = $result1->fetch_assoc(); // Obtener la fila de resultados como una matriz asociativa
 
     //validar si ya se hizo una salida
-    $sql2 = $conexion->prepare("SELECT * FROM Salida_D 
-            INNER JOIN Salida_E SE ON Salida_D.Id = SE.Id_SalE 
-                WHERE ID_ReqE=?;");
+    $sql2 = $conexion->prepare("SELECT * FROM Salida_D SD INNER JOIN Salida_E SE ON SD.Id = SE.Id_SalE WHERE SE.ID_ReqE = ?");
 
     $sql2->bind_param("i", $requisicion_id);
     $sql2->execute();
@@ -36,41 +34,30 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     if ($resultado2->num_rows > 0) {
         // Consulta para obtener la información adicional de los productos relacionados
         $sql3 = $conexion->prepare("SELECT
-            rd.IdCProd AS Identificador_Producto,
-            p.Descripcion AS Descripcion_Producto,
-            rd.IdTalla AS Identificador_Talla,
-            ct.Talla AS Talla_Requisicion,
-            rd.Cantidad AS Solicitado,
-            COALESCE(sd.Entregada, 0) AS Entregada,
-            CASE
-                WHEN rd.Cantidad - COALESCE(sd.Entregada, 0) <= 0 THEN 0
-                ELSE rd.Cantidad - COALESCE(sd.Entregada, 0)
-            END AS Faltante,
-            i.Cantidad AS Cantidad_Disponible,
-            p.IMG AS IMG_Producto
-        FROM
-            RequisicionD rd
-        JOIN
-            Producto p ON rd.IdCProd = p.IdCProducto
-        LEFT JOIN
-            (
-                SELECT 
-                    IdCProd, IdTallas, SUM(Cantidad) AS Entregada
-                FROM 
-                    Salida_D
-                WHERE 
-                    Id IN (SELECT Id_SalE FROM Salida_E WHERE ID_ReqE = ?)
-                GROUP BY 
-                    IdCProd, IdTallas
-            ) sd ON rd.IdCProd = sd.IdCProd AND rd.IdTalla = sd.IdTallas
-        LEFT JOIN
-            Inventario i ON rd.IdCProd = i.IdCPro AND rd.IdTalla = i.IdCTal
-        LEFT JOIN
-            CTallas ct ON rd.IdTalla = ct.IdCTallas
-        WHERE
-            rd.IdReqE = ?
-        GROUP BY
-            rd.IdCProd, p.Descripcion, rd.IdTalla, ct.Talla, rd.Cantidad, i.Cantidad, p.IMG;");
+                                        rd.IdCProd AS Identificador_Producto,
+                                        MAX(p.Descripcion) AS Descripcion_Producto,
+                                        rd.IdTalla AS Identificador_Talla,
+                                        MAX(ct.Talla) AS Talla_Requisicion,
+                                        SUM(rd.Cantidad) AS Solicitado,
+                                        COALESCE(sd.Entregada, 0) AS Entregada,
+                                        CASE
+                                            WHEN SUM(rd.Cantidad) - COALESCE(sd.Entregada, 0) <= 0 THEN 0
+                                            ELSE SUM(rd.Cantidad) - COALESCE(sd.Entregada, 0)
+                                        END AS Faltante,
+                                        MAX(i.Cantidad) AS Cantidad_Disponible,
+                                        MAX(p.IMG) AS IMG_Producto
+                                    FROM RequisicionD rd
+                                    JOIN Producto p ON rd.IdCProd = p.IdCProducto
+                                    LEFT JOIN (
+                                        SELECT IdCProd, IdTallas, SUM(Cantidad) AS Entregada
+                                        FROM Salida_D
+                                        WHERE Id IN (SELECT Id_SalE FROM Salida_E WHERE ID_ReqE = ?)
+                                        GROUP BY IdCProd, IdTallas
+                                    ) sd ON rd.IdCProd = sd.IdCProd AND rd.IdTalla = sd.IdTallas
+                                    LEFT JOIN Inventario i ON rd.IdCProd = i.IdCPro AND rd.IdTalla = i.IdCTal
+                                    LEFT JOIN CTallas ct ON rd.IdTalla = ct.IdCTallas
+                                    WHERE rd.IdReqE = ?
+                                    GROUP BY rd.IdCProd, rd.IdTalla");
 
         $sql3->bind_param("ii", $requisicion_id, $requisicion_id);
         $sql3->execute();
@@ -79,27 +66,19 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     } else {
         // Consulta para obtener la información adicional de los productos relacionados
         $sql3 = $conexion->prepare("SELECT 
-                rd.IdCProd AS Identificador_Producto,
-                p.Descripcion AS Descripcion_Producto,
-                rd.IdTalla AS Identificador_Talla,
-                ct.Talla AS Talla_Requisicion,
-                p.IMG AS IMG_Producto, 
-                rd.Cantidad AS Solicitado, 
-                i.Cantidad AS Cantidad_Disponible  
-                FROM
-                    RequisicionD rd
-                JOIN
-                    Producto p ON rd.IdCProd = p.IdCProducto
-                LEFT JOIN
-                    Salida_D sd ON rd.IdCProd = sd.IdCProd AND rd.IdTalla = sd.IdTallas
-                LEFT JOIN
-                    Inventario i ON rd.IdCProd = i.IdCPro AND rd.IdTalla = i.IdCTal
-                LEFT JOIN
-                    CTallas ct ON rd.IdTalla = ct.IdCTallas
-                WHERE 
-                    rd.IdReqE = ?
-                GROUP BY
-                    rd.IdCProd, rd.IdTalla;");
+                                    rd.IdCProd AS Identificador_Producto,
+                                    MAX(p.Descripcion) AS Descripcion_Producto,
+                                    rd.IdTalla AS Identificador_Talla,
+                                    MAX(ct.Talla) AS Talla_Requisicion,
+                                    MAX(p.IMG) AS IMG_Producto, 
+                                    SUM(rd.Cantidad) AS Solicitado, 
+                                    MAX(i.Cantidad) AS Cantidad_Disponible  
+                                    FROM RequisicionD rd
+                                    JOIN Producto p ON rd.IdCProd = p.IdCProducto
+                                    LEFT JOIN Inventario i ON rd.IdCProd = i.IdCPro AND rd.IdTalla = i.IdCTal
+                                    LEFT JOIN CTallas ct ON rd.IdTalla = ct.IdCTallas
+                                    WHERE rd.IdReqE = ?
+                                    GROUP BY rd.IdCProd, rd.IdTalla");
 
                 $sql3->bind_param("i", $requisicion_id);
                 $sql3->execute();
@@ -225,7 +204,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                     <td><?php echo $row1['Identificador_Producto']; ?></td>
                                     <td><?php echo $row1['Descripcion_Producto']; ?></td>
                                     <td><?php echo $row1['Talla_Requisicion']; ?></td>
-                                    <td><?php echo isset($row1['Solicitada']) ? $row1['Solicitada'] : $row1['Solicitado']; ?></td>
+                                    <td><?php echo isset($row1['Solicitado']) ? $row1['Solicitado'] : $row1['Solicitado']; ?></td>
                                     <td><?php echo isset($row1['Entregada']) ? $row1['Entregada'] : 0; ?></td>
                                     <td><?php echo isset($row1['Faltante']) ? $row1['Faltante'] : $row1['Solicitado']; ?></td>
                                     <td><?php echo isset($row1['Cantidad_Disponible']) ? $row1['Cantidad_Disponible'] : 0; ?></td>

@@ -6,14 +6,10 @@ date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria d
 
 // Incluir dependencias necesarias
 include('../../../Modelo/Conexion.php'); // Conexión a la base de datos
-require_once("../../../Modelo/Funciones/Funciones_Borrador_RequisicionD.php"); // Incluir funciones de borrador de requisición de detalles
-require_once("../../../Modelo/Funciones/Funciones_Borrador_RequisicionE.php"); // Incluir funciones de borrador de requisición de elementos
 require_once("../../../Modelo/Funciones/Funciones_Inventario.php"); // Incluir funciones de inventario
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Incluir funciones de tipo de usuario
 require_once("../../../Modelo/Funciones/Funciones_SalidaE.php"); // Incluir funciones de salida de elementos
 require_once("../../../Modelo/Funciones/Funciones_SalidaD.php"); // Incluir funciones de salida de detalles
-require_once("../../../Modelo/Funciones/Funciones_RequisicionD.php"); // Incluir funciones de requisición de detalles
-require_once("../../../Modelo/Funciones/Funciones_RequisicionE.php"); // Incluir funciones de requisición de elementos
 require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Incluir funciones de usuarios
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos

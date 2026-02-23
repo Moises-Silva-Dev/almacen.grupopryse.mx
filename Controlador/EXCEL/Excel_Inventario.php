@@ -24,11 +24,11 @@ try {
     $sqlE = "SELECT 
                 P.IdCProducto, 
                 P.Descripcion AS Descripcion, 
-                P.Especificacion AS Especificacion, 
+                ANY_VALUE(P.Especificacion) AS Especificacion, -- ANY_VALUE es ideal para MySQL 8
                 T.Talla AS Talla, 
-                I.Cantidad AS Cantidad, 
+                SUM(I.Cantidad) AS Cantidad,                    -- Sumamos el stock
                 CE.Nombre_Empresa AS Nombre_Empresa, 
-                CCA.Descrp AS Categoria 
+                ANY_VALUE(CCA.Descrp) AS Categoria             -- Tomamos el valor de la categoría
             FROM 
                 Inventario I 
             INNER JOIN 

@@ -160,15 +160,17 @@ function ActualizarEstatusRequisionESalida($conexion, $id_requisicion){
             RequisicionD RD
         INNER JOIN 
             (SELECT 
-                SE.ID_ReqE, SUM(SD.Cantidad) Cantidad
+                SE.ID_ReqE, SUM(SD.Cantidad) AS Cantidad
             FROM 
                 Salida_E SE
             INNER JOIN 
                 Salida_D SD ON SE.Id_SalE = SD.Id
             WHERE 
-                SE.ID_ReqE = ?) SD1 ON RD.IdReqE = SD1.ID_ReqE
+                SE.ID_ReqE = ?
+            GROUP BY SE.ID_ReqE) SD1 ON RD.IdReqE = SD1.ID_ReqE 
         WHERE 
-            RD.IdReqE = ?");
+            RD.IdReqE = ?
+        GROUP BY SD1.Cantidad");
             
     $SQLBuscarEstatus->bind_param("ii", $id_requisicion, $id_requisicion);
     $SQLBuscarEstatus->execute();

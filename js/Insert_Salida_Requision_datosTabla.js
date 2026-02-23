@@ -123,41 +123,51 @@ function bloquearInputs() {
 
 // Función para validar que la cantidad a entregar no sea mayor a la cantidad solicitada
 function validarCantidad() {
-    // Selecciona todos los inputs con el nombre "Cant[]"
-    var inputsCantidadEntregar = document.querySelectorAll('input[name="Cant[]"]'); 
-    // Selecciona todas las celdas de la columna 6 (Solicitado)
-    var solicitados = document.querySelectorAll('td:nth-child(6)'); 
+    var inputsCantidadEntregar = document.querySelectorAll('input[name="Cant[]"]');
+    // En tu HTML: col 4=Solicitado, col 5=Entregado, col 6=Faltante, col 7=Disponible
+    var faltantes = document.querySelectorAll('td:nth-child(6)'); 
+    var disponibles = document.querySelectorAll('td:nth-child(7)');
 
-    // Itera a través de todos los inputs de cantidad a entregar
-    for (var i = 0; i < inputsCantidadEntregar.length; i++) { 
-        // Obtiene el valor del input y lo convierte a entero
-        var cantidadEntregar = parseInt(inputsCantidadEntregar[i].value); 
-        // Obtiene el valor de la celda de solicitado y lo convierte a entero
-        var solicitado = parseInt(solicitados[i].textContent); 
+    for (var i = 0; i < inputsCantidadEntregar.length; i++) {
+        var cantidadEntregar = parseInt(inputsCantidadEntregar[i].value) || 0;
+        var faltante = parseInt(faltantes[i].textContent) || 0;
+        var disponible = parseInt(disponibles[i].textContent) || 0;
         
-        // Si la cantidad a entregar es mayor que la solicitada
-        if (cantidadEntregar > solicitado) { 
-            // Muestra una alerta
-            alert("No puedes entregar una cantidad mayor a la solicitada."); 
-            // Limpia el valor del input
-            inputsCantidadEntregar[i].value = ""; 
-            // Devuelve falso para detener la validación
-            return false; 
+        // Regla 1: No entregar más de lo que falta
+        if (cantidadEntregar > faltante) {
+            Swal.fire("Error", "No puedes entregar más de lo que falta: " + faltante, "error");
+            inputsCantidadEntregar[i].value = "";
+            return false;
+        }
+        
+        // Regla 2: No entregar más de lo que hay en stock
+        if (cantidadEntregar > disponible) {
+            Swal.fire("Sin Stock", "Solo tienes " + disponible + " disponible(s)", "warning");
+            inputsCantidadEntregar[i].value = "";
+            return false;
         }
     }
-    return true; // Devuelve verdadero si todas las cantidades son válidas
+    return true;
 }
 
 // Llamar a las funciones cuando se cargue la página
 window.onload = function() {
-    // Llama a la función bloquearInputs
     bloquearInputs(); 
 
-    // Selecciona todos los inputs con el nombre "Cant[]"
-    var inputsCantidadEntregar = document.querySelectorAll('input[name="Cant[]"]'); 
-    // Itera a través de todos los inputs de cantidad a entregar
-    for (var i = 0; i < inputsCantidadEntregar.length; i++) { 
-        // Añade un evento 'change' a cada input para validar la cantidad al cambiar
-        inputsCantidadEntregar[i].addEventListener('change', validarCantidad); 
-    }
+    // Escuchar el envío del formulario
+    const formulario = document.getElementById('FormInsertSalidaNueva');
+    formulario.addEventListener('submit', function(e) {
+        // Ejecutar el guardado de datos en el input oculto
+        const datosListos = guardarDatosTabla();
+        
+        if (!datosListos) {
+            e.preventDefault(); // Detener el envío si no hay datos
+        }
+        // Si todo está bien, el formulario se envía con el JSON listo
+    });
+
+    var inputsCantidadEntregar = document.querySelectorAll('input[name="Cant[]"]');
+    inputsCantidadEntregar.forEach(input => {
+        input.addEventListener('change', validarCantidad);
+    });
 };
