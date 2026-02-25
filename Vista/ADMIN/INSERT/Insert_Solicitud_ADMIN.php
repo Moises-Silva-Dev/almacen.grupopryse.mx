@@ -196,7 +196,7 @@
                                         <select class="form-select mb-3" id="ID_Producto" name="ID_Producto[]">
                                             <option value="" selected disabled>-- Seleccionar ID de Producto --</option>
                                             <?php
-                                                $sql = $conexion->query("SELECT * FROM Producto;");
+                                                $sql = $conexion->query("SELECT * FROM Producto");
                                                 while ($resultado = $sql->fetch_assoc()) {
                                                     echo "<option value='" . $resultado['IdCProducto'] . "'>" . $resultado['IdCProducto'] . "</option>";
                                                 }
