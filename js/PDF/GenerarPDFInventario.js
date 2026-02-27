@@ -1,27 +1,46 @@
-// Función llamada por el botón al hacer clic
 function Generar_PDF_Inventario(event) {
     event.preventDefault();
 
-    var url = '../../Controlador/Reportes/Reporte_Inventario.php';
+    // 1. Mostrar SweetAlert de carga
+    Swal.fire({
+        title: 'Generando Reporte',
+        text: 'Preparando los datos del inventario...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
-    fetch(url, {
-        method: 'GET',
-    })
-    .then(response => {
+    const url = '../../Controlador/Reportes/Reporte_Inventario.php';
+
+    // 2. Definimos una promesa que dura exactamente 2 segundos
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // 3. Ejecutamos el fetch
+    const peticion = fetch(url);
+
+    // 4. Usamos Promise.all para esperar a QUE AMBAS terminen
+    // (La petición Y el tiempo de 2 segundos)
+    Promise.all([peticion, timer])
+    .then(([response]) => {
         const contentType = response.headers.get('Content-Type');
         
         if (contentType && contentType.includes('application/json')) {
             return response.json().then(json => {
+                Swal.close(); // Cerramos carga
                 if (json.error) {
-                    document.getElementById('errorMessage').innerText = json.error;
-                    
-                    // Código nativo (igual que ya tenías aquí)
-                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: json.error
+                    });
                 }
             });
         } else {
             return response.blob().then(blob => {
+                // El servidor respondió y ya pasaron al menos 2 segundos
+                Swal.close(); 
+
                 var pdfUrl = URL.createObjectURL(blob);
                 document.getElementById('pdfIframe').src = pdfUrl;
 
@@ -31,14 +50,13 @@ function Generar_PDF_Inventario(event) {
             });
         }
     })
-    .catch(error => console.error('Error:', error));
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var pdfModal = document.getElementById('pdfModal');
-    if (pdfModal) {
-        pdfModal.addEventListener('hidden.bs.modal', function () {
-            document.getElementById('pdfIframe').src = '';
+    .catch(error => {
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de red',
+            text: 'No se pudo obtener el reporte.'
         });
-    }
-});
+    });
+}

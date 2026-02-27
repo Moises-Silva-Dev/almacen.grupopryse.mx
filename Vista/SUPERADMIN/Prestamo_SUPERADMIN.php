@@ -131,7 +131,7 @@
                                             ) AND (PE.Estatus = 'Pendiente' OR PE.Estatus = 'Autorizado')";
                                         }
 
-                                        $sql .= " GROUP BY PE.IdPrestamoE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY PE.IdPrestamoE ORDER BY PE.IdPrestamoE DESC LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(*) as total

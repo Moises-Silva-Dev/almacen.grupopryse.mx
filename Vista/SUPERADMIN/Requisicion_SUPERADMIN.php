@@ -133,7 +133,7 @@
                                             $sql .= " AND (RE.IDRequisicionE LIKE ? OR C.NombreCuenta LIKE ?) AND (U.Correo_Electronico = ?)";
                                         }
 
-                                        $sql .= " GROUP BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY RE.IDRequisicionE ORDER BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
                                         
                                         // Consulta para obtener las requisiciones
                                         $sql_total = "SELECT COUNT(*) AS Total

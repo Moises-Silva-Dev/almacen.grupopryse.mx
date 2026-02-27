@@ -313,7 +313,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted">
-                                    Mostrando <strong><?php echo $records_per_page; ?></strong> 
+                                    Mostrando <strong><?php echo min($records_per_page, $total_rows); ?></strong> 
                                     de <strong><?php echo $total_rows; ?></strong> usuarios
                                 </small>
                             </div>

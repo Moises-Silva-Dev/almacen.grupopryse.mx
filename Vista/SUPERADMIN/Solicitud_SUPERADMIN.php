@@ -134,7 +134,7 @@
                                             ) AND (RE.Estatus = 'Pendiente' OR RE.Estatus = 'Autorizado')";
                                         }
 
-                                        $sql .= " GROUP BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY RE.IDRequisicionE ORDER BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(*) as total
