@@ -1,46 +1,65 @@
-// Función para generar y descargar un archivo Excel basado en las fechas seleccionadas en el formulario
 function Generar_Excel_Producto_x_Estado(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío y recarga de la página)
     event.preventDefault();
-        
-    // Crear la URL para enviar las fechas al script PHP que genera el archivo Excel
-    var url = '../../Controlador/EXCEL/Excel_Producto_x_Estado.php';
 
-    // Usar fetch para realizar la solicitud al servidor con el método GET
+    // 1. Notificación visual de inicio de proceso
+    Swal.fire({
+        title: 'Generando reporte...',
+        text: 'Por favor, espere mientras se procesa el archivo Excel.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // Activa el spinner de carga
+        }
+    });
+
+    const url = '../../Controlador/EXCEL/Excel_Producto_x_Estado.php';
+
     fetch(url, {
-        method: 'GET', // Indica que los datos se solicitan mediante el método GET
+        method: 'GET',
     })
-    // Verificar si la respuesta del servidor fue exitosa
     .then(response => {
         if (!response.ok) {
-            // Lanzar un error si la respuesta no es satisfactoria (status code >= 400)
-            throw new Error('Error en la respuesta del servidor: ' + response.statusText);
+            throw new Error('Error en el servidor: ' + response.statusText);
         }
-        // Convertir la respuesta a un objeto Blob (representación binaria del archivo)
         return response.blob();
     })
-    // Manejar el Blob recibido para descargar el archivo Excel
     .then(blob => {
-        // Crear una URL temporal para el archivo Blob
-        var url = URL.createObjectURL(blob);
-            
-        // Crear un elemento <a> dinámicamente para descargar el archivo
-        var a = document.createElement('a');
-        a.href = url; // Asignar la URL del archivo al atributo href
-        a.download = 'Producto_x_Estado_' + 
-            new Date().toISOString().slice(0, 19) // Obtener la fecha y hora actual en formato ISO
-            .replace(/[-T]/g, '_') // Reemplazar caracteres no válidos en nombres de archivo
-            .replace(/:/g, '-') + 
-            '.xlsx'; // Agregar extensión .xlsx al archivo
+        // 2. Validación de contenido (evita descargar archivos vacíos o errores PHP ocultos)
+        if (blob.size === 0) {
+            throw new Error('El archivo recibido está vacío.');
+        }
 
-        // Agregar el elemento <a> al DOM, simular un clic para descargar el archivo, y luego eliminarlo
-        document.body.appendChild(a); // Agregar el enlace al DOM
-        a.click(); // Simular el clic en el enlace para iniciar la descarga
-        document.body.removeChild(a); // Eliminar el enlace del DOM después de descargar
-            
-        // Revocar la URL temporal para liberar memoria
-        URL.revokeObjectURL(url);
+        // 3. Gestión de la descarga mediante ObjectURL
+        const urlBlob = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        // Generación dinámica del nombre de archivo (Timestamping)
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/[-T]/g, '_').replace(/:/g, '-');
+        
+        a.href = urlBlob;
+        a.download = `Producto_x_Estado_${timestamp}.xlsx`;
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(urlBlob);
+
+        // 4. Notificación de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Descarga completada!',
+            text: 'El reporte se ha generado correctamente.',
+            timer: 2000,
+            showConfirmButton: false
+        });
     })
-    // Manejar errores si ocurren durante la solicitud fetch o procesamiento del archivo
-    .catch(error => console.error('Error al generar el archivo Excel:', error)); 
+    .catch(error => {
+        // 5. Gestión de excepciones y errores de red
+        console.error('Runtime Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de generación',
+            text: 'No se pudo generar el archivo. ' + error.message,
+            confirmButtonText: 'Entendido'
+        });
+    });
 }

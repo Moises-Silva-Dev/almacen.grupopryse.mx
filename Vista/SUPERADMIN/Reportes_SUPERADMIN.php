@@ -35,12 +35,12 @@
                 <div class="card-body p-4">
                     <!-- Acordeón de reportes -->
                     <div class="accordion accordion-flush" id="reportsAccordion">
-                        
+
                         <!-- Reporte de Entradas de Productos -->
                         <div class="accordion-item border-navy mb-3">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-light-navy text-white" type="button" 
-                                        data-bs-toggle="collapse" data-bs-target="#collapseEntradas">
+                                <button class="accordion-button collapsed bg-light-navy text-white" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseEntradas">
                                     <div class="d-flex align-items-center w-100">
                                         <div class="report-icon me-3">
                                             <i class="fas fa-inbox fa-lg"></i>
@@ -84,15 +84,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-grid gap-2">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Entradas_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Entradas_Fechas(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>Generar PDF</span>
                                                             </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Entradas_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Entradas_Fechas(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Generar Excel</span>
                                                             </button>
@@ -101,7 +101,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Por ID -->
                                         <div class="col-lg-6">
                                             <div class="report-card">
@@ -121,9 +121,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-grid">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Entrada_ID(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Entrada_ID(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>Generar PDF</span>
                                                             </button>
@@ -140,8 +140,8 @@
                         <!-- Reporte de Salidas de Almacén -->
                         <div class="accordion-item border-navy mb-3">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-light-navy text-white" type="button" 
-                                        data-bs-toggle="collapse" data-bs-target="#collapseSalidas">
+                                <button class="accordion-button collapsed bg-light-navy text-white" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseSalidas">
                                     <div class="d-flex align-items-center w-100">
                                         <div class="report-icon me-3">
                                             <i class="fas fa-box fa-lg"></i>
@@ -185,15 +185,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-grid gap-2">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Salidas_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Salidas_Fechas(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>Generar PDF</span>
                                                             </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Salidas_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Salidas_Fechas(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Generar Excel</span>
                                                             </button>
@@ -202,7 +202,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Por ID -->
                                         <div class="col-lg-6">
                                             <div class="report-card">
@@ -222,9 +222,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-grid">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Salida_ID(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Salida_ID(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>Generar PDF</span>
                                                             </button>
@@ -241,8 +241,8 @@
                         <!-- Reporte de Inventario -->
                         <div class="accordion-item border-navy mb-3">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-light-navy text-white" type="button" 
-                                        data-bs-toggle="collapse" data-bs-target="#collapseInventario">
+                                <button class="accordion-button collapsed bg-light-navy text-white" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseInventario">
                                     <div class="d-flex align-items-center w-100">
                                         <div class="report-icon me-3">
                                             <i class="fas fa-boxes fa-lg"></i>
@@ -271,15 +271,15 @@
                                                     </p>
                                                     <div class="mt-auto">
                                                         <div class="d-grid gap-2">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Inventario(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Inventario(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>Generar PDF</span>
                                                             </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Inventario(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Inventario(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Generar Excel</span>
                                                             </button>
@@ -288,7 +288,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Reporte por Estado -->
                                         <div class="col-lg-4">
                                             <div class="report-card h-100">
@@ -302,9 +302,9 @@
                                                     </p>
                                                     <div class="mt-auto">
                                                         <div class="d-grid">
-                                                            <button type="button" 
-                                                                    class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Producto_x_Estado(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success btn-lg d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Producto_x_Estado(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Generar Excel</span>
                                                             </button>
@@ -321,8 +321,8 @@
                         <!-- Reporte de Requisiciones -->
                         <div class="accordion-item border-navy mb-3">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-light-navy text-white" type="button" 
-                                        data-bs-toggle="collapse" data-bs-target="#collapseRequisiciones">
+                                <button class="accordion-button collapsed bg-light-navy text-white" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseRequisiciones">
                                     <div class="d-flex align-items-center w-100">
                                         <div class="report-icon me-3">
                                             <i class="fas fa-file-contract fa-lg"></i>
@@ -360,15 +360,15 @@
                                                             <input class="form-control border-navy" type="date" id="Fecha_Fin_Solicitud" name="Fecha_Fin" required>
                                                         </div>
                                                         <div class="d-grid gap-2">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Solicitud_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Solicitud_Fechas(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>PDF</span>
                                                             </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-success d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Solicitud_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Solicitud_Fechas(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Excel</span>
                                                             </button>
@@ -377,7 +377,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Por ID -->
                                         <div class="col-lg-4">
                                             <div class="report-card">
@@ -394,9 +394,9 @@
                                                             <input class="form-control border-navy" type="text" id="Id_Solicitud" name="Id_Solicitud" placeholder="Ej: 1001" pattern="[0-9]+" required>
                                                         </div>
                                                         <div class="d-grid">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Solicitud_ID(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Solicitud_ID(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>Generar PDF</span>
                                                             </button>
@@ -405,7 +405,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Por Usuario -->
                                         <div class="col-lg-4">
                                             <div class="report-card">
@@ -422,15 +422,15 @@
                                                             <input class="form-control border-navy" type="text" id="Id_Usuario" name="Id_Usuario" placeholder="Ej: 1001" pattern="[0-9]+" required>
                                                         </div>
                                                         <div class="d-grid gap-2">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Requisicion_Usuario(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Requisicion_Usuario(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>PDF</span>
                                                             </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-success d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Requisicion_Usuario(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Requisicion_Usuario(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Excel</span>
                                                             </button>
@@ -447,8 +447,8 @@
                         <!-- Reporte de Conteo Salidas -->
                         <div class="accordion-item border-navy mb-3">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-light-navy text-white" type="button" 
-                                        data-bs-toggle="collapse" data-bs-target="#collapseConteoSalidas">
+                                <button class="accordion-button collapsed bg-light-navy text-white" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseConteoSalidas">
                                     <div class="d-flex align-items-center w-100">
                                         <div class="report-icon me-3">
                                             <i class="fas fa-calculator fa-lg"></i>
@@ -485,15 +485,15 @@
                                                             <input class="form-control border-navy" type="date" id="Fecha_Fin_Conteo" name="Fecha_Fin" required>
                                                         </div>
                                                         <div class="d-grid gap-2">
-                                                            <button type="button" 
-                                                                    class="btn btn-danger d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_PDF_Conteo_Salidas_Solicitud_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-danger d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_PDF_Conteo_Salidas_Solicitud_Fechas(event)">
                                                                 <i class="fas fa-file-pdf me-2"></i>
                                                                 <span>PDF</span>
                                                             </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-success d-flex align-items-center justify-content-center"
-                                                                    onclick="Generar_Excel_Conteo_Salidas_Solicitud_Fechas(event)">
+                                                            <button type="button"
+                                                                class="btn btn-success d-flex align-items-center justify-content-center"
+                                                                onclick="Generar_Excel_Conteo_Salidas_Solicitud_Fechas(event)">
                                                                 <i class="fas fa-file-excel me-2"></i>
                                                                 <span>Excel</span>
                                                             </button>
@@ -514,208 +514,209 @@
 </div>
 
 <!-- Modal de ERROR -->
-    <div class="modal fade" id="pdfModalERROR" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Lo siento</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <center><div class="modal-body">
+<div class="modal fade" id="pdfModalERROR" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lo siento</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <center>
+                <div class="modal-body">
                     <p id="errorMessage"></p>
-                </div></center>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
+            </center>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal de inventario -->
-    <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte de Inventario</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframe" src="" style="width: 100%; height: 600px;"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<!-- Modal de inventario -->
+<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte de Inventario</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframe" src="" style="width: 100%; height: 600px;"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
-    
-    <!-- Modal de entrada fechas -->
-    <div class="modal fade" id="pdfModalEntradaFechas" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Entradas de Productos por Fechas</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfViewerEntradasFechas" style="width: 100%; height: 600px;"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
-    <!-- Modal de salidas fechas -->
-    <div class="modal fade" id="pdfModalSalidaFechas" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Salidas de Almacén por Fechas</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfViewerSalidasFechas" style="width: 100%; height: 600px;"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<!-- Modal de entrada fechas -->
+<div class="modal fade" id="pdfModalEntradaFechas" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Entradas de Productos por Fechas</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfViewerEntradasFechas" style="width: 100%; height: 600px;"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
-    
-    <!-- Modal de solicitud fechas -->
-    <div class="modal fade" id="pdfModalSolicitudFechas" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Requisiciones por Fechas</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframeSolicitudFechas" width="100%" height="500px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
-    <!-- Modal de conteo de salidas solicitud fechas -->
-    <div class="modal fade" id="pdfModalConteoSalidasSolicitudFechas" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Conteo de Salidas de Requisiciones por Fechas</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframeConteoSalidasSolicitudFechas" width="100%" height="500px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<!-- Modal de salidas fechas -->
+<div class="modal fade" id="pdfModalSalidaFechas" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Salidas de Almacén por Fechas</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfViewerSalidasFechas" style="width: 100%; height: 600px;"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
-    
-    <!-- Modal de solicitud ID -->
-    <div class="modal fade" id="pdfModalSolicitudID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Requisición por ID</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframeSolicitudID" width="100%" height="500px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Entrada ID -->
-    <div class="modal fade" id="pdfModalEntradaID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Entradas de Productos por ID</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframeEntradaID" width="100%" height="500px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Salida ID -->
-    <div class="modal fade" id="pdfModalSalidaID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Salidas de Almacén por ID</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframeSalidaID" width="100%" height="500px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
-    <!-- Modal de requisicion usuario -->
-    <div class="modal fade" id="pdfModalRequisicionUsuario" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalLabel">Reporte Requisicion por Usuario</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="pdfIframeRequisicionUsuario" width="100%" height="500px"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<!-- Modal de solicitud fechas -->
+<div class="modal fade" id="pdfModalSolicitudFechas" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Requisiciones por Fechas</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframeSolicitudFechas" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal de conteo de salidas solicitud fechas -->
+<div class="modal fade" id="pdfModalConteoSalidasSolicitudFechas" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Conteo de Salidas de Requisiciones por Fechas</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframeConteoSalidasSolicitudFechas" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de solicitud ID -->
+<div class="modal fade" id="pdfModalSolicitudID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Requisición por ID</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframeSolicitudID" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Entrada ID -->
+<div class="modal fade" id="pdfModalEntradaID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Entradas de Productos por ID</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframeEntradaID" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Salida ID -->
+<div class="modal fade" id="pdfModalSalidaID" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Salidas de Almacén por ID</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframeSalidaID" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de requisicion usuario -->
+<div class="modal fade" id="pdfModalRequisicionUsuario" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Reporte Requisicion por Usuario</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfIframeRequisicionUsuario" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Mantener tus scripts existentes -->
 <script src="../../js/ConfigurarValidacionFechas.js"></script>
