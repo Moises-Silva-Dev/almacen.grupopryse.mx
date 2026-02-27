@@ -113,9 +113,13 @@
                                         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
                                         // Consulta SQL modificada con búsqueda
-                                        $sql = "SELECT U.ID_Usuario, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno, 
-                                                    U.Correo_Electronico, TU.Tipo_Usuario,
-                                                    COALESCE(C.NombreCuenta, 'N/A') AS NombreCuenta,
+                                        $sql = "SELECT U.ID_Usuario, 
+                                                    ANY_VALUE(U.Nombre) AS Nombre, 
+                                                    ANY_VALUE(U.Apellido_Paterno) AS Apellido_Paterno, 
+                                                    ANY_VALUE(U.Apellido_Materno) AS Apellido_Materno, 
+                                                    ANY_VALUE(U.Correo_Electronico) AS Correo_Electronico, 
+                                                    ANY_VALUE(TU.Tipo_Usuario) AS Tipo_Usuario,
+                                                    ANY_VALUE(COALESCE(C.NombreCuenta, 'N/A')) AS NombreCuenta,
                                                     EXISTS (SELECT 1 FROM RequisicionE WHERE IdUsuario = U.ID_Usuario) AS tieneRequisicionE,
                                                     EXISTS (SELECT 1 FROM Borrador_RequisicionE WHERE BIdUsuario = U.ID_Usuario) AS tieneBorradorRequisicionE,
                                                     EXISTS (SELECT 1 FROM EntradaE WHERE Usuario_Creacion = U.ID_Usuario) AS tieneEntradaE
@@ -138,7 +142,7 @@
                                             )";
                                         }
 
-                                        $sql .= " GROUP BY U.ID_Usuario DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY U.ID_Usuario ORDER BY U.ID_Usuario DESC LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(DISTINCT U.ID_Usuario) as total
@@ -185,6 +189,7 @@
                                         $stmt_total = $conexion->prepare($sql_total);
                                         
                                         if (!empty($search)) {
+                                            $searchTerm = "%$search%";
                                             $stmt_total->bind_param("ssssss", 
                                                 $searchTerm, $searchTerm, $searchTerm, 
                                                 $searchTerm, $searchTerm, $searchTerm
@@ -308,7 +313,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <small class="text-muted">
-                                    Mostrando <strong><?php echo min($records_per_page, $total_rows); ?></strong> 
+                                    Mostrando <strong><?php echo $records_per_page; ?></strong> 
                                     de <strong><?php echo $total_rows; ?></strong> usuarios
                                 </small>
                             </div>

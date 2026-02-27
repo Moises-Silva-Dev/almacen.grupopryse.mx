@@ -2,11 +2,11 @@
 //Hacemos la clase para la conexion con la base de datos
 	class Conectar{
 		//nombre del servidor de la base de datos
-		private $servidor = "localhost"; 
+		private $servidor = "db"; 
 		//nombre del usuario de la base de datos
-		private $usuario = "root";
+		private $usuario = "grupova9_TecPryse";
 		//contraseña de usuario de la base de datos 
-		private $password = ""; 
+		private $password = "M0ch1t*_619"; 
 		//nombre de la base de datos
 		private $base = "grupova9_Pryse";
 

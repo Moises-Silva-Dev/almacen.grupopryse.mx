@@ -95,8 +95,6 @@ try {
     // Obtener datos de los productos relacionados con la requisición
     $stmtProductos = $conexion->prepare("SELECT 
                                             RE.IDRequisicionE AS Requisicion_ID,
-                                            P.IdCProducto AS Producto_ID,
-                                            ANY_VALUE(P.IMG) AS Imagen_Producto,
                                             ANY_VALUE(CE.Nombre_Empresa) AS Empresa,
                                             ANY_VALUE(P.Descripcion) AS Descripcion_Producto,
                                             ANY_VALUE(P.Especificacion) AS Especificacion_Producto,
@@ -125,7 +123,7 @@ try {
                                         WHERE 
                                             RE.IDRequisicionE = ?
                                         GROUP BY 
-                                            RE.IDRequisicionE, P.IdCProducto");
+                                            RE.IDRequisicionE, P.IdCProducto, CT.IdCTallas");
                                             
     if (!$stmtProductos) {
         throw new Exception("Error en la preparación de la consulta de productos: " . $conexion->error);

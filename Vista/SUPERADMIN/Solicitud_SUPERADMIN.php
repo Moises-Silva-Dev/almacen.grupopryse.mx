@@ -98,9 +98,6 @@
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
                                         <i class="fas fa-building me-2"></i>Cuenta
                                     </th>
-                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-file-alt me-2"></i>Justificación
-                                    </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy text-center">
                                         <i class="fas fa-cogs me-2"></i>Acciones
                                     </th>
@@ -115,7 +112,7 @@
                                         // Preparar la consulta SQL con LIMIT y OFFSET    
                                         $sql = "SELECT 
                                                     RE.IDRequisicionE, U.Nombre, U.Apellido_Paterno, U.Apellido_Materno,
-                                                    DATE(RE.FchCreacion) AS Fecha, RE.Estatus, C.NombreCuenta, RE.Justificacion
+                                                    DATE(RE.FchCreacion) AS Fecha, RE.Estatus, C.NombreCuenta
                                                 FROM 
                                                     RequisicionE RE
                                                 INNER JOIN 
@@ -252,12 +249,6 @@
                                         <span class="badge bg-light text-navy">
                                             <i class="fas fa-building me-1"></i>
                                             <?php echo htmlspecialchars($row['NombreCuenta']); ?>
-                                        </span>
-                                    </td>
-                                    <td class="py-3 px-4">
-                                        <span class="badge bg-light text-navy">
-                                            <i class="fas fa-building me-1"></i>
-                                            <?php echo htmlspecialchars($row['Justificacion']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
