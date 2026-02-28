@@ -100,7 +100,7 @@ try {
                                             ANY_VALUE(P.Especificacion) AS Especificacion_Producto,
                                             ANY_VALUE(CC.Descrp) AS Categoria,
                                             ANY_VALUE(CT.Talla) AS Talla,
-                                            SUM(RD.Cantidad) AS Cantidad_Solicitada -- Se quita ANY_VALUE de la suma y se quita coma
+                                            SUM(RD.Cantidad) AS Cantidad_Solicitada
                                         FROM 
                                             RequisicionE RE
                                         INNER JOIN 

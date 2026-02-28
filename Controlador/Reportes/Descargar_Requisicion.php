@@ -22,11 +22,11 @@ class MYPDF extends TCPDF {
         $this->Image('../../img/pryse.png', 10, 5, 0, 10, 'PNG');
         
         // Establecer la fecha actual en la parte superior derecha
-        $this->SetY(10); // Establecer la posición vertical
-        $this->SetX(150); // Establecer la posición horizontal (ajusta según el tamaño de tu imagen)
+        $this->SetY(10);
+        $this->SetX(150);
         $this->SetFont('helvetica', 'B', 12);
-        $this->Cell(0, 10, date('d/m/Y'), 0, 0, 'R'); // Cambia el formato de la fecha si lo deseas
-        $this->Ln(15); // Salto de línea después de la fecha
+        $this->Cell(0, 10, date('d/m/Y'), 0, 0, 'R');
+        $this->Ln(15);
     }
 
     // Pie de página personalizado
@@ -50,9 +50,7 @@ try {
     
     // Verificar que el ID se recibió correctamente
     if (empty($ID_RequisionE)) {
-        // Establece el encabezado de la respuesta como JSON.
         header('Content-Type: application/json');
-        // Envía un mensaje de error en formato JSON al cliente.
         echo json_encode(["error" => "ID de solicitud no recibido correctamente."]);
         exit;
     }
@@ -92,24 +90,26 @@ try {
         throw new Exception("No se encontró información para el ID de solicitud proporcionado.");
     }
     
-    // Obtener datos de los productos relacionados con la requisición
+    // Obtener datos de los productos relacionados con la requisición (detallado por talla)
     $stmtProductos = $conexion->prepare("SELECT 
                                             RE.IDRequisicionE AS Requisicion_ID,
-                                            ANY_VALUE(CE.Nombre_Empresa) AS Empresa,
-                                            ANY_VALUE(P.Descripcion) AS Descripcion_Producto,
-                                            ANY_VALUE(P.Especificacion) AS Especificacion_Producto,
-                                            ANY_VALUE(CC.Descrp) AS Categoria,
-                                            ANY_VALUE(CT.Talla) AS Talla,
-                                            ANY_VALUE(RD.Cantidad) AS Cantidad_Solicitada,
-                                            IFNULL(SUM(SD.Cantidad), 0) AS Cantidad_Salida
-                                        FROM 
+                                            CE.Nombre_Empresa AS Empresa,
+                                            P.Descripcion AS Descripcion_Producto,
+                                            P.Especificacion AS Especificacion_Producto,
+                                            CC.Descrp AS Categoria,
+                                            CT.Talla AS Talla,
+                                            RD.Cantidad AS Cantidad_Solicitada,
+                                            IFNULL(SUM(SD.Cantidad),0) AS Cantidad_Salida
+                                        FROM
                                             RequisicionE RE
                                         INNER JOIN 
                                             RequisicionD RD ON RD.IdReqE = RE.IDRequisicionE
                                         LEFT JOIN 
                                             Salida_E SE ON RE.IDRequisicionE = SE.ID_ReqE
                                         LEFT JOIN 
-                                            Salida_D SD ON SE.Id_SalE = SD.Id AND SD.IdCProd = RD.IdCProd AND SD.IdTallas = RD.IdTalla
+                                            Salida_D SD ON SE.Id_SalE = SD.Id 
+                                                AND SD.IdCProd = RD.IdCProd 
+                                                AND SD.IdTallas = RD.IdTalla
                                         INNER JOIN 
                                             Producto P ON RD.IdCProd = P.IdCProducto
                                         INNER JOIN 
@@ -117,13 +117,13 @@ try {
                                         INNER JOIN 
                                             CCategorias CC ON P.IdCCat = CC.IdCCate
                                         INNER JOIN 
-                                            CTipoTallas CTT ON CT.IdCTipTal = CTT.IdCTipTall
-                                        INNER JOIN 
                                             CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa
                                         WHERE 
                                             RE.IDRequisicionE = ?
                                         GROUP BY 
-                                            RE.IDRequisicionE, P.IdCProducto, CT.IdCTallas");
+                                            RE.IDRequisicionE, RD.IdCProd, CT.IdCTallas, RD.Cantidad
+                                        ORDER BY 
+                                            CE.Nombre_Empresa, P.Descripcion");
                                             
     if (!$stmtProductos) {
         throw new Exception("Error en la preparación de la consulta de productos: " . $conexion->error);
@@ -132,16 +132,69 @@ try {
     $stmtProductos->bind_param('i', $ID_RequisionE);
     $stmtProductos->execute();
     $resultadoProductos = $stmtProductos->get_result();
+    
+    // Obtener todos los productos en un array
+    $productos = [];
+    while ($row = $resultadoProductos->fetch_assoc()) {
+        $productos[] = $row;
+    }
 
-    // Verificar si ambos resultados están vacíos
-    if ($resultadoE->num_rows === 0 && $resultadoProductos->num_rows === 0) {
-        // Configurar la respuesta JSON para error
+    // Obtener datos de la suma de productos (agrupados sin talla)
+    $stmtSumaProductos = $conexion->prepare("SELECT 
+                                                RE.IDRequisicionE AS Requisicion_ID,
+                                                CE.Nombre_Empresa AS Empresa,
+                                                P.Descripcion AS Descripcion_Producto,
+                                                P.Especificacion AS Especificacion_Producto,
+                                                CC.Descrp AS Categoria,
+                                                SUM(RD.Cantidad) AS Cantidad_Solicitada,
+                                                IFNULL(SUM(SD.Cantidad),0) AS Cantidad_Salida
+                                            FROM 
+                                                RequisicionE RE
+                                            INNER JOIN 
+                                                RequisicionD RD ON RD.IdReqE = RE.IDRequisicionE
+                                            LEFT JOIN 
+                                                Salida_E SE ON RE.IDRequisicionE = SE.ID_ReqE
+                                            LEFT JOIN 
+                                                Salida_D SD ON SE.Id_SalE = SD.Id 
+                                                    AND SD.IdCProd = RD.IdCProd 
+                                                    AND SD.IdTallas = RD.IdTalla
+                                            INNER JOIN 
+                                                Producto P ON RD.IdCProd = P.IdCProducto
+                                            INNER JOIN 
+                                                CTallas CT ON RD.IdTalla = CT.IdCTallas
+                                            INNER JOIN 
+                                                CCategorias CC ON P.IdCCat = CC.IdCCate
+                                            INNER JOIN 
+                                                CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa
+                                            WHERE 
+                                                RE.IDRequisicionE = ?
+                                            GROUP BY 
+                                                RE.IDRequisicionE, P.IdCProducto
+                                            ORDER BY 
+                                                CE.Nombre_Empresa, P.Descripcion");
+                                                
+    if (!$stmtSumaProductos) {
+        throw new Exception("Error en la preparación de la consulta de suma de productos: " . $conexion->error);
+    }
+
+    $stmtSumaProductos->bind_param('i', $ID_RequisionE);
+    $stmtSumaProductos->execute();
+    $resultadoSumaProductos = $stmtSumaProductos->get_result();
+    
+    // Obtener todos los productos sumados en un array
+    $sumaProductos = [];
+    while ($row = $resultadoSumaProductos->fetch_assoc()) {
+        $sumaProductos[] = $row;
+    }
+
+    // Verificar si hay productos
+    if (empty($productos) && empty($sumaProductos)) {
         header('Content-Type: application/json');
-        echo json_encode(["error " => " No hay informacion relacionada con la ID."]);
-        return; // Termina la ejecución del script
+        echo json_encode(["error" => "No hay productos relacionados con esta requisición."]);
+        return;
     }
     
-    // Crear un nuevo objeto PDF con orientación horizontal (Landscape)
+    // Crear un nuevo objeto PDF con orientación vertical (Portrait)
     $pdf = new MYPDF('P', 'mm', 'LETTER');
     
     // Configuración general del PDF
@@ -162,7 +215,6 @@ try {
 
     // Definir el ancho de las celdas de etiqueta y contenido
     $labelWidth = 50;
-    // Ajusta este valor según el tamaño del contenido y el tamaño de tu página
     $contentWidth = 150; 
     
     // Identificador
@@ -254,79 +306,178 @@ try {
     // Imprimir dirección
     $pdf->MultiCell($contentWidth, 7, implode(', ', $address_parts), 0, "L");
     
-    // Agregar salto de página antes de la tabla
+    // Agregar salto de línea
     $pdf->Ln();
 
-    // Título de la tabla Salida_E
+    // Título de la tabla Productos en Total
     $pdf->SetFont("helvetica", "B", 14);
-    $pdf->Cell(0, 10, "Productos Solicitados", 0, 1, "C");
+    $pdf->Cell(0, 10, "Productos en Total", 0, 1, "C");
     
     // Estilo de la tabla 
-    $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
+    $pdf->SetFillColor(200, 220, 255);
     $pdf->SetFont("helvetica", "B", 9);
+    
+    // Verificar si hay salidas
+    $mostrarSalida = false;
+    foreach ($sumaProductos as $temp) {
+        if ($temp['Cantidad_Salida'] > 0) {
+            $mostrarSalida = true;
+            break;
+        }
+    }
 
-    // Calcular la altura de la fila más alta
+    // Calcular la altura del encabezado dinámicamente
     $cellHeightsEncabezado = [
-        $pdf->getStringHeight(38, "Nombre de la Empresa"),
-        $pdf->getStringHeight(50, "Descripción"),
-        $pdf->getStringHeight(50, "Especificación"),
-        $pdf->getStringHeight(20, "Talla"),
-        $pdf->getStringHeight(18, "Solicitado"),
-        $pdf->getStringHeight(18, "Entregado")
+        $pdf->getStringHeight(38, "Empresa"),
+        $pdf->getStringHeight(40, "Descripción"),
+        $pdf->getStringHeight(40, "Especificación"),
+        $pdf->getStringHeight(30, "Categoria"),
+        $pdf->getStringHeight(18, "Solicitado")
     ];
 
-    // Definir la altura máxima para la fila actual
+    if ($mostrarSalida) {
+        $cellHeightsEncabezado[] = $pdf->getStringHeight(12, "Salida");
+    }
+
     $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla 
-    $pdf->MultiCell(38, $maxHeightEncabezado, 'Nombre de la Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
+
+    // Cabecera de tabla Productos en Total
+    $pdf->MultiCell(38, $maxHeightEncabezado, 'Empresa', 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Categoria', 1, 'C', true, 0);
+    $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 0);
+
+    if ($mostrarSalida) {
+        $pdf->MultiCell(12, $maxHeightEncabezado, 'Salida', 1, 'C', true, 1);
+    } else {
+        $pdf->Ln();
+    }
+
+    // Filas de Productos en Total
+    $pdf->SetFont("helvetica", '', 10);
+
+    foreach ($sumaProductos as $filaSumaProductos) {
+        $cellHeights = [
+            $pdf->getStringHeight(38, $filaSumaProductos['Empresa']),
+            $pdf->getStringHeight(40, $filaSumaProductos['Descripcion_Producto']),
+            $pdf->getStringHeight(40, $filaSumaProductos['Especificacion_Producto']),
+            $pdf->getStringHeight(30, $filaSumaProductos['Categoria']),
+            $pdf->getStringHeight(18, $filaSumaProductos['Cantidad_Solicitada'])
+        ];
+
+        if ($mostrarSalida) {
+            $cellHeights[] = $pdf->getStringHeight(12, $filaSumaProductos['Cantidad_Salida']);
+        }
+
+        $maxHeight = max($cellHeights);
+
+        $pdf->MultiCell(38, $maxHeight, $filaSumaProductos['Empresa'], 1, 'C', false, 0);
+        $pdf->MultiCell(40, $maxHeight, $filaSumaProductos['Descripcion_Producto'], 1, 'C', false, 0);
+        $pdf->MultiCell(40, $maxHeight, $filaSumaProductos['Especificacion_Producto'], 1, 'C', false, 0);
+        $pdf->MultiCell(30, $maxHeight, $filaSumaProductos['Categoria'], 1, 'C', false, 0);
+        $pdf->MultiCell(18, $maxHeight, $filaSumaProductos['Cantidad_Solicitada'], 1, 'C', false, 0);
+
+        if ($mostrarSalida) {
+            $pdf->MultiCell(12, $maxHeight, $filaSumaProductos['Cantidad_Salida'], 1, 'C', false, 1);
+        } else {
+            $pdf->Ln();
+        }
+    }
+
+    // Salto
+    $pdf->Ln();
+
+    // Título de la tabla Productos Solicitados (detallado)
+    $pdf->SetFont("helvetica", "B", 14);
+    $pdf->Cell(0, 10, "Productos Solicitados (Detalle por Talla)", 0, 1, "C");
+
+    $pdf->SetFillColor(200, 220, 255);
+    $pdf->SetFont("helvetica", "B", 9);
+
+    // Calcular altura del encabezado para tabla detallada
+    $cellHeightsEncabezado = [
+        $pdf->getStringHeight(38, "Nombre de la Empresa"),
+        $pdf->getStringHeight(40, "Descripción"),
+        $pdf->getStringHeight(40, "Especificación"),
+        $pdf->getStringHeight(30, "Categoria"),
+        $pdf->getStringHeight(20, "Talla"),
+        $pdf->getStringHeight(18, "Solicitado")
+    ];
+
+    if ($mostrarSalida) {
+        $cellHeightsEncabezado[] = $pdf->getStringHeight(12, "Salida");
+    }
+
+    $maxHeightEncabezado = max($cellHeightsEncabezado);
+
+    // Cabecera de tabla detallada
+    $pdf->MultiCell(38, $maxHeightEncabezado, 'Empresa', 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
+    $pdf->MultiCell(40, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
+    $pdf->MultiCell(30, $maxHeightEncabezado, 'Categoria', 1, 'C', true, 0);
     $pdf->MultiCell(20, $maxHeightEncabezado, 'Talla', 1, 'C', true, 0);
     $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 0);
-    $pdf->MultiCell(18, $maxHeightEncabezado, 'Entregado', 1, 'C', true, 1);
-    
-    // Agregar datos a la tabla
-    $pdf->SetFont("helvetica", '', 10); // Restaurar el estilo de fuente normal
-    while ($filaProducto = $resultadoProductos->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
+
+    if ($mostrarSalida) {
+        $pdf->MultiCell(12, $maxHeightEncabezado, 'Salida', 1, 'C', true, 1);
+    } else {
+        $pdf->Ln();
+    }
+
+    // Filas de tabla detallada
+    $pdf->SetFont("helvetica", '', 10);
+
+    foreach ($productos as $filaProducto) {
         $cellHeights = [
             $pdf->getStringHeight(38, $filaProducto['Empresa']),
-            $pdf->getStringHeight(50, $filaProducto['Descripcion_Producto']),
-            $pdf->getStringHeight(50, $filaProducto['Especificacion_Producto']),
+            $pdf->getStringHeight(40, $filaProducto['Descripcion_Producto']),
+            $pdf->getStringHeight(40, $filaProducto['Especificacion_Producto']),
+            $pdf->getStringHeight(30, $filaProducto['Categoria']),
             $pdf->getStringHeight(20, $filaProducto['Talla']),
-            $pdf->getStringHeight(18, $filaProducto['Cantidad_Solicitada']),
-            $pdf->getStringHeight(18, $filaProducto['Cantidad_Salida'])
+            $pdf->getStringHeight(18, $filaProducto['Cantidad_Solicitada'])
         ];
-    
-        // Definir la altura máxima para la fila actual
+
+        if ($mostrarSalida) {
+            $cellHeights[] = $pdf->getStringHeight(12, $filaProducto['Cantidad_Salida']);
+        }
+
         $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
+
         $pdf->MultiCell(38, $maxHeight, $filaProducto['Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaProducto['Descripcion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaProducto['Especificacion_Producto'], 1, 'C', false, 0);
+        $pdf->MultiCell(40, $maxHeight, $filaProducto['Descripcion_Producto'], 1, 'C', false, 0);
+        $pdf->MultiCell(40, $maxHeight, $filaProducto['Especificacion_Producto'], 1, 'C', false, 0);
+        $pdf->MultiCell(30, $maxHeight, $filaProducto['Categoria'], 1, 'C', false, 0);
         $pdf->MultiCell(20, $maxHeight, $filaProducto['Talla'], 1, 'C', false, 0);
         $pdf->MultiCell(18, $maxHeight, $filaProducto['Cantidad_Solicitada'], 1, 'C', false, 0);
-        $pdf->MultiCell(18, $maxHeight, $filaProducto['Cantidad_Salida'], 1, 'C', false, 1);
+
+        if ($mostrarSalida) {
+            $pdf->MultiCell(12, $maxHeight, $filaProducto['Cantidad_Salida'], 1, 'C', false, 1);
+        } else {
+            $pdf->Ln();
+        }
     }
-    
-    // Después de procesar $resultadoProductos
+
+    // Cerrar statements
+    $stmtSumaProductos->close();
     $stmtProductos->close();
-    
-    // Cerrar el statement de Salida_E
     $stmtE->close();
     
     // Cerrar la conexión a la base de datos
     $conexion->close();
+
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
     
     // Generar el PDF
     $pdf->Output('Reporte_Solicitud_Por_ID_' . date('YmdHis') . '.pdf', 'I');
     
-    // Finaliza la ejecución
     exit;
+    
 } catch (Exception $e) {
-        // Si ocurre una excepción, responder con un mensaje de error en formato JSON
+    // Si ocurre una excepción, responder con un mensaje de error en formato JSON
     header('Content-Type: application/json');
     echo json_encode(["error" => $e->getMessage()]);
 }

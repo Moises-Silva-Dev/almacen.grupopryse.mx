@@ -39,29 +39,26 @@ try {
 
     // Establecer la consulta para la tabla Inventario
     $sql = "SELECT 
-                P.IdCProducto, 
                 P.Descripcion AS Descripcion, 
-                ANY_VALUE(P.Especificacion) AS Especificacion, -- ANY_VALUE es ideal para MySQL 8
+                ANY_VALUE(P.Especificacion) AS Especificacion, 
                 T.Talla AS Talla, 
-                SUM(I.Cantidad) AS Cantidad,                    -- Sumamos el stock
-                CE.Nombre_Empresa AS Nombre_Empresa, 
-                ANY_VALUE(CCA.Descrp) AS Categoria             -- Tomamos el valor de la categoría
-            FROM 
-                Inventario I 
-            INNER JOIN 
-                Producto P ON I.IdCPro = P.IdCProducto 
-            INNER JOIN 
-                CTallas T ON I.IdCTal = T.IdCTallas 
-            INNER JOIN 
-                CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa 
-            INNER JOIN 
-                CCategorias CCA ON P.IdCCat = CCA.IdCCate 
-            INNER JOIN 
-                CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
-            WHERE 
-                I.Cantidad > 0 
-            GROUP BY 
-                CE.Nombre_Empresa, P.IdCProducto, P.Descripcion, T.Talla";
+                SUM(I.Cantidad) AS Cantidad, 
+                ANY_VALUE(CE.Nombre_Empresa) AS Nombre_Empresa, 
+                ANY_VALUE(CCA.Descrp) AS Categoria 
+            FROM Inventario I 
+            INNER JOIN Producto P ON I.IdCPro = P.IdCProducto 
+            INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
+            INNER JOIN CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa 
+            INNER JOIN CCategorias CCA ON P.IdCCat = CCA.IdCCate 
+            INNER JOIN CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
+            WHERE I.Cantidad > 0 
+            GROUP BY P.Descripcion, T.Talla
+            ORDER BY 
+                -- Orden personalizado por Categoría
+                FIELD(ANY_VALUE(CCA.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC,
+                -- Orden secundario por descripción y talla
+                P.Descripcion ASC,
+                T.Talla ASC";
 
     // Ejecutar la consulta
     $resultado = $conexion->query($sql);
