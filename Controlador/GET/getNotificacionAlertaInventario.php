@@ -13,14 +13,23 @@ try {
   // Consulta para obtener el producto con cantidad menor o igual a 5 en inventario
   $sql = "SELECT P.IdCProducto AS Identificador, 
                 P.Descripcion AS Descripcion, 
-                P.Especificacion AS Especificacion, 
-                T.Talla AS Talla, 
-                I.Cantidad 
+                ANY_VALUE(P.Especificacion) AS Especificacion, 
+                T.Talla AS Talla,
+                ANY_VALUE(CCA.Descrp) AS Categoria,  
+                SUM(I.Cantidad) AS Cantidad 
           FROM Inventario I 
-          INNER JOIN Producto P ON I.IdCPro = P.IdCProducto 
-          INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
+            INNER JOIN Producto P ON I.IdCPro = P.IdCProducto 
+            INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
+            INNER JOIN CCategorias CCA ON P.IdCCat = CCA.IdCCate 
+            INNER JOIN CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
           WHERE I.Cantidad <= 20 
-          ORDER BY P.Descripcion, P.Especificacion ASC";
+          GROUP BY P.IdCProducto, P.Descripcion, T.Talla
+          ORDER BY 
+              -- Orden personalizado por Categoría
+              FIELD(ANY_VALUE(CCA.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC,
+              -- Orden secundario por descripción y talla
+              P.Descripcion ASC,
+              T.Talla ASC";
   
   // Preparar la consulta SQL
   $stmt = $conexion->prepare($sql);

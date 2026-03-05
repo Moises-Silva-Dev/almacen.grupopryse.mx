@@ -115,6 +115,7 @@
                     <th>Descripción</th>
                     <th>Especificación</th>
                     <th>Talla</th>
+                    <th>Categoria</th>
                     <th>Cantidad Actual</th>
                     <th>Estado</th>
                 </tr>

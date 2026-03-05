@@ -226,6 +226,7 @@ class AlertsTable {
             <td data-label="Descripción">${this.escapeHtml(alerta.Descripcion || 'N/A')}</td>
             <td data-label="Especificación">${this.escapeHtml(alerta.Especificacion || 'N/A')}</td>
             <td data-label="Talla">${this.escapeHtml(alerta.Talla || 'N/A')}</td>
+            <td data-label="Categoria">${this.escapeHtml(alerta.Categoria || 'N/A')}</td>
             <td data-label="Cantidad">
                 <span class="quantity-display ${claseEstado}">
                     ${alerta.Cantidad}
