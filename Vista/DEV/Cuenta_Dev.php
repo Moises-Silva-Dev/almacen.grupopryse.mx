@@ -117,7 +117,7 @@
                                             )";
                                         }                                 
                                         
-                                        $sql .= " GROUP BY C.ID DESC LIMIT ? OFFSET ?";
+                                        $sql .= " ORDER BY C.ID DESC LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(*) as total FROM Cuenta C";

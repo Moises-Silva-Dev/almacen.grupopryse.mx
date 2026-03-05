@@ -117,8 +117,12 @@
                                         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
                         
                                         // Consulta SQL modificada con búsqueda
-                                        $sql = "SELECT P.IdCProducto, CE.Nombre_Empresa, CC.Descrp, CTT.Descrip, 
-                                                    P.Descripcion, P.Especificacion FROM Producto P
+                                        $sql = "SELECT P.IdCProducto, 
+                                                    ANY_VALUE(CE.Nombre_Empresa) AS Nombre_Empresa, 
+                                                    ANY_VALUE(CC.Descrp) AS Categoria, 
+                                                    ANY_VALUE(CTT.Descrip) AS TipoTalla, 
+                                                    P.Descripcion, 
+                                                    ANY_VALUE(P.Especificacion) AS Especificacion FROM Producto P
                                                 INNER JOIN 
                                                     CEmpresas CE on P.IdCEmp = CE.IdCEmpresa
                                                 INNER JOIN 
@@ -139,7 +143,10 @@
                                             )";
                                         }
 
-                                        $sql .= " GROUP BY P.IdCProducto DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY P.IdCProducto, P.Descripcion 
+                                                ORDER BY FIELD(ANY_VALUE(CC.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC, 
+                                                P.Descripcion ASC 
+                                                LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(DISTINCT P.IdCProducto) as total
@@ -232,13 +239,13 @@
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
                                             <i class="fas fa-tags"></i>
-                                            <?php echo htmlspecialchars($row['Descrp']); ?>
+                                            <?php echo htmlspecialchars($row['Categoria']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
                                             <i class="fas fa-tags"></i>
-                                            <?php echo htmlspecialchars($row['Descrip']); ?>
+                                            <?php echo htmlspecialchars($row['TipoTalla']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">

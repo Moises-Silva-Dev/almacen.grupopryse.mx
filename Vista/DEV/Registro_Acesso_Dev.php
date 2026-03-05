@@ -143,7 +143,7 @@
                                         )";
                                     } 
 
-                                    $sql .= " GROUP BY RA.FchAcceso DESC, RA.HorAcceso DESC LIMIT ? OFFSET ?";
+                                    $sql .= " GROUP BY RA.ID ORDER BY RA.FchAcceso DESC, RA.HorAcceso DESC LIMIT ? OFFSET ?";
                                         
                                     // Total de registros
                                     $sql_total = "SELECT COUNT(*) as total

@@ -128,7 +128,7 @@
                                             AND (RE.Estatus='Autorizado' OR RE.Estatus='Parcial')";
                                         }
 
-                                        $sql .= " GROUP BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " ORDER BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
                                         
                                         // Consulta para contar el total de registros con los mismos filtros
                                         $sql_total = "SELECT 

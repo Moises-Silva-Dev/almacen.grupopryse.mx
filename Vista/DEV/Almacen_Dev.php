@@ -125,7 +125,7 @@
                                             AND (EE.Estatus='Creada' OR EE.Estatus='Modificado')";
                                         }
 
-                                        $sql .= " GROUP BY EE.IdEntE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " ORDER BY EE.IdEntE DESC LIMIT ? OFFSET ?";
                                         
                                         // Consulta para obtener el total de registros
                                         $sql_total = "SELECT 
