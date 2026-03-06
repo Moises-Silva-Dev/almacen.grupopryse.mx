@@ -425,6 +425,7 @@ class AlertsTable {
                 "Descripción": alerta.Descripcion || 'N/A',
                 "Especificación": alerta.Especificacion || 'N/A',
                 "Talla": alerta.Talla || 'N/A',
+                "Categoria": alerta.Categoria || 'N/A',
                 "Cantidad": alerta.Cantidad,
                 "Estado": estado
             };
@@ -443,7 +444,7 @@ class AlertsTable {
             ["Fecha de exportación:", fechaExportacion],
             ["Total de productos:", totalProductos],
             [] // Línea en blanco
-        ], { origin: "H1" });
+        ], { origin: "I1" });
         
         // Agregar hoja al libro
         XLSX.utils.book_append_sheet(wb, ws, "Alertas");
