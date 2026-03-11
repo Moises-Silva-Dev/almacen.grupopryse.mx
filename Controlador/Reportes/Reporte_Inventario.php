@@ -40,24 +40,26 @@ try {
     // Establecer la consulta para la tabla Inventario
     $sql = "SELECT 
                 P.Descripcion AS Descripcion, 
-                ANY_VALUE(P.Especificacion) AS Especificacion, 
+                P.Especificacion AS Especificacion, 
                 T.Talla AS Talla, 
                 SUM(I.Cantidad) AS Cantidad, 
-                ANY_VALUE(CE.Nombre_Empresa) AS Nombre_Empresa, 
-                ANY_VALUE(CCA.Descrp) AS Categoria 
+                CE.Nombre_Empresa AS Nombre_Empresa, 
+                CCA.Descrp AS Categoria 
             FROM Inventario I 
             INNER JOIN Producto P ON I.IdCPro = P.IdCProducto 
-            INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
             INNER JOIN CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa 
             INNER JOIN CCategorias CCA ON P.IdCCat = CCA.IdCCate 
             INNER JOIN CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
+            INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
             WHERE I.Cantidad > 0 
-            GROUP BY P.Descripcion, T.Talla
+            GROUP BY 
+                P.IdCProducto,
+                T.Talla 
             ORDER BY 
-                -- Orden personalizado por Categoría
-                FIELD(ANY_VALUE(CCA.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC,
-                -- Orden secundario por descripción y talla
-                P.Descripcion ASC,
+                FIELD(ANY_VALUE(CE.Nombre_Empresa), 'PRYSE', 'PRYSE/AICM', 'PRYSE/LIMP', 'PRYSE/PROTE', 'MULTISISTEMAS URIBE', 'Uribe', 'LATE') ASC,
+                FIELD(ANY_VALUE(CCA.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC, 
+                P.Descripcion ASC, 
+                P.Especificacion ASC, 
                 T.Talla ASC";
 
     // Ejecutar la consulta
@@ -93,71 +95,55 @@ try {
     $margenIzquierdo = ($pdf->GetPageWidth() - $anchoTabla) / 2;
     $pdf->SetLeftMargin($margenIzquierdo);
 
-    // Título de la tabla Salida_E
-    $pdf->SetFont("helvetica", "B", 14);
-    $pdf->Cell(0, 10, "Productos Inventario", 0, 1, "C");
-
     // Estilo de la tabla
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
-    $pdf->SetFont("helvetica", "B", 9);
-
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(40, "Nombre de la Empresa"),
-        $pdf->getStringHeight(40, "Descripción"),
-        $pdf->getStringHeight(40, "Especificación"),
-        $pdf->getStringHeight(30, "Categoria"),
-        $pdf->getStringHeight(20, "Talla"),
-        $pdf->getStringHeight(20, "Cantidad")
-    ];
-
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla inventario
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Nombre de la Empresa", 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Descripción", 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Especificación", 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, "Categoria", 1, 'C', true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, "Talla", 1, 'C', true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, "Cantidad", 1, 'C', true, 1);
+    $pdf->SetFont("helvetica", "", 9);
+    $html = '
+        <h2 style="text-align:center; font-size:18px; color:#2c3e50;">Productos Inventario</h2>
+        <table border="1" cellpadding="4">
+            <thead>
+                <tr style="background-color:#34495e; color:white; font-weight:bold; text-align:center;">
+                    <th width="15%">Empresa</th>
+                    <th width="21%">Descripción</th>
+                    <th width="29%">Especificación</th>
+                    <th width="13%">Categoría</th>
+                    <th width="11%">Talla</th>
+                    <th width="10%">Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+    ';
 
     // Agregar datos a la tabla
     $pdf->SetFont("helvetica", "", 10); // Restaurar el estilo de fuente normal
     while ($fila = $resultado->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(40, $fila['Nombre_Empresa']),
-            $pdf->getStringHeight(40, $fila['Descripcion']),
-            $pdf->getStringHeight(40, $fila['Especificacion']),
-            $pdf->getStringHeight(30, $fila['Categoria']),
-            $pdf->getStringHeight(20, $fila['Talla']),
-            $pdf->getStringHeight(20, $fila['Cantidad'])
-        ];
-    
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-        
-        $pdf->MultiCell(40, $maxHeight, $fila['Nombre_Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $fila['Descripcion'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $fila['Especificacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $fila['Categoria'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $fila['Talla'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $fila['Cantidad'], 1, 'C', false, 1);
+        $fondo = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
+        $html .= '
+                <tr style="background-color:'.$fondo.'; text-align:center;">
+                    <td width="15%">'.$fila['Nombre_Empresa'].'</td>
+                    <td width="21%">'.$fila['Descripcion'].'</td>
+                    <td width="29%" class="descripcion">'.$fila['Especificacion'].'</td>
+                    <td width="13%">'.$fila['Categoria'].'</td>
+                    <td width="11%">'.$fila['Talla'].'</td>
+                    <td width="10%">'.$fila['Cantidad'].'</td>
+                </tr>
+        ';
     }
-        
-    // Liberar el resultado de la consulta
-    $resultado->free();
 
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
-    
-    // Limpiar el búfer de salida para evitar cualquier salida no deseada
-    ob_end_clean(); 
-        
-    // Salida del PDF
-    $pdf->Output();
-        
+    $html .= '
+            </tbody>
+        </table>
+    ';
+
+    $pdf->setCellPadding(2);
+    $pdf->setCellMargins(0,0,0,0);
+    $pdf->SetAutoPageBreak(TRUE, 15);
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $resultado->free(); // Liberar el resultado de la consulta
+    $conexion->close(); // Cerrar la conexión a la base de datos
+    ob_end_clean(); // Limpiar el búfer de salida para evitar cualquier salida no deseada
+    $pdf->Output(); // Salida del PDF
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }

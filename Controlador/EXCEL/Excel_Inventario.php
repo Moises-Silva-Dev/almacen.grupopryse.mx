@@ -23,25 +23,27 @@ try {
     // Consultar la base de datos para obtener la información de EntradaE
     $sqlE = "SELECT 
                 P.Descripcion AS Descripcion, 
-                ANY_VALUE(P.Especificacion) AS Especificacion, 
+                P.Especificacion AS Especificacion, 
                 T.Talla AS Talla, 
                 SUM(I.Cantidad) AS Cantidad, 
-                ANY_VALUE(CE.Nombre_Empresa) AS Nombre_Empresa, 
-                ANY_VALUE(CCA.Descrp) AS Categoria 
+                CE.Nombre_Empresa AS Nombre_Empresa, 
+                CCA.Descrp AS Categoria 
             FROM Inventario I 
             INNER JOIN Producto P ON I.IdCPro = P.IdCProducto 
-            INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
             INNER JOIN CEmpresas CE ON P.IdCEmp = CE.IdCEmpresa 
             INNER JOIN CCategorias CCA ON P.IdCCat = CCA.IdCCate 
             INNER JOIN CTipoTallas ON P.IdCTipTal = CTipoTallas.IdCTipTall 
+            INNER JOIN CTallas T ON I.IdCTal = T.IdCTallas 
             WHERE I.Cantidad > 0 
-            GROUP BY P.Descripcion, T.Talla
+            GROUP BY 
+                P.IdCProducto,
+                T.Talla 
             ORDER BY 
-                -- Orden personalizado por Categoría
-                FIELD(ANY_VALUE(CCA.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC,
-                -- Orden secundario por descripción y talla
-                P.Descripcion ASC,
-                T.Talla ASC";
+                FIELD(ANY_VALUE(CE.Nombre_Empresa), 'PRYSE', 'PRYSE/AICM', 'PRYSE/LIMP', 'PRYSE/PROTE', 'MULTISISTEMAS URIBE', 'Uribe', 'LATE') ASC,
+                FIELD(ANY_VALUE(CCA.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC, 
+                P.Descripcion ASC, 
+                P.Especificacion ASC, 
+                T.Talla ASC;";
     
     // Ejecutar la consulta para obtener los datos de EntradaE
     $stmtE = $conexion->prepare($sqlE);
