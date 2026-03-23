@@ -116,6 +116,7 @@ try {
 
     // Agregar datos a la tabla
     $pdf->SetFont("helvetica", "", 10); // Restaurar el estilo de fuente normal
+    $color = true;
     while ($fila = $resultado->fetch_assoc()) {
         $fondo = $color ? '#f2f2f2' : '#ffffff';
         $color = !$color;
