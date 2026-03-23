@@ -124,7 +124,7 @@ try {
                 <tr style="background-color:'.$fondo.'; text-align:center;">
                     <td width="15%">'.$fila['Nombre_Empresa'].'</td>
                     <td width="21%">'.$fila['Descripcion'].'</td>
-                    <td width="29%" class="descripcion">'.$fila['Especificacion'].'</td>
+                    <td width="29%">'.$fila['Especificacion'].'</td>
                     <td width="13%">'.$fila['Categoria'].'</td>
                     <td width="11%">'.$fila['Talla'].'</td>
                     <td width="10%">'.$fila['Cantidad'].'</td>

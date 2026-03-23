@@ -326,64 +326,52 @@ try {
         }
     }
 
-    // Calcular la altura del encabezado dinámicamente
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(38, "Empresa"),
-        $pdf->getStringHeight(40, "Descripción"),
-        $pdf->getStringHeight(40, "Especificación"),
-        $pdf->getStringHeight(30, "Categoria"),
-        $pdf->getStringHeight(18, "Solicitado")
-    ];
+    $html = '
+        <table border="1" cellpadding="4">
+            <thead>
+                <tr style="background-color:#2c3e50; color:white; text-align:center; font-weight:bold;">
+                    <th width="20%">Empresa</th>
+                    <th width="25%">Descripción</th>
+                    <th width="25%">Especificación</th>
+                    <th width="10%">Categoría</th>
+                    <th width="10%">Solicitado</th>
+    ';
 
     if ($mostrarSalida) {
-        $cellHeightsEncabezado[] = $pdf->getStringHeight(12, "Salida");
+        $html .= '  <th width="10%">Salida</th>';
     }
 
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
+    $html .= '  </tr>
+            </thead>
+            <tbody>
+    ';
 
-    // Cabecera de tabla Productos en Total
-    $pdf->MultiCell(38, $maxHeightEncabezado, 'Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Categoria', 1, 'C', true, 0);
-    $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 0);
+    $color = true;
 
-    if ($mostrarSalida) {
-        $pdf->MultiCell(12, $maxHeightEncabezado, 'Salida', 1, 'C', true, 1);
-    } else {
-        $pdf->Ln();
-    }
+    foreach ($sumaProductos as $fila) {
+        $bg = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
 
-    // Filas de Productos en Total
-    $pdf->SetFont("helvetica", '', 10);
-
-    foreach ($sumaProductos as $filaSumaProductos) {
-        $cellHeights = [
-            $pdf->getStringHeight(38, $filaSumaProductos['Empresa']),
-            $pdf->getStringHeight(40, $filaSumaProductos['Descripcion_Producto']),
-            $pdf->getStringHeight(40, $filaSumaProductos['Especificacion_Producto']),
-            $pdf->getStringHeight(30, $filaSumaProductos['Categoria']),
-            $pdf->getStringHeight(18, $filaSumaProductos['Cantidad_Solicitada'])
-        ];
+        $html .= '
+                <tr style="background-color:'.$bg.'; text-align:center;">
+                    <td width="20%">'.$fila['Empresa'].'</td>
+                    <td width="25%"> '.$fila['Descripcion_Producto'].'</td>
+                    <td width="25%">'.$fila['Especificacion_Producto'].'</td>
+                    <td width="10%">'.$fila['Categoria'].'</td>
+                    <td width="10%">'.$fila['Cantidad_Solicitada'].'</td>
+        ';
 
         if ($mostrarSalida) {
-            $cellHeights[] = $pdf->getStringHeight(12, $filaSumaProductos['Cantidad_Salida']);
+            $html .= '<td width="10%">'.$fila['Cantidad_Salida'].'</td>';
         }
 
-        $maxHeight = max($cellHeights);
-
-        $pdf->MultiCell(38, $maxHeight, $filaSumaProductos['Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaSumaProductos['Descripcion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaSumaProductos['Especificacion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaSumaProductos['Categoria'], 1, 'C', false, 0);
-        $pdf->MultiCell(18, $maxHeight, $filaSumaProductos['Cantidad_Solicitada'], 1, 'C', false, 0);
-
-        if ($mostrarSalida) {
-            $pdf->MultiCell(12, $maxHeight, $filaSumaProductos['Cantidad_Salida'], 1, 'C', false, 1);
-        } else {
-            $pdf->Ln();
-        }
+        $html .= '</tr>';
     }
+
+    $html .= '</tbody>
+        </table>
+    ';
+    $pdf->writeHTML($html, true, false, true, false, '');
 
     // Salto
     $pdf->Ln();
@@ -395,68 +383,50 @@ try {
     $pdf->SetFillColor(200, 220, 255);
     $pdf->SetFont("helvetica", "B", 9);
 
-    // Calcular altura del encabezado para tabla detallada
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(38, "Nombre de la Empresa"),
-        $pdf->getStringHeight(40, "Descripción"),
-        $pdf->getStringHeight(40, "Especificación"),
-        $pdf->getStringHeight(30, "Categoria"),
-        $pdf->getStringHeight(20, "Talla"),
-        $pdf->getStringHeight(18, "Solicitado")
-    ];
+    $html = '
+        <table border="1" cellpadding="4">
+            <thead>
+                <tr style="background-color:#34495e; color:white; text-align:center; font-weight:bold;">
+                    <th width="20%">Empresa</th>
+                    <th width="20%">Descripción</th>
+                    <th width="20%">Especificación</th>
+                    <th width="10%">Categoría</th>
+                    <th width="10%">Talla</th>
+                    <th width="10%">Solicitado</th>
+    ';
 
     if ($mostrarSalida) {
-        $cellHeightsEncabezado[] = $pdf->getStringHeight(12, "Salida");
+        $html .= '  <th width="10%">Salida</th>';
     }
 
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
+    $html .= '  </tr>
+            </thead>
+            <tbody>
+    ';
 
-    // Cabecera de tabla detallada
-    $pdf->MultiCell(38, $maxHeightEncabezado, 'Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Categoria', 1, 'C', true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, 'Talla', 1, 'C', true, 0);
-    $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 0);
+    $color = true;
+    foreach ($productos as $fila) {
+        $bg = $color ? '#f9f9f9' : '#ffffff';
+        $color = !$color;
 
-    if ($mostrarSalida) {
-        $pdf->MultiCell(12, $maxHeightEncabezado, 'Salida', 1, 'C', true, 1);
-    } else {
-        $pdf->Ln();
-    }
-
-    // Filas de tabla detallada
-    $pdf->SetFont("helvetica", '', 10);
-
-    foreach ($productos as $filaProducto) {
-        $cellHeights = [
-            $pdf->getStringHeight(38, $filaProducto['Empresa']),
-            $pdf->getStringHeight(40, $filaProducto['Descripcion_Producto']),
-            $pdf->getStringHeight(40, $filaProducto['Especificacion_Producto']),
-            $pdf->getStringHeight(30, $filaProducto['Categoria']),
-            $pdf->getStringHeight(20, $filaProducto['Talla']),
-            $pdf->getStringHeight(18, $filaProducto['Cantidad_Solicitada'])
-        ];
+        $html .= '
+                <tr style="background-color:'.$bg.'; text-align:center;">
+                    <td width="20%">'.$fila['Empresa'].'</td>
+                    <td width="20%">'.$fila['Descripcion_Producto'].'</td>
+                    <td width="20%">'.$fila['Especificacion_Producto'].'</td>
+                    <td width="10%">'.$fila['Categoria'].'</td>
+                    <td width="10%">'.$fila['Talla'].'</td>
+                    <td width="10%">'.$fila['Cantidad_Solicitada'].'</td>';
 
         if ($mostrarSalida) {
-            $cellHeights[] = $pdf->getStringHeight(12, $filaProducto['Cantidad_Salida']);
+            $html .= '<td width="10%">'.$fila['Cantidad_Salida'].'</td>';
         }
 
-        $maxHeight = max($cellHeights);
-
-        $pdf->MultiCell(38, $maxHeight, $filaProducto['Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaProducto['Descripcion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaProducto['Especificacion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaProducto['Categoria'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $filaProducto['Talla'], 1, 'C', false, 0);
-        $pdf->MultiCell(18, $maxHeight, $filaProducto['Cantidad_Solicitada'], 1, 'C', false, 0);
-
-        if ($mostrarSalida) {
-            $pdf->MultiCell(12, $maxHeight, $filaProducto['Cantidad_Salida'], 1, 'C', false, 1);
-        } else {
-            $pdf->Ln();
-        }
+        $html .= '</tr>';
     }
+
+    $html .= '</tbody></table>';
+    $pdf->writeHTML($html, true, false, true, false, '');
 
     // Cerrar statements
     $stmtSumaProductos->close();

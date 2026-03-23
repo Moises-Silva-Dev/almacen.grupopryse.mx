@@ -289,48 +289,42 @@ try {
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
 
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(38, "Nombre de la Empresa"),
-        $pdf->getStringHeight(50, "Descripción"),
-        $pdf->getStringHeight(50, "Especificación"),
-        $pdf->getStringHeight(30, "Categoria"),
-        $pdf->getStringHeight(18, "Solicitado")
-    ];
+    $html = '
+        <table border="1" cellpadding="4">
+            <thead>
+                <tr style="background-color:#2c3e50; color:white; font-weight:bold; text-align:center;">
+                    <th width="20%">Empresa</th>
+                    <th width="25%">Descripción</th>
+                    <th width="25%">Especificación</th>
+                    <th width="15%">Categoría</th>
+                    <th width="15%">Solicitado</th>
+                </tr>
+            </thead>
+            <tbody>
+    ';
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla 
-    $pdf->MultiCell(38, $maxHeightEncabezado, 'Nombre de la Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Categoria', 1, 'C', true, 0);
-    $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 1);
-    
-    // Agregar datos a la tabla
-    $pdf->SetFont("helvetica", '', 10); // Restaurar el estilo de fuente normal
-    while ($filaSumaProductos = $resultadoSumaProductos->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(38, $filaSumaProductos['Empresa']),
-            $pdf->getStringHeight(50, $filaSumaProductos['Descripcion_Producto']),
-            $pdf->getStringHeight(50, $filaSumaProductos['Especificacion_Producto']),
-            $pdf->getStringHeight(30, $filaSumaProductos['Categoria']),
-            $pdf->getStringHeight(18, $filaSumaProductos['Cantidad_Solicitada'])
-        ];
-    
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
-        $pdf->MultiCell(38, $maxHeight, $filaSumaProductos['Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaSumaProductos['Descripcion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaSumaProductos['Especificacion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaSumaProductos['Categoria'], 1, 'C', false, 0);
-        $pdf->MultiCell(18, $maxHeight, $filaSumaProductos['Cantidad_Solicitada'], 1, 'C', false, 1);
+    $color = true;
+    while ($fila = $resultadoSumaProductos->fetch_assoc()) {
+        $bg = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
+
+        $html .= '
+                <tr style="background-color:'.$bg.'; text-align:center;">
+                    <td width="20%">'.$fila['Empresa'].'</td>
+                    <td width="25%">'.$fila['Descripcion_Producto'].'</td>
+                    <td width="25%">'.$fila['Especificacion_Producto'].'</td>
+                    <td width="15%">'.$fila['Categoria'].'</td>
+                    <td width="15%">'.$fila['Cantidad_Solicitada'].'</td>
+                </tr>
+        ';
     }
-    
+
+    $html .= '
+            </tbody>
+        </table>
+    ';
+    $pdf->writeHTML($html, true, false, true, false, '');
+
     // Agregar salto de página antes de la tabla
     $pdf->Ln();
 
@@ -342,63 +336,56 @@ try {
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
 
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(38, "Nombre de la Empresa"),
-        $pdf->getStringHeight(50, "Descripción"),
-        $pdf->getStringHeight(50, "Especificación"),
-        $pdf->getStringHeight(30, "Categoria"),
-        $pdf->getStringHeight(10, "Talla"),
-        $pdf->getStringHeight(18, "Solicitado")
-    ];
+    $html = '
+        <table border="1" cellpadding="4">
+            <thead>
+                <tr style="background-color:#34495e; color:white; font-weight:bold; text-align:center;">
+                    <th width="20%">Empresa</th>
+                    <th width="20%">Descripción</th>
+                    <th width="30%">Especificación</th>
+                    <th width="10%">Categoría</th>
+                    <th width="10%">Talla</th>
+                    <th width="10%">Solicitado</th>
+                </tr>
+            </thead>
+            <tbody>
+    ';
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla 
-    $pdf->MultiCell(38, $maxHeightEncabezado, 'Nombre de la Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Categoria', 1, 'C', true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, 'Talla', 1, 'C', true, 0);
-    $pdf->MultiCell(18, $maxHeightEncabezado, 'Solicitado', 1, 'C', true, 1);
-    
-    // Agregar datos a la tabla
-    $pdf->SetFont("helvetica", '', 10); // Restaurar el estilo de fuente normal
-    while ($filaProducto = $resultadoProductos->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(38, $filaProducto['Empresa']),
-            $pdf->getStringHeight(40, $filaProducto['Descripcion_Producto']),
-            $pdf->getStringHeight(50, $filaProducto['Especificacion_Producto']),
-            $pdf->getStringHeight(30, $filaProducto['Categoria']),
-            $pdf->getStringHeight(20, $filaProducto['Talla']),
-            $pdf->getStringHeight(18, $filaProducto['Cantidad_Solicitada'])
-        ];
-    
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
-        $pdf->MultiCell(38, $maxHeight, $filaProducto['Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaProducto['Descripcion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaProducto['Especificacion_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaProducto['Categoria'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $filaProducto['Talla'], 1, 'C', false, 0);
-        $pdf->MultiCell(18, $maxHeight, $filaProducto['Cantidad_Solicitada'], 1, 'C', false, 1);
+    $color = true;
+    while ($fila = $resultadoProductos->fetch_assoc()) {
+        $bg = $color ? '#f9f9f9' : '#ffffff';
+        $color = !$color;
+
+        $html .= '
+                <tr style="background-color:'.$bg.'; text-align:center;">
+                    <td width="20%">'.$fila['Empresa'].'</td>
+                    <td width="20%">'.$fila['Descripcion_Producto'].'</td>
+                    <td width="30%">'.$fila['Especificacion_Producto'].'</td>
+                    <td width="10%">'.$fila['Categoria'].'</td>
+                    <td width="10%">'.$fila['Talla'].'</td>
+                    <td width="10%">'.$fila['Cantidad_Solicitada'].'</td>
+                </tr>
+        ';
     }
 
-    // Despues de procesar $resultadoSumaProductos
-    $stmtSumaProductos->close();
+    $html .= '
+            </tbody>
+        </table>
+    ';
+    $pdf->writeHTML($html, true, false, true, false, '');
 
-    // Después de procesar $resultadoProductos
+    // Cerrar statements
+    $stmtSumaProductos->close();
     $stmtProductos->close();
-    
-    // Cerrar el statement de Salida_E
     $stmtE->close();
     
     // Cerrar la conexión a la base de datos
     $conexion->close();
+
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
     
     // Generar el PDF
     $pdf->Output('Reporte_Solicitud_Por_ID_' . date('YmdHis') . '.pdf', 'I');
