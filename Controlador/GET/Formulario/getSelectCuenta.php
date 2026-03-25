@@ -2,7 +2,7 @@
 header('Content-Type: application/json'); // Establece el tipo de contenido como JSON
 
 try {
-    include('../../Modelo/Conexion.php'); // Incluir dependencias necesarias
+    include('../../../Modelo/Conexion.php'); // Incluir dependencias necesarias
     $conexion = (new Conectar())->conexion(); // Crear una nueva conexión a la base de datos
 
     if ($conexion->connect_error) { // Verificar si hay un error de conexión
@@ -39,7 +39,7 @@ try {
     // Devolver los resultados como JSON
     echo json_encode($Cuenta);
 } catch (Exception $e) {
-    // Manejo de excepciones para errores de conexión o consultas
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()

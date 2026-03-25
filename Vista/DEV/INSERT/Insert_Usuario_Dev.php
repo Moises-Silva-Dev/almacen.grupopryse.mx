@@ -60,7 +60,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="nombre" class="form-label text-navy">
-                                    <i class="fas fa-user me-1 text-turquoise"></i> Nombre *
+                                    <i class="fas fa-user me-1 text-turquoise"></i> Nombre <strong style="color: red;">*</strong>
                                 </label>
                                 <input type="text" class="form-control border-navy" id="nombre" name="nombre" 
                                        placeholder="Ingresa el Nombre" 
@@ -73,7 +73,7 @@
                             
                             <div class="col-md-4 mb-3">
                                 <label for="apellido_paterno" class="form-label text-navy">
-                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Apellido Paterno *
+                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Apellido Paterno <strong style="color: red;">*</strong>
                                 </label>
                                 <input type="text" class="form-control border-navy" id="apellido_paterno" name="apellido_paterno" 
                                        placeholder="Ingresa el Apellido Paterno" 
@@ -100,7 +100,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="num_tel" class="form-label text-navy">
-                                    <i class="fas fa-phone me-1 text-turquoise"></i> Número de Teléfono *
+                                    <i class="fas fa-phone me-1 text-turquoise"></i> Número de Teléfono <strong style="color: red;">*</strong>
                                 </label>
                                 <input type="tel" class="form-control border-navy" id="num_tel" name="num_tel" 
                                        placeholder="Ingresa el Número de Teléfono" 
@@ -113,7 +113,7 @@
                             
                             <div class="col-md-6 mb-3">
                                 <label for="num_contacto_sos" class="form-label text-navy">
-                                    <i class="fas fa-ambulance me-1 text-turquoise"></i> Número de Contacto SOS *
+                                    <i class="fas fa-ambulance me-1 text-turquoise"></i> Número de Contacto SOS <strong style="color: red;">*</strong>
                                 </label>
                                 <input type="tel" class="form-control border-navy" id="num_contacto_sos" name="num_contacto_sos" 
                                        placeholder="Ingresa el Número de Contacto (Emergencia)" 
@@ -128,7 +128,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label for="correo_electronico" class="form-label text-navy">
-                                    <i class="fas fa-envelope me-1 text-turquoise"></i> Correo Electrónico *
+                                    <i class="fas fa-envelope me-1 text-turquoise"></i> Correo Electrónico <strong style="color: red;">*</strong>
                                 </label>
                                 <input type="email" class="form-control border-navy" id="correo_electronico" name="correo_electronico" 
                                        placeholder="ejemplo@empresa.com" required>
@@ -149,7 +149,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="contrasena" class="form-label text-navy">
-                                    <i class="fas fa-key me-1 text-turquoise"></i> Contraseña *
+                                    <i class="fas fa-key me-1 text-turquoise"></i> Contraseña <strong style="color: red;">*</strong>
                                 </label>
                                 <div class="input-group">
                                     <input type="password" class="form-control border-navy" id="contrasena" name="contrasena" 
@@ -177,7 +177,7 @@
                             
                             <div class="col-md-6 mb-3">
                                 <label for="valcontrasena" class="form-label text-navy">
-                                    <i class="fas fa-check-circle me-1 text-turquoise"></i> Repetir Contraseña *
+                                    <i class="fas fa-check-circle me-1 text-turquoise"></i> Repetir Contraseña <strong style="color: red;">*</strong>
                                 </label>
                                 <div class="input-group">
                                     <input type="password" class="form-control border-navy" id="valcontrasena" name="valcontrasena" 
@@ -203,7 +203,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label for="ID_Tipo" class="form-label text-navy">
-                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Tipo de Usuario *
+                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Tipo de Usuario <strong style="color: red;">*</strong>
                                 </label>
                                 <select class="form-select border-navy" id="ID_Tipo" name="ID_Tipo" required>
                                     <option value="" selected disabled>-- Cargando tipos de usuario... --</option>

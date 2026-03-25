@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             tipoSelect.innerHTML = '<option value="" selected disabled>⏳ Cargando tipos de usuario...</option>';
             tipoSelect.disabled = true;
             
-            const response = await fetch('../../../Controlador/GET/getTiposUsuario.php');
+            const response = await fetch('../../../Controlador/GET/Formulario/getTiposUsuario.php');
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cuentaSelect.innerHTML = '<option value="" selected disabled>⏳ Cargando cuentas...</option>';
             cuentaSelect.disabled = true;
             
-            const response = await fetch('../../../Controlador/GET/getSelectCuenta.php');
+            const response = await fetch('../../../Controlador/GET/Formulario/getSelectCuenta.php');
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

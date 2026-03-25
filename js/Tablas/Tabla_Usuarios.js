@@ -23,15 +23,6 @@ document.getElementById('selectAll').addEventListener('change', function(e) {
     });
 });
 
-// Funciones para acciones de usuario
-function editUser(id) {
-    window.location.href = `Update/Update_Usuario_Dev.php?id=${id}`;
-}
-
-function changeRole(id) {
-    window.location.href = `Update/Update_Rol_Usuario_Dev.php?id=${id}`;
-}
-
 // Función para búsqueda con debounce
 let searchTimeout;
 document.querySelector('input[name="search"]').addEventListener('input', function(e) {

@@ -57,7 +57,7 @@ class AlertsTable {
         try {
             this.mostrarCargando();
             
-            const respuesta = await fetch('../../Controlador/GET/getNotificacionAlertaInventario.php');
+            const respuesta = await fetch('../../Controlador/GET/Notificacion/getNotificacionAlertaInventario.php');
             this.currentData = await respuesta.json();
             
             // Filtrar datos si hay término de búsqueda

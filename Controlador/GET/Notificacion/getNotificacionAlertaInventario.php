@@ -2,7 +2,7 @@
 header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
 
 try {
-  include('../../Modelo/Conexion.php'); // Incluir el archivo de conexión para establecer la conexión con la base de datos
+  include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión para establecer la conexión con la base de datos
   $conexion = (new Conectar())->conexion(); // Establecer la conexión a la base de datos
 
   if ($conexion->connect_error) { // Verificar si hay un error de conexión

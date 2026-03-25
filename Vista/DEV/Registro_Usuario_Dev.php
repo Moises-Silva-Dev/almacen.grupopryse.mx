@@ -1,5 +1,6 @@
 <?php include('head.php'); ?>
 <?php include('INSERT/Insert_Usuario_Dev.php'); ?>
+<?php include('UPDATE/Update_Usuario_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -254,13 +255,13 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editUser(<?php echo $row['ID_Usuario']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openEditModal(<?php echo $row['ID_Usuario']; ?>)" title="Editar usuario">
+                                                <i class="fas fa-edit"></i> Editar
                                             </button>
                                             
                                             <!-- Botón Cambiar Rol -->
                                             <button class="btn btn-sm btn-outline-turquoise" onclick="changeRole(<?php echo $row['ID_Usuario']; ?>)" title="Cambiar rol">
-                                                <i class="fas fa-user-edit"></i>
+                                                <i class="fas fa-user-edit"></i> Cambiar Rol
                                             </button>
                                             
                                             <!-- Botón Eliminar -->
@@ -268,7 +269,7 @@
                                                     <?php if (!$tieneRegistros): ?>
                                                     onclick="eliminarRegistroUsuario(<?php echo $row['ID_Usuario']; ?>)"
                                                     <?php endif; ?>>
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt"></i> Eliminar
                                             </button>
                                         </div>
                                     </td>
