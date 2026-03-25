@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Usuario_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -11,12 +12,13 @@
                 <div>
                     <h1 class="h3 mb-0 text-navy">
                         <i class="fas fa-users me-2 text-turquoise"></i>
-                        Gestión de Usuarios
+                        Administra los Usuarios del Sistema
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Usuario_Dev.php" class="btn btn-primary">
+                <!-- Botón para abrir modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registroUsuarioModal">
                     <i class="fas fa-user-plus me-1"></i> Nuevo Usuario
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -388,5 +390,6 @@
 <!-- JavaScript -->
 <script src="../../js/Tablas/Tabla_Usuarios.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Usuario.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <?php include('footer.php'); ?>

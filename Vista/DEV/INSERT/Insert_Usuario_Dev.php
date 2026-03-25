@@ -1,182 +1,760 @@
-<?php include('head.php'); ?>
-
-<div class="container mt-5">
-    <center><h2>Registrar Nuevo Usuario</h2></center>
-    <!-- Formulario -->
-    <form id="FormInsertUsuarioNuevo" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Usuario.php" method="post" enctype="multipart/form-data" novalidate>
-        <!-- Nombre -->
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa el Nombre" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-            <div class="invalid-feedback">
-                Por favor, ingresa tu Nombre.
+<!-- Modal de Registro de Usuario -->
+<div class="modal fade" id="registroUsuarioModal" tabindex="-1" aria-labelledby="registroUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="registroUsuarioModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Registrar Nuevo Usuario
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-
-        <!-- Apellido Paterno -->
-        <div class="mb-3">
-            <label for="apellido_paterno" class="form-label">Apellido Paterno:</label>
-            <input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" placeholder="Ingresa el Apellido Paterno" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-            <div class="invalid-feedback">
-                Por favor, ingresa tu Apellido Paterno.
-            </div>
-        </div>
-
-        <!-- Apellido Materno -->
-        <div class="mb-3">
-            <label for="apellido_materno" class="form-label">Apellido Materno:</label>
-            <input type="text" class="form-control" id="apellido_materno" name="apellido_materno" placeholder="Ingresa el Apellido Materno" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)">
-            <div class="invalid-feedback">
-                Por favor, ingresa tu Apellido Materno.
-            </div>
-        </div>
-
-        <!-- NumTel -->
-        <div class="mb-3">
-            <label for="num_tel" class="form-label">Número de Teléfono:</label>
-            <input type="tel" class="form-control" id="num_tel" name="num_tel" placeholder="Ingresa el Numero de Telefono" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
-            <div class="invalid-feedback">
-                Por favor, ingresa tu Numero de Telefono.
-            </div>
-        </div>
-
-        <!-- Correo Electrónico -->
-        <div class="mb-3">
-            <label for="correo_electronico" class="form-label">Correo Electrónico:</label>
-            <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Ingresa el Correo Electronico" required>
-            <div class="invalid-feedback">
-                Por favor, ingresa tu Correo Electronico.
-            </div>
-        </div>
-
-        <!-- Contraseña -->
-        <div class="mb-3">
-            <label for="contrasena" class="form-label">Contraseña:</label>
-            <div class="input-group">
-                <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Ingresa la contraseña" required>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                        <!-- SVG Icon -->
-                        <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000" width="20" height="20">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M94.433 536.378c49.818-67.226 110.761-124.854 180.172-166.808 35.333-21.356 62.64-33.686 99.016-45.698 17.076-5.638 34.511-10.135 52.088-13.898 23.033-4.932 28.596-5.483 49.577-7.228 76.233-6.333 138.449 4.648 210.869 33.643 3.581 1.435 10.361 4.513 18.987 8.594 8.488 4.013 16.816 8.358 25.086 12.801 18.349 9.861 36.004 20.974 53.173 32.756 31.245 21.442 62.37 49.184 91.227 79.147 20.218 20.991 39.395 43.706 56.427 66.689 14.436 19.479 38.301 29.282 60.985 15.991 19.248-11.276 30.491-41.417 15.991-60.984-101.194-136.555-243.302-247.3-415.205-272.778-165.834-24.575-325.153 31.855-452.148 138.262-46.849 39.252-86.915 85.525-123.221 134.518-14.5 19.567-3.258 49.708 15.991 60.984 22.685 13.291 46.549 3.488 60.985-15.991z" fill="#4A5699"></path>
-                                <path d="M931.055 491.378c-49.817 67.228-110.761 124.856-180.173 166.811-35.332 21.354-62.639 33.684-99.015 45.694-17.076 5.641-34.512 10.137-52.09 13.902-23.032 4.931-28.593 5.48-49.576 7.225-76.233 6.336-138.449-4.648-210.869-33.642-3.582-1.436-10.362-4.514-18.987-8.595-8.488-4.015-16.816-8.357-25.087-12.801-18.348-9.862-36.003-20.974-53.172-32.755-31.245-21.443-62.37-49.184-91.227-79.149-20.218-20.99-39.395-43.705-56.427-66.69-14.436-19.479-38.3-29.279-60.985-15.991-19.249 11.276-30.491 41.419-15.991 60.984C118.65 672.929 260.76 783.677 432.661 809.15c165.834 24.578 325.152-31.854 452.148-138.259 46.85-39.256 86.915-85.528 123.222-134.521 14.5-19.564 3.257-49.708-15.991-60.984-22.685-13.287-46.55-3.487-60.985 15.992z" fill="#C45FA0"></path>
-                                <path d="M594.746 519.234c0.03 46.266-34.587 83.401-80.113 85.188-46.243 1.814-83.453-35.93-85.188-80.11-0.953-24.271-19.555-44.574-44.574-44.574-23.577 0-45.527 20.281-44.573 44.574 3.705 94.378 79.154 169.32 174.334 169.258 94.457-0.063 169.321-81.897 169.261-174.335-0.039-57.486-89.184-57.49-89.147-0.001z" fill="#F39A2B"></path>
-                                <path d="M430.688 514.818c0.876-45.416 37.262-81.797 82.677-82.672 45.438-0.875 81.824 38.571 82.673 82.672 1.105 57.413 90.256 57.521 89.147 0-1.827-94.791-77.028-169.994-171.82-171.82-94.787-1.827-170.049 79.785-171.824 171.82-1.108 57.522 88.04 57.413 89.147 0z" fill="#E5594F"></path>
-                            </g>
-                        </svg>
-                    </button>
-                </div>
-                <div class="invalid-feedback">
-                    Por favor, ingresa tu Contraseña.
-                </div>
-            </div>
-            <ul class="requirements mt-2">
-                <li id="length">Mínimo 8 caracteres</li>
-                <li id="uppercase">Una letra mayúscula</li>
-                <li id="lowercase">Letras minúsculas</li>
-                <li id="number">Números</li>
-                <li id="special">Símbolos</li>
-            </ul>
-        </div>
-    
-        <!-- Repetir Contraseña -->
-        <div class="mb-3">
-            <label for="valcontrasena" class="form-label">Repetir contraseña:</label>
-            <div class="input-group">
-                <input type="password" class="form-control" id="valcontrasena" name="valcontrasena" placeholder="Ingresa la contraseña" required>
-                <div class="invalid-feedback">
-                    Las contraseñas no coinciden.
-                </div>
-            </div>
-        </div>
-
-        <!-- NumContactoSOS -->
-        <div class="mb-3">
-            <label for="num_contacto_sos" class="form-label">Número de Contacto SOS:</label>
-            <input type="tel" class="form-control" id="num_contacto_sos" name="num_contacto_sos" placeholder="Ingresa el Numero de Telefono de Contacto (En caso de Emergencia)" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
-            <div class="invalid-feedback">
-                Por favor, ingresa tu Numero de Contacto SOS.
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="ID_Tipo" class="form-label">Tipo de Usuario:</label>
-            <select class="form-select mb-3" id="ID_Tipo" name="ID_Tipo" required>
-                <option value="" selected disabled>-- Seleccionar Tipo de Usuario --</option>
-                    <?php
-                        include('../../../Modelo/Conexion.php'); 
-                        $conexion = (new Conectar())->conexion();
-                            $sql = $conexion->query("SELECT ID, Tipo_Usuario FROM Tipo_Usuarios");
-                            while ($resultado = $sql->fetch_assoc()) {
-                                echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Tipo_Usuario'] . "</option>";
-                            }
-                        ?>
-            </select>
-            <div class="invalid-feedback">
-                Por favor, selecciona una opción.
-            </div>
-        </div>
-
-            <div id="cuenta-container" class="docente-fields user-fields" style="display: none;">
-                <div class="mb-3">
-                    <label for="ID_Materia" class="form-label">Cuenta:</label>
-                    <div class="input-group">
-                        <select class="form-select" id="Seleccionar_ID_Cuenta">
-                            <option value="" selected>-- Seleccionar Cuenta --</option>
-                        </select>
-                        <button class="btn btn-outline-secondary" type="button" id="BtnAddCuenta">Agregar</button>
+            
+            <div class="modal-body">
+                <form id="FormInsertUsuarioNuevo" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Usuario.php" method="post" enctype="multipart/form-data" novalidate>
+                    <!-- Barra de progreso -->
+                    <div class="mb-4">
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar bg-turquoise" id="formProgress" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted" id="stepIndicator">Paso 1 de 3: Datos Personales</small>
+                        </div>
                     </div>
-                    <div class="invalid-feedback">
-                        Por favor, selecciona una materia.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Cuentas Seleccionadas:</label>
-                    <table class="table table-bordered" id="cuentaTable">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <input type="hidden" id="DatosTablaInsertCuentaUsuario" name="DatosTablaInsertCuentaUsuario">
-            </div>
 
-            <!-- Botones -->
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary" id="submitBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                        <path d="M16 19h6" />
-                        <path d="M19 16v6" />
-                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                    </svg>Guardar
+                    <!-- Sección 1: Datos Personales -->
+                    <div id="step1" class="form-step">
+                        <h5 class="text-navy mb-3">
+                            <i class="fas fa-user-circle me-2 text-turquoise"></i>
+                            Datos Personales
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="nombre" class="form-label text-navy">
+                                    <i class="fas fa-user me-1 text-turquoise"></i> Nombre *
+                                </label>
+                                <input type="text" class="form-control border-navy" id="nombre" name="nombre" 
+                                       placeholder="Ingresa el Nombre" 
+                                       onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa tu Nombre.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="apellido_paterno" class="form-label text-navy">
+                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Apellido Paterno *
+                                </label>
+                                <input type="text" class="form-control border-navy" id="apellido_paterno" name="apellido_paterno" 
+                                       placeholder="Ingresa el Apellido Paterno" 
+                                       onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa tu Apellido Paterno.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="apellido_materno" class="form-label text-navy">
+                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Apellido Materno
+                                </label>
+                                <input type="text" class="form-control border-navy" id="apellido_materno" name="apellido_materno" 
+                                       placeholder="Ingresa el Apellido Materno" 
+                                       onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)">
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa tu Apellido Materno.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="num_tel" class="form-label text-navy">
+                                    <i class="fas fa-phone me-1 text-turquoise"></i> Número de Teléfono *
+                                </label>
+                                <input type="tel" class="form-control border-navy" id="num_tel" name="num_tel" 
+                                       placeholder="Ingresa el Número de Teléfono" 
+                                       onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" 
+                                       maxlength="10" required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa tu Número de Teléfono (10 dígitos).
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="num_contacto_sos" class="form-label text-navy">
+                                    <i class="fas fa-ambulance me-1 text-turquoise"></i> Número de Contacto SOS *
+                                </label>
+                                <input type="tel" class="form-control border-navy" id="num_contacto_sos" name="num_contacto_sos" 
+                                       placeholder="Ingresa el Número de Contacto (Emergencia)" 
+                                       onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" 
+                                       maxlength="10" required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa tu Número de Contacto SOS (10 dígitos).
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="correo_electronico" class="form-label text-navy">
+                                    <i class="fas fa-envelope me-1 text-turquoise"></i> Correo Electrónico *
+                                </label>
+                                <input type="email" class="form-control border-navy" id="correo_electronico" name="correo_electronico" 
+                                       placeholder="ejemplo@empresa.com" required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa un Correo Electrónico válido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 2: Seguridad -->
+                    <div id="step2" class="form-step" style="display: none;">
+                        <h5 class="text-navy mb-3">
+                            <i class="fas fa-lock me-2 text-turquoise"></i>
+                            Seguridad
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="contrasena" class="form-label text-navy">
+                                    <i class="fas fa-key me-1 text-turquoise"></i> Contraseña *
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control border-navy" id="contrasena" name="contrasena" 
+                                           placeholder="Ingresa la contraseña" required>
+                                    <button class="btn btn-outline-secondary border-navy" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor, ingresa una contraseña válida.
+                                </div>
+                                
+                                <!-- Requisitos de contraseña -->
+                                <div class="mt-2">
+                                    <small class="text-muted">Requisitos de contraseña:</small>
+                                    <ul class="requirements list-unstyled mt-1">
+                                        <li id="length" class="text-muted"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Mínimo 8 caracteres</li>
+                                        <li id="uppercase" class="text-muted"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Una letra mayúscula</li>
+                                        <li id="lowercase" class="text-muted"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Letras minúsculas</li>
+                                        <li id="number" class="text-muted"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Números</li>
+                                        <li id="special" class="text-muted"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Símbolos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="valcontrasena" class="form-label text-navy">
+                                    <i class="fas fa-check-circle me-1 text-turquoise"></i> Repetir Contraseña *
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control border-navy" id="valcontrasena" name="valcontrasena" 
+                                           placeholder="Repite la contraseña" required>
+                                    <button class="btn btn-outline-secondary border-navy" type="button" id="toggleConfirmPassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback" id="passwordMatchError">
+                                    Las contraseñas no coinciden.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 3: Rol y Cuentas -->
+                    <div id="step3" class="form-step" style="display: none;">
+                        <h5 class="text-navy mb-3">
+                            <i class="fas fa-user-tag me-2 text-turquoise"></i>
+                            Rol y Cuentas
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="ID_Tipo" class="form-label text-navy">
+                                    <i class="fas fa-user-tag me-1 text-turquoise"></i> Tipo de Usuario *
+                                </label>
+                                <select class="form-select border-navy" id="ID_Tipo" name="ID_Tipo" required>
+                                    <option value="" selected disabled>-- Seleccionar Tipo de Usuario --</option>
+                                    <?php
+                                    include('../../../Modelo/Conexion.php'); 
+                                    $conexion = (new Conectar())->conexion();
+                                    $sql = $conexion->query("SELECT ID, Tipo_Usuario FROM Tipo_Usuarios");
+                                    while ($resultado = $sql->fetch_assoc()) {
+                                        echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Tipo_Usuario'] . "</option>";
+                                    }
+                                    $conexion->close();
+                                    ?>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor, selecciona un Tipo de Usuario.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cuenta-container" class="docente-fields user-fields" style="display: none;">
+                            <div class="card border-navy mt-3">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-building me-2 text-turquoise"></i>
+                                    Asignación de Cuentas
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8 mb-3">
+                                            <label for="Seleccionar_ID_Cuenta" class="form-label text-navy">Seleccionar Cuenta</label>
+                                            <select class="form-select border-navy" id="Seleccionar_ID_Cuenta">
+                                                <option value="" selected disabled>-- Seleccionar Cuenta --</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3 d-flex align-items-end">
+                                            <button class="btn btn-turquoise w-100" type="button" id="BtnAddCuenta">
+                                                <i class="fas fa-plus me-1"></i> Agregar Cuenta
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="table-responsive mt-3">
+                                        <table class="table table-hover" id="cuentaTable">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nombre de Cuenta</th>
+                                                    <th width="100">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Las cuentas se agregarán aquí dinámicamente -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <input type="hidden" id="DatosTablaInsertCuentaUsuario" name="DatosTablaInsertCuentaUsuario">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cancelar
                 </button>
-                <a href="../Registro_Usuario_Dev.php" class="btn btn-danger">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M4 7l16 0" />
-                        <path d="M10 11l0 6" />
-                        <path d="M14 11l0 6" />
-                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                    </svg>Cancelar
-                </a>
+                <button type="button" class="btn btn-outline-navy" id="prevBtn" style="display: none;">
+                    <i class="fas fa-arrow-left me-1"></i> Anterior
+                </button>
+                <button type="button" class="btn btn-navy" id="nextBtn">
+                    Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                </button>
+                <button type="button" class="btn btn-primary" id="submitBtn" style="display: none;">
+                    <i class="fas fa-save me-1"></i> Guardar Usuario
+                </button>
             </div>
-        </form>
+        </div>
     </div>
-    
-<script src="../../../js/ValidarPass.js"></script>
-<script src="../../../js/Insert_Usuario_Cuentas_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Usuario.js"></script>
+</div>
 
-<?php include('footer.php'); ?>
+<!-- CSS Adicional para el Modal -->
+<style>
+.modal-xl {
+    max-width: 900px;
+}
+
+.form-step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Requisitos de contraseña */
+.requirements li {
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.requirements li.valid {
+    color: #28a745;
+}
+
+.requirements li.valid i {
+    color: #28a745;
+}
+
+.requirements li.invalid {
+    color: #dc3545;
+}
+
+/* Validación de campos */
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.2rem rgba(64, 224, 208, 0.25);
+}
+
+.was-validated .form-control:invalid, 
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.progress-bar.bg-turquoise {
+    background-color: var(--color-turquoise) !important;
+}
+
+@media (max-width: 768px) {
+    .modal-xl {
+        max-width: 95%;
+        margin: 0.5rem auto;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+}
+</style>
+
+<!-- JavaScript para el Modal (Integrado con tu código existente) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ==================== VARIABLES GLOBALES ====================
+    let currentStep = 1;
+    const totalSteps = 3;
+    
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressBar = document.getElementById('formProgress');
+    const stepIndicator = document.getElementById('stepIndicator');
+    
+    // Elementos para la gestión de cuentas
+    const tipoSelect = document.getElementById('ID_Tipo');
+    const cuentaSelect = document.getElementById('Seleccionar_ID_Cuenta');
+    const addCuentaButton = document.getElementById('BtnAddCuenta');
+    const cuentasTable = document.getElementById('cuentaTable').querySelector('tbody');
+    const datosTablaCuenta = document.getElementById('DatosTablaInsertCuentaUsuario');
+    const cuentaContainer = document.getElementById('cuenta-container');
+    
+    // Array para almacenar cuentas seleccionadas
+    let cuentasSeleccionadas = [];
+    
+    // Tipos de usuario que NO requieren cuenta
+    const noCuentaRequired = [1, 2, 5, 6]; // Ajusta según tus necesidades
+    
+    // ==================== FUNCIONES DEL FORMULARIO POR PASOS ====================
+    function updateSteps() {
+        // Ocultar todos los pasos
+        step1.style.display = 'none';
+        step2.style.display = 'none';
+        step3.style.display = 'none';
+        
+        // Mostrar el paso actual
+        if (currentStep === 1) step1.style.display = 'block';
+        if (currentStep === 2) step2.style.display = 'block';
+        if (currentStep === 3) step3.style.display = 'block';
+        
+        // Actualizar botones
+        prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
+        nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-block';
+        submitBtn.style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+        
+        // Actualizar barra de progreso
+        const progress = (currentStep / totalSteps) * 100;
+        progressBar.style.width = progress + '%';
+        
+        // Actualizar indicador de paso
+        const stepNames = ['Datos Personales', 'Seguridad', 'Rol y Cuentas'];
+        stepIndicator.textContent = `Paso ${currentStep} de ${totalSteps}: ${stepNames[currentStep - 1]}`;
+    }
+    
+    function validateCurrentStep() {
+        if (currentStep === 1) {
+            const nombre = document.getElementById('nombre');
+            const apellidoPaterno = document.getElementById('apellido_paterno');
+            const numTel = document.getElementById('num_tel');
+            const numSOS = document.getElementById('num_contacto_sos');
+            const email = document.getElementById('correo_electronico');
+            
+            let isValid = true;
+            
+            if (!nombre.value.trim()) {
+                nombre.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                nombre.classList.remove('is-invalid');
+            }
+            
+            if (!apellidoPaterno.value.trim()) {
+                apellidoPaterno.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                apellidoPaterno.classList.remove('is-invalid');
+            }
+            
+            if (!numTel.value.trim() || numTel.value.length !== 10) {
+                numTel.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                numTel.classList.remove('is-invalid');
+            }
+            
+            if (!numSOS.value.trim() || numSOS.value.length !== 10) {
+                numSOS.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                numSOS.classList.remove('is-invalid');
+            }
+            
+            if (!email.value.trim() || !email.value.includes('@')) {
+                email.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                email.classList.remove('is-invalid');
+            }
+            
+            return isValid;
+        }
+        
+        if (currentStep === 2) {
+            const password = document.getElementById('contrasena');
+            const confirmPassword = document.getElementById('valcontrasena');
+            const errorDiv = document.getElementById('passwordMatchError');
+            
+            let isValid = true;
+            
+            // Validar contraseña
+            const hasLength = password.value.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password.value);
+            const hasLowercase = /[a-z]/.test(password.value);
+            const hasNumber = /[0-9]/.test(password.value);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password.value);
+            
+            if (!hasLength || !hasUppercase || !hasLowercase || !hasNumber || !hasSpecial) {
+                password.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                password.classList.remove('is-invalid');
+            }
+            
+            // Validar que las contraseñas coincidan
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('is-invalid');
+                errorDiv.style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPassword.classList.remove('is-invalid');
+                errorDiv.style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        if (currentStep === 3) {
+            const tipoUsuario = document.getElementById('ID_Tipo');
+            let isValid = true;
+            
+            if (!tipoUsuario.value) {
+                tipoUsuario.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                tipoUsuario.classList.remove('is-invalid');
+            }
+            
+            // Validar cuentas si el tipo de usuario requiere
+            const tipo = parseInt(tipoUsuario.value);
+            if (!noCuentaRequired.includes(tipo) && cuentasSeleccionadas.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cuentas requeridas',
+                    text: 'Por favor, selecciona al menos una cuenta para este usuario.',
+                    confirmButtonColor: '#001F3F'
+                });
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        return true;
+    }
+    
+    // ==================== GESTIÓN DE CUENTAS (TU CÓDIGO EXISTENTE) ====================
+    function actualizarDatosTablaCuenta() {
+        datosTablaCuenta.value = JSON.stringify(cuentasSeleccionadas);
+    }
+    
+    // Evento cuando cambia el tipo de usuario
+    tipoSelect.addEventListener('change', async () => {
+        const tipo = parseInt(tipoSelect.value);
+    
+        if (noCuentaRequired.includes(tipo)) {
+            cuentaContainer.style.display = 'none';
+            cuentaSelect.required = false;
+        } else {
+            cuentaContainer.style.display = 'block';
+            cuentaSelect.required = true;
+
+            try {
+                if (tipo === 3 || tipo === 4) { 
+                    let direccion = '../../../Controlador/GET/getSelectCuenta.php';
+                    const response = await fetch(direccion);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const text = await response.text();
+                    try {
+                        const data = JSON.parse(text);
+                        cuentaSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Cuenta --</option>';
+                        data.forEach(cuenta => {
+                            cuentaSelect.innerHTML += `<option value="${cuenta.ID}">${cuenta.NombreCuenta}</option>`;
+                        });
+                    } catch (e) {
+                        console.error('Error al parsear JSON:', e);
+                        console.error('Respuesta del servidor:', text);
+                    }
+                }
+            } catch (error) {
+                console.error('Error en la petición:', error);
+            }
+        }
+    });
+    
+    // Evento para agregar cuenta
+    addCuentaButton.addEventListener('click', function () {
+        const selectedCuenta = cuentaSelect.options[cuentaSelect.selectedIndex];
+        
+        if (selectedCuenta && selectedCuenta.value !== "") {
+            const cuentaId = selectedCuenta.value;
+            const cuentaNombre = selectedCuenta.text;
+    
+            const cuentaExiste = cuentasSeleccionadas.some(cuenta => cuenta.cuentaId === cuentaId);
+            
+            if (!cuentaExiste) {
+                const newRow = cuentasTable.insertRow();
+                newRow.innerHTML = `
+                    <td>${cuentaId}</td>
+                    <td>${cuentaNombre}</td>
+                    <td><button type="button" class="btn btn-danger btn-sm removeCuenta">Eliminar</button></td>
+                `;
+    
+                cuentasSeleccionadas.push({ cuentaId: cuentaId, cuentaNombre: cuentaNombre });
+                actualizarDatosTablaCuenta();
+    
+                newRow.querySelector('.removeCuenta').addEventListener('click', function () {
+                    newRow.remove();
+                    cuentasSeleccionadas = cuentasSeleccionadas.filter(cuenta => cuenta.cuentaId !== cuentaId);
+                    actualizarDatosTablaCuenta();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cuenta duplicada',
+                    text: 'Esta cuenta ya ha sido agregada.',
+                    confirmButtonColor: '#001F3F'
+                });
+            }
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Selecciona una cuenta',
+                text: 'Por favor, selecciona una cuenta antes de agregar.',
+                confirmButtonColor: '#001F3F'
+            });
+        }
+    });
+    
+    // ==================== VALIDACIÓN DE CONTRASEÑA ====================
+    const passwordInput = document.getElementById('contrasena');
+    const requirements = {
+        length: document.getElementById('length'),
+        uppercase: document.getElementById('uppercase'),
+        lowercase: document.getElementById('lowercase'),
+        number: document.getElementById('number'),
+        special: document.getElementById('special')
+    };
+    
+    function validatePassword() {
+        const password = passwordInput.value;
+        
+        const hasLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        
+        updateRequirement(requirements.length, hasLength);
+        updateRequirement(requirements.uppercase, hasUppercase);
+        updateRequirement(requirements.lowercase, hasLowercase);
+        updateRequirement(requirements.number, hasNumber);
+        updateRequirement(requirements.special, hasSpecial);
+        
+        return hasLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+    }
+    
+    function updateRequirement(element, isValid) {
+        if (isValid) {
+            element.classList.add('valid');
+            element.classList.remove('invalid', 'text-muted');
+            element.innerHTML = '<i class="fas fa-check-circle me-1" style="font-size: 0.8rem;"></i> ' + element.textContent.trim();
+        } else {
+            element.classList.add('invalid', 'text-muted');
+            element.classList.remove('valid');
+            element.innerHTML = '<i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> ' + element.textContent.trim();
+        }
+    }
+    
+    passwordInput.addEventListener('input', validatePassword);
+    
+    // ==================== TOGGLE CONTRASEÑA ====================
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const password = document.getElementById('contrasena');
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+    
+    document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+        const password = document.getElementById('valcontrasena');
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+    
+    // ==================== BOTONES DE NAVEGACIÓN ====================
+    nextBtn.addEventListener('click', function() {
+        if (validateCurrentStep()) {
+            currentStep++;
+            updateSteps();
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos incompletos',
+                text: 'Por favor, completa todos los campos requeridos antes de continuar.',
+                confirmButtonColor: '#001F3F'
+            });
+        }
+    });
+    
+    prevBtn.addEventListener('click', function() {
+        currentStep--;
+        updateSteps();
+    });
+    
+    // ==================== ENVÍO DEL FORMULARIO (TU CÓDIGO EXISTENTE) ====================
+    document.getElementById('FormInsertUsuarioNuevo').addEventListener('submit', function (e) {
+        e.preventDefault();
+        
+        // Validar último paso antes de enviar
+        if (!validateCurrentStep()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validación',
+                text: 'Por favor, completa todos los campos correctamente.',
+                confirmButtonColor: '#001F3F'
+            });
+            return;
+        }
+        
+        const formData = new FormData(e.target);
+        
+        // Mostrar loading
+        Swal.fire({
+            title: 'Guardando usuario...',
+            text: 'Por favor, espera un momento.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        fetch(e.target.action, {
+            method: e.target.method,
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro exitoso!',
+                    text: data.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    // Cerrar el modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('registroUsuarioModal'));
+                    modal.hide();
+                    
+                    // Recargar la página o redirigir
+                    window.location.href = data.redirect;
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                    confirmButtonColor: '#001F3F'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al procesar la solicitud.',
+                confirmButtonColor: '#001F3F'
+            });
+            console.error('Error en la solicitud:', error);
+        });
+    });
+    
+    // ==================== INICIALIZACIÓN ====================
+    submitBtn.addEventListener('click', function() {
+        if (validateCurrentStep()) {
+            document.getElementById('FormInsertUsuarioNuevo').dispatchEvent(new Event('submit'));
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de validación',
+                text: 'Por favor, revisa todos los campos del formulario.',
+                confirmButtonColor: '#001F3F'
+            });
+        }
+    });
+    
+    // Inicializar el paso 1
+    updateSteps();
+    validatePassword();
+    
+    // Limpiar formulario al cerrar el modal
+    document.getElementById('registroUsuarioModal').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('FormInsertUsuarioNuevo').reset();
+        cuentasSeleccionadas = [];
+        cuentasTable.innerHTML = '';
+        actualizarDatosTablaCuenta();
+        currentStep = 1;
+        updateSteps();
+        // Limpiar validaciones
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+    });
+});
+</script>
