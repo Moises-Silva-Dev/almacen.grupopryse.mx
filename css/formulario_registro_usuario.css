@@ -1,0 +1,221 @@
+.modal-xl {
+    max-width: 900px;
+}
+
+.form-step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Requisitos de contraseña */
+.requirements li {
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.requirements li.valid {
+    color: #28a745;
+}
+
+.requirements li.valid i {
+    color: #28a745;
+}
+
+.requirements li.invalid {
+    color: #dc3545;
+}
+
+/* Validación de campos */
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.2rem rgba(64, 224, 208, 0.25);
+}
+
+.was-validated .form-control:invalid, 
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Estilos para el indicador de pasos */
+.step-indicator-container {
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.step-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    border: 3px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.step-circle.active {
+    border-color: var(--color-turquoise);
+    background-color: var(--color-turquoise);
+    box-shadow: 0 0 0 5px rgba(64, 224, 208, 0.2);
+}
+
+.step-circle.completed {
+    border-color: #28a745;
+    background-color: #28a745;
+}
+
+.step-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step-circle.active .step-number {
+    color: var(--color-navy);
+}
+
+.step-circle.completed .step-number {
+    display: none;
+}
+
+.step-check {
+    font-size: 1.2rem;
+    color: white;
+    display: none;
+}
+
+.step-circle.completed .step-check {
+    display: block;
+}
+
+.step-line {
+    flex: 1;
+    height: 3px;
+    background-color: #dee2e6;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.step-line.active {
+    background-color: var(--color-turquoise);
+}
+
+.step-line.completed {
+    background-color: #28a745;
+}
+
+.step-labels {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.step-label {
+    text-align: center;
+    flex: 1;
+    font-size: 0.85rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step-label i {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.step-label.active {
+    color: var(--color-turquoise);
+    font-weight: 600;
+}
+
+.step-label.completed {
+    color: #28a745;
+}
+
+/* Animación para los círculos */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(64, 224, 208, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(64, 224, 208, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(64, 224, 208, 0);
+    }
+}
+
+.step-circle.active {
+    animation: pulse 1.5s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .step-circle {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .step-number, .step-check {
+        font-size: 1rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .step-label i {
+        font-size: 1rem;
+    }
+    
+    .step-line {
+        margin: 0 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .step-label span {
+        display: none;
+    }
+    
+    .step-label i {
+        font-size: 1.2rem;
+        margin-bottom: 0;
+    }
+    
+    .step-circle {
+        width: 35px;
+        height: 35px;
+    }
+}
