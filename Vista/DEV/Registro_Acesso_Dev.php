@@ -90,25 +90,25 @@
                                         <i class="fas fa-user me-2"></i>Nombre Completo
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>Correo_Electronico
+                                        <i class="fas fa-envelope me-2 text-turquoise"></i>Correo_Electronico
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>Fecha de Acceso
+                                        <i class="fas fa-user-tag me-1"></i>Fecha de Acceso
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>Hora de Acceso
+                                        <i class="fas fa-clock me-1"></i>Hora de Acceso
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>IP
+                                        <i class="fas fa-laptop me-1"></i>IP
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>ID_Mac
+                                        <i class="fas fa-microchip me-1"></i>ID_Mac
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>Ciudad
+                                        <i class="fas fa-map-marker-alt me-1"></i>Ciudad
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>País
+                                        <i class="fas fa-globe-americas me-1"></i>País
                                     </th>
                                 </tr>
                             </thead>

@@ -63,11 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Funciones para acciones de región
-function editRegion(id) {
-    window.location.href = `Update/Update_Region_Dev.php?id=${id}`;
-}
-
 // Función para cambiar cuenta (auto-submit)
 document.getElementById('cuenta')?.addEventListener('change', function() {
     // Si hay búsqueda, mantenerla

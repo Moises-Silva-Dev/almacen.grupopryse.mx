@@ -169,7 +169,158 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     </div>
 </div>
 
-<script src="../../../js/Update_Region_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Region.js"></script>
+<script>
+    // Obtiene el botón "Agregar" del DOM
+const btnAgregar = document.getElementById("btn_ModificarRegionConEstado");
+// Obtiene la tabla de estados del DOM
+const tablaEstados = document.querySelector(".table-responsive table tbody");
+// Obtiene el campo de datos de la tabla del DOM
+const datosTablaInput = document.getElementById("datosTablaUpdateRegion");
+
+// Función para actualizar los datos de la tabla
+function actualizarDatosTabla() {
+    // Obtiene todas las filas de la tabla de estados
+    const filas = tablaEstados.querySelectorAll("tr");
+    // Inicializa un array para almacenar los datos de las filas
+    const datos = [];
+
+    // Itera sobre cada fila de la tabla de estados
+    filas.forEach(function(fila) {
+        // Obtiene el ID del estado (almacenado en un atributo data-id)
+        const idEstado = fila.querySelector("td:nth-child(1)").getAttribute('data-id');
+
+        // Agrega el ID del estado al array de datos
+        datos.push({ idEstado: idEstado });
+    });
+
+    // Convierte el array de datos a formato JSON y lo asigna al campo de datos de la tabla
+    datosTablaInput.value = JSON.stringify(datos);
+}
+
+// Función que se activa cuando das clic en "Agregar"
+btnAgregar.addEventListener("click", function() {
+    // Obtiene los valores de los campos del formulario
+    const estadoSelect = document.getElementById("Nombre_Estado");
+    const idEstado = estadoSelect.value;
+    const nombreEstado = estadoSelect.options[estadoSelect.selectedIndex].textContent;
+
+    // Verifica que el estado esté seleccionado
+    if (idEstado === "") {
+        // Usamos SweetAlert para mostrar un mensaje de advertencia
+        Swal.fire({
+            icon: "warning", // Icono de advertencia
+            title: "Estado no seleccionado", // Título del mensaje
+            text: "Por favor, seleccione un estado antes de agregar.",
+        });
+        return; // Salimos de la función
+    }
+
+    // Busca si ya existe una fila con el mismo estado en la tabla
+    let filaExistente = null;
+    tablaEstados.querySelectorAll("tr").forEach(function(fila) {
+        // Obtiene el ID del estado de la fila
+        const filaIdEstado = fila.querySelector("td:nth-child(1)").getAttribute('data-id');
+
+        // Verifica si el ID del estado coincide con el valor actual
+        if (filaIdEstado === idEstado) {
+            filaExistente = fila; // Si coincide, asigna la fila existente a la variable filaExistente
+        }
+    });
+
+    // Si la fila no existe, crea una nueva fila con los datos del estado
+    if (!filaExistente) {
+        // Si la fila no existe, crea una nueva fila con los datos del estado
+        const nuevaFila = `
+            <tr>
+                <td data-id="${idEstado}">${nombreEstado}</td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-anular">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+        
+        // Agrega la nueva fila al final de la tabla
+        tablaEstados.insertAdjacentHTML("beforeend", nuevaFila);
+    }
+
+    // Limpia la selección del estado después de agregarlo
+    estadoSelect.value = "";
+
+    // Actualiza los datos de la tabla después de realizar cambios
+    actualizarDatosTabla();
+});
+
+// Función para eliminar información del Arreglo 
+tablaEstados.addEventListener("click", function(event) {
+    // Verifica si el elemento clicado tiene la clase "btn-anular"
+    if (event.target.classList.contains("btn-anular")) {
+        // Si el clic fue en un botón "Eliminar", obtiene la fila correspondiente
+        const fila = event.target.closest("tr");
+        // Remueve la fila de la tabla
+        fila.remove();
+        // Después de eliminar la fila, actualiza los datos de la tabla para reflejar los cambios en el campo oculto datosTablaInput
+        actualizarDatosTabla();
+    }
+});
+</script>
+<script>
+    // Se activa cuando haces clic en el botón, se envía el formulario
+document.getElementById('FormUpdateRegion').addEventListener('submit', function (e) {
+    actualizarDatosTabla(); // Actualiza los datos de la tabla antes de enviar el formulario
+
+    if (datosTablaInput.value === "[]") { // Verifica si no se han agregado estados
+        Swal.fire({
+            icon: "error", // Icono de error
+            title: "Sin estados agregados", // Título del mensaje
+            text: "Por favor, agregue al menos un estado antes de enviar el formulario."
+        });
+
+        e.preventDefault(); // Detiene el envío del formulario
+        return; // Finaliza la ejecución aquí
+    }
+    
+    // Si se han agregado estados, procede a enviar el formulario
+    e.preventDefault(); // Evita el comportamiento predeterminado del formulario (recargar la página)
+    const formData = new FormData(e.target); // Recoge los datos del formulario
+
+    // Realiza una petición al backend usando fetch
+    fetch(e.target.action, { // La URL del formulario está en el atributo "action"
+        method: e.target.method, // El método del formulario está en el atributo "method" (POST)
+        body: formData // Los datos del formulario son enviados como "body"
+    })
+    .then(response => response.json()) // Convierte la respuesta del servidor a formato JSON
+    .then(data => { // Maneja la respuesta del servidor
+        console.log('Respuesta del servidor:', data); // Debugging: Verifica el JSON recibido
+        if (data.success) { // Si el servidor indica éxito
+            Swal.fire({
+                icon: 'success', // Icono de éxito
+                title: '¡Modificación exitosa!', // Título de la alerta
+                text: data.message, // Mensaje enviado por el backend
+                timer: 1500, // Duración de la alerta en milisegundos
+                showConfirmButton: false // No muestra un botón de confirmación
+            }).then(() => {
+                // Redirige automáticamente a la URL proporcionada después del temporizador
+                window.location.href = data.redirect;
+            });
+        } else { // Si la respuesta indica un fallo
+            Swal.fire({
+                icon: 'error', // Icono de error
+                title: 'Error', // Título de la alerta
+                text: data.message // Mensaje enviado por el backend
+            });
+        }
+    })
+    .catch(error => { // Maneja errores de red o del servidor
+        Swal.fire({
+            icon: 'error', // Icono de error
+            title: 'Error', // Título de la alerta
+            text: 'Hubo un problema al procesar la solicitud.' // Mensaje genérico para el usuario
+        });
+        console.error(error); // Muestra el error detallado en la consola para depuración
+    });
+});
+</script>
 
 <?php include('footer.php'); ?>

@@ -1,100 +1,161 @@
-<?php include('head.php'); ?>
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
 
-<div class="container mt-5">
-<center><h1>Registrar Región</h1></center>
-    <form id="FormInsertRegionNueva" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Region.php" method="post" enctype="multipart/form-data" novalidate>
-
-    <input type="hidden" id="datosTablaInsertRegion" name="datosTablaInsertRegion">
-
-    <div class="mb-3">
-        <label for="ID_Cuenta" class="form-label">Cuenta:</label>
-            <select class="form-select mb-3" id="ID_Cuenta" name="ID_Cuenta" required>
-                <option value="" selected disabled>-- Seleccionar Cuenta --</option>
-                    <?php 
-                        include('../../../Modelo/Conexion.php');  // incluir la conexión a la base de datos
-                        $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
-                        $sql = $conexion->query("SELECT * FROM Cuenta;"); // Consulta a la base de datos
-                        while ($resultado = $sql->fetch_assoc()) { // Recorrer los resultados de la consulta
-                            echo "<option value='" . $resultado['ID'] . "'>" . $resultado['NombreCuenta'] . "</option>"; // Mostrar los resultados
-                        }
-                    ?>
-            </select>
-        <div class="invalid-feedback">
-            Por favor, selecciona una opción.
-        </div>
-    </div>
-
-    <div class="mb-3">
-        <label for="ID_Cuenta" class="form-label">Región:</label>
-        <input type="text" class="form-control" id="Nombre_Region" name="Nombre_Region" placeholder="Ingresa el nombre de la region" required>
-        <div class="invalid-feedback">
-            Por favor, ingresa el Nombre de la region.
-        </div>
-    </div>
-
-    <div class="mb-3">
-        <label for="NombreEstado" class="form-label">Selecciona un estado:</label>
-            <select class="form-select mb-3" id="Nombre_Estado" name="Nombre_Estado">
-                <option value="" selected disabled>Selecciona un estado</option>
-                    <?php
-                        $sql1 = $conexion->query("SELECT * FROM Estados;"); // Consulta a la base de datos
-                        while ($resultado1 = $sql1->fetch_assoc()) { // Recorrer los resultados de la consulta
-                            echo "<option value='" . $resultado1['Id_Estado'] . "'>" . $resultado1['Nombre_estado'] . "</option>"; // Mostrar los resultados
-                        }
-                    ?>
-            </select>
-        <div class="invalid-feedback">
-            Por favor, Selecciona un Opción.
-        </div>
-    </div>
-
-    <!-- Botones -->
-        <div class="mb-3">
-            <button id="btn_AgregarRegionConEstado" type="button" class="btn btn-success">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-text-wrap" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M4 6l16 0" />
-                    <path d="M4 18l5 0" />
-                    <path d="M4 12h13a3 3 0 0 1 0 6h-4l2 -2m0 4l-2 -2" />
-                </svg>Agregar Estado</button>
-                        
-            <button type="submit" class="btn btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                    <path d="M16 19h6" />
-                    <path d="M19 16v6" />
-                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                </svg>Guardar</button>
+<!-- Modal para Registrar Región -->
+<div class="modal fade" id="registrarRegionModal" tabindex="-1" aria-labelledby="registrarRegionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="registrarRegionModalLabel">
+                    <i class="fas fa-map-marked-alt me-2"></i>
+                    Registrar Nueva Región
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             
-            <a href="../Regiones_Dev.php" class="btn btn-danger">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M4 7l16 0" />
-                    <path d="M10 11l0 6" />
-                    <path d="M14 11l0 6" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                </svg>Cancelar</a>
+            <div class="modal-body">
+                <form id="FormInsertRegionNueva" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Region.php" method="post" novalidate>
+                    <input type="hidden" id="datosTablaInsertRegion" name="datosTablaInsertRegion">
+                    
+                    <!-- Selección de Cuenta -->
+                    <div class="mb-4">
+                        <label for="ID_Cuenta" class="form-label text-navy">
+                            <i class="fas fa-building me-1 text-turquoise"></i>
+                            Cuenta *
+                        </label>
+                        <select class="form-select border-navy" id="ID_Cuenta" name="ID_Cuenta" required>
+                            <option value="" selected disabled>-- Cargando cuentas... --</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Por favor, selecciona una cuenta.
+                        </div>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Selecciona la cuenta a la que pertenecerá esta región
+                        </small>
+                    </div>
+                    
+                    <!-- Nombre de la Región -->
+                    <div class="mb-4">
+                        <label for="Nombre_Region" class="form-label text-navy">
+                            <i class="fas fa-map-marker-alt me-1 text-turquoise"></i>
+                            Nombre de la Región *
+                        </label>
+                        <input type="text" 
+                               class="form-control border-navy" 
+                               id="Nombre_Region" 
+                               name="Nombre_Region" 
+                               placeholder="Ej: Zona Norte, Región Centro, Costa del Pacífico"
+                               onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                               required>
+                        <div class="invalid-feedback">
+                            Por favor, ingresa el nombre de la región.
+                        </div>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Solo letras y espacios
+                        </small>
+                    </div>
+                    
+                    <!-- Selección de Estado y Botón Agregar -->
+                    <div class="mb-4">
+                        <label class="form-label text-navy">
+                            <i class="fas fa-city me-1 text-turquoise"></i>
+                            Estados de la Región *
+                        </label>
+                        <div class="input-group">
+                            <select class="form-select border-navy" id="Nombre_Estado">
+                                <option value="" selected disabled>-- Cargando estados... --</option>
+                            </select>
+                            <button class="btn btn-turquoise" type="button" id="btn_AgregarRegionConEstado">
+                                <i class="fas fa-plus me-1"></i> Agregar Estado
+                            </button>
+                        </div>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Selecciona los estados que componen esta región
+                        </small>
+                    </div>
+                    
+                    <!-- Tabla de Estados Agregados -->
+                    <div class="mb-4">
+                        <label class="form-label text-navy">
+                            <i class="fas fa-list me-1 text-turquoise"></i>
+                            Estados Agregados
+                        </label>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="50">#</th>
+                                        <th>Estado</th>
+                                        <th width="100">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaEstadosRegiones">
+                                    <!-- Los estados se agregarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <small class="text-muted mt-1 d-block" id="estadosCount">
+                            <i class="fas fa-info-circle me-1"></i>
+                            No hay estados agregados
+                        </small>
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnGuardarRegion">
+                            <i class="fas fa-save me-1"></i> Guardar Región
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
-
-<div class="table-responsive">
-    <table class="table table-sm table-dark">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Estado</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
+    </div>
 </div>
 
-<script src="../../../js/Insert_Region_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Region.js"></script>
+<style>
+/* Estilos específicos para el modal de región */
+#registrarRegionModal .modal-dialog {
+    max-width: 700px;
+}
 
-<?php include('footer.php'); ?>
+#registrarRegionModal .form-control:focus,
+#registrarRegionModal .form-select:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.2rem rgba(64, 224, 208, 0.25);
+}
+
+#tablaEstadosRegiones tr {
+    transition: all 0.2s ease;
+}
+
+#tablaEstadosRegiones tr:hover {
+    background-color: rgba(0, 31, 63, 0.05);
+}
+
+@media (max-width: 768px) {
+    #registrarRegionModal .modal-dialog {
+        max-width: 95%;
+        margin: 0.5rem auto;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .input-group select,
+    .input-group button {
+        width: 100%;
+        border-radius: 0.375rem !important;
+    }
+}
+</style>
+
+<!-- JS --> 
+<script src="../../../js/Formularios/Formulario_Insertar_Region.js"></script>

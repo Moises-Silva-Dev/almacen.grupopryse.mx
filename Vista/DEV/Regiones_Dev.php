@@ -11,13 +11,12 @@
                 <div>
                     <h1 class="h3 mb-0 text-navy">
                         <i class="fas fa-map-marked-alt me-2 text-turquoise"></i>
-                        Gestión de Regiones
+                        Administra las regiones y sus estados
                     </h1>
-                    <p class="text-muted mb-0">Administra las regiones asociadas a las cuentas</p>
                 </div>
-                <a href="INSERT/Insert_Region_Dev.php" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" onclick="openRegionModal()">
                     <i class="fas fa-plus-circle me-1"></i> Nueva Región
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -434,8 +433,10 @@
     </div>
 </div>
 
+<?php include('INSERT/Insert_Region_Dev.php'); ?>
+<?php include('UPDATE/Update_Region_Dev.php'); ?>
+
 <!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Region.js"></script>
-<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Region.js"></script>
 
 <?php include('footer.php'); ?>
