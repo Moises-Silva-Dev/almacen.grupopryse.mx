@@ -1,7 +1,4 @@
 <?php include('head.php'); ?>
-<?php include('INSERT/Insert_Usuario_Dev.php'); ?>
-<?php include('UPDATE/Update_Usuario_Dev.php'); ?>
-<?php include('UPDATE/Update_Rol_Usuario_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -388,6 +385,10 @@
         </div>
     </div>
 </div>
+
+<?php include('INSERT/Insert_Usuario_Dev.php'); ?>
+<?php include('UPDATE/Update_Usuario_Dev.php'); ?>
+<?php include('UPDATE/Update_Rol_Usuario_Dev.php'); ?>
 
 <!-- JavaScript -->
 <script src="../../js/Tablas/Tabla_Usuarios.js"></script>

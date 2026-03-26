@@ -1,34 +1,66 @@
-// ==================== MODAL DE REGISTRO DE CUENTA - JS COMPLETO ====================
+// ==================== MODAL DE MODIFICAR CUENTA - JS COMPLETO ====================
 
-// Variables (no globales, están dentro del scope del archivo)
-let cuentaModal;
-let formularioModificado = false;
-let formularioEnviado = false;
+let modificarCuentaModal;
+let formularioCuentaModificado = false;
+let formularioCuentaEnviado = false;
 
 // ==================== FUNCIÓN PARA ABRIR EL MODAL ====================
-function openCuentaModal() {
-    if (!cuentaModal) {
-        cuentaModal = new bootstrap.Modal(document.getElementById('registrarCuentaModal'));
+async function openModificarCuentaModal(cuentaId) {
+    if (!modificarCuentaModal) {
+        modificarCuentaModal = new bootstrap.Modal(document.getElementById('modificarCuentaModal'));
     }
     
-    const form = document.getElementById('FormInsertCuentaNueva');
-    if (form) {
-        form.reset();
-        document.querySelectorAll('#registrarCuentaModal .is-invalid').forEach(el => {
-            el.classList.remove('is-invalid');
-        });
+    const loadingDiv = document.getElementById('loadingCuentaData');
+    const formContainer = document.getElementById('editCuentaFormContainer');
+    
+    if (loadingDiv) loadingDiv.style.display = 'block';
+    if (formContainer) formContainer.style.display = 'none';
+    
+    formularioCuentaModificado = false;
+    formularioCuentaEnviado = false;
+    
+    modificarCuentaModal.show();
+    
+    try {
+        const response = await fetch(`../../../Controlador/GET/Formulario/getObtenerInfoCuenta.php?id=${cuentaId}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('edit_cuenta_id').value = data.data.ID || '';
+            document.getElementById('edit_nombre_cuenta').value = data.data.NombreCuenta || '';
+            document.getElementById('edit_nro_elementos').value = data.data.NroElemetos || '';
+            
+            if (loadingDiv) loadingDiv.style.display = 'none';
+            if (formContainer) formContainer.style.display = 'block';
+        } else {
+            throw new Error(data.message || 'No se pudieron cargar los datos');
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar cuenta:', error);
+        if (loadingDiv) {
+            loadingDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al cargar los datos: ${error.message}
+                </div>
+                <button class="btn btn-navy mt-3" onclick="openModificarCuentaModal(${cuentaId})">
+                    <i class="fas fa-redo me-1"></i> Reintentar
+                </button>
+            `;
+        }
     }
-    
-    formularioModificado = false;
-    formularioEnviado = false;
-    
-    cuentaModal.show();
 }
 
 // ==================== VALIDACIÓN DEL FORMULARIO ====================
-function validarFormularioCuenta() {
-    const nombreCuenta = document.getElementById('NombreCuenta');
-    const nroElementos = document.getElementById('NroElemetos');
+function validarFormularioEditarCuenta() {
+    const nombreCuenta = document.getElementById('edit_nombre_cuenta');
+    const nroElementos = document.getElementById('edit_nro_elementos');
     let isValid = true;
     
     if (!nombreCuenta.value.trim()) {
@@ -61,10 +93,10 @@ function validarFormularioCuenta() {
 }
 
 // ==================== ENVÍO DEL FORMULARIO ====================
-function submitCuentaForm() {
-    const form = document.getElementById('FormInsertCuentaNueva');
+function submitEditarCuentaForm() {
+    const form = document.getElementById('FormUpdateCuenta');
     
-    if (!validarFormularioCuenta()) {
+    if (!validarFormularioEditarCuenta()) {
         Swal.fire({
             icon: 'warning',
             title: 'Campos incompletos',
@@ -77,7 +109,7 @@ function submitCuentaForm() {
     const formData = new FormData(form);
     
     Swal.fire({
-        title: 'Guardando cuenta...',
+        title: 'Guardando cambios...',
         text: 'Por favor, espera un momento.',
         allowOutsideClick: false,
         didOpen: () => {
@@ -94,24 +126,24 @@ function submitCuentaForm() {
         try {
             const data = JSON.parse(text);
             if (data.success) {
-                formularioEnviado = true;
-                formularioModificado = false;
+                formularioCuentaEnviado = true;
+                formularioCuentaModificado = false;
                 
                 Swal.fire({
                     icon: 'success',
-                    title: '¡Cuenta registrada!',
-                    text: data.message || 'La cuenta ha sido registrada exitosamente.',
+                    title: '¡Cuenta actualizada!',
+                    text: data.message,
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    if (cuentaModal) cuentaModal.hide();
+                    if (modificarCuentaModal) modificarCuentaModal.hide();
                     location.reload();
                 });
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: data.message || 'Ocurrió un error al registrar la cuenta.',
+                    text: data.message || 'Ocurrió un error al actualizar.',
                     confirmButtonColor: '#001F3F'
                 });
             }
@@ -129,7 +161,7 @@ function submitCuentaForm() {
         Swal.fire({
             icon: 'error',
             title: 'Error de conexión',
-            text: 'Hubo un problema al procesar la solicitud: ' + error.message,
+            text: 'Hubo un problema al procesar la solicitud.',
             confirmButtonColor: '#001F3F'
         });
         console.error('Error:', error);
@@ -137,13 +169,13 @@ function submitCuentaForm() {
 }
 
 // ==================== VALIDACIÓN EN TIEMPO REAL ====================
-function addRealTimeValidationCuenta() {
-    const nombreInput = document.getElementById('NombreCuenta');
-    const nroInput = document.getElementById('NroElemetos');
+function addRealTimeValidationEditarCuenta() {
+    const nombreInput = document.getElementById('edit_nombre_cuenta');
+    const nroInput = document.getElementById('edit_nro_elementos');
     
     if (nombreInput) {
         nombreInput.addEventListener('input', function() {
-            formularioModificado = true;
+            formularioCuentaModificado = true;
             
             if (this.value.trim()) {
                 const nombreRegex = /^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]*$/;
@@ -160,7 +192,7 @@ function addRealTimeValidationCuenta() {
     
     if (nroInput) {
         nroInput.addEventListener('input', function() {
-            formularioModificado = true;
+            formularioCuentaModificado = true;
             
             if (this.value.trim()) {
                 const valor = parseInt(this.value);
@@ -178,31 +210,31 @@ function addRealTimeValidationCuenta() {
 
 // ==================== EVENTOS ====================
 document.addEventListener('DOMContentLoaded', function() {
-    const btnGuardar = document.getElementById('btnGuardarCuenta');
+    const btnGuardar = document.getElementById('btnGuardarEditarCuenta');
     if (btnGuardar) {
         btnGuardar.addEventListener('click', function(e) {
             e.preventDefault();
-            submitCuentaForm();
+            submitEditarCuentaForm();
         });
     }
     
-    addRealTimeValidationCuenta();
+    addRealTimeValidationEditarCuenta();
     
-    const modalElement = document.getElementById('registrarCuentaModal');
+    const modalElement = document.getElementById('modificarCuentaModal');
     if (modalElement) {
-        const form = document.getElementById('FormInsertCuentaNueva');
+        const form = document.getElementById('FormUpdateCuenta');
         if (form) {
             const inputs = form.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
-                input.addEventListener('change', () => { formularioModificado = true; });
-                input.addEventListener('input', () => { formularioModificado = true; });
+                input.addEventListener('change', () => { formularioCuentaModificado = true; });
+                input.addEventListener('input', () => { formularioCuentaModificado = true; });
             });
         }
         
         modalElement.addEventListener('hide.bs.modal', function(e) {
-            if (formularioEnviado) return;
+            if (formularioCuentaEnviado) return;
             
-            if (formularioModificado) {
+            if (formularioCuentaModificado) {
                 e.preventDefault();
                 Swal.fire({
                     title: '¿Descartar cambios?',
@@ -215,36 +247,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        formularioModificado = false;
-                        formularioEnviado = false;
+                        formularioCuentaModificado = false;
+                        formularioCuentaEnviado = false;
                         modalElement.classList.remove('show');
                         document.body.classList.remove('modal-open');
                         const backdrop = document.querySelector('.modal-backdrop');
                         if (backdrop) backdrop.remove();
-                        
-                        if (form) {
-                            form.reset();
-                            document.querySelectorAll('#registrarCuentaModal .is-invalid').forEach(el => {
-                                el.classList.remove('is-invalid');
-                            });
-                        }
                     }
                 });
             }
         });
         
         modalElement.addEventListener('hidden.bs.modal', function() {
-            formularioModificado = false;
-            formularioEnviado = false;
-            if (form) {
-                form.reset();
-                document.querySelectorAll('#registrarCuentaModal .is-invalid').forEach(el => {
-                    el.classList.remove('is-invalid');
-                });
+            formularioCuentaModificado = false;
+            formularioCuentaEnviado = false;
+            
+            const loadingDiv = document.getElementById('loadingCuentaData');
+            const formContainer = document.getElementById('editCuentaFormContainer');
+            
+            if (loadingDiv) {
+                loadingDiv.style.display = 'block';
+                loadingDiv.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-turquoise" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Cargando datos de la cuenta...</p>
+                    </div>
+                `;
             }
+            if (formContainer) formContainer.style.display = 'none';
         });
     }
 });
 
 // Hacer la función accesible desde el HTML (SOLO ESTA LÍNEA)
-window.openCuentaModal = openCuentaModal;
+window.openModificarCuentaModal = openModificarCuentaModal;

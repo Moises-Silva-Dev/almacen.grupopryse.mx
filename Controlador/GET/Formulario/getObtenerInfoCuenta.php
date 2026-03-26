@@ -1,5 +1,4 @@
 <?php
-// getTiposCuenta.php
 header('Content-Type: application/json');
 
 try {
@@ -18,7 +17,7 @@ try {
     
     $sql = "SELECT ID, NombreCuenta, NroElemetos FROM Cuenta WHERE ID = ?";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $_POST['id']);
+    $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     

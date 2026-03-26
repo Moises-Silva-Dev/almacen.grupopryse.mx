@@ -44,7 +44,6 @@ try {
     }
     
     $usuario = $resultUsuario->fetch_assoc();
-    $stmt->close();
     
     // 2. Obtener todos los tipos de usuario (excepto el actual)
     $sqlTipos = "SELECT ID, Tipo_Usuario FROM Tipo_Usuarios WHERE ID != ? ORDER BY Tipo_Usuario";
@@ -61,7 +60,6 @@ try {
     while ($tipo = $resultTipos->fetch_assoc()) {
         $tiposUsuario[] = $tipo;
     }
-    $stmtTipos->close();
     
     // 3. Obtener cuentas asociadas al usuario
     $sqlCuentas = "SELECT 
@@ -99,7 +97,6 @@ try {
             $tieneRequisiciones = true;
         }
     }
-    $stmtCuentas->close();
     
     // 4. Obtener cuentas disponibles para agregar
     $sqlCuentasDisponibles = "SELECT ID, NombreCuenta FROM Cuenta";
@@ -119,10 +116,6 @@ try {
             'NombreCuenta' => $cuenta['NombreCuenta']
         ];
     }
-    $stmtDisponibles->close();
-    
-    // Cerrar conexión
-    $conexion->close();
     
     // Respuesta exitosa
     echo json_encode([

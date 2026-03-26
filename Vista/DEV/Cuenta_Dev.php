@@ -1,5 +1,4 @@
 <?php include('head.php'); ?>
-<?php include('INSERT/Insert_Cuenta_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -190,13 +189,12 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editUser(<?php echo $row['ID']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarCuentaModal(<?php echo $row['ID']; ?>)" title="Editar usuario">
+                                                <i class="fas fa-edit"></i> Modificar
                                             </button>
-                                            
                                             <!-- Botón Eliminar -->
-                                            <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="eliminarRegistroCuenta(<?php echo $row['ID']; ?>)">
-                                                <i class="fas fa-trash-alt"></i>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="eliminarRegistroCuenta(<?php echo $row['ID']; ?>)" title="Eliminar usuario">
+                                                <i class="fas fa-trash"></i> Eliminar
                                             </button>
                                         </div>
                                     </td>
@@ -315,7 +313,8 @@
     </div>
 </div>  
 
+<?php include('INSERT/Insert_Cuenta_Dev.php'); ?>
+<?php include('UPDATE/Update_Cuenta_Dev.php'); ?>
 <script src="../../js/Tablas/Tabla_Cuenta.js"></script>
-<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Cuenta.js"></script>
     
 <?php include('footer.php'); ?>

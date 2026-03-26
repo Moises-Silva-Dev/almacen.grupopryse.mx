@@ -1,5 +1,5 @@
 <!-- CSS Personalizado -->
-<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
+<link rel="stylesheet" href="../../../css/formulario_registro_usuario.css">
 
 <!-- Modal para Cambiar Rol de Usuario -->
 <div class="modal fade" id="cambiarRolModal" tabindex="-1" aria-labelledby="cambiarRolModalLabel" aria-hidden="true">
