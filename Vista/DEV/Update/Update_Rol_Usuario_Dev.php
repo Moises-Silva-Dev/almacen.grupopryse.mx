@@ -1,189 +1,205 @@
-<?php include('head.php'); ?>
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
 
-<?php
-include('../../../Modelo/Conexion.php'); // Incluye la conexión a la base de datos
-
-if (!isset($_GET['id']) || empty($_GET['id'])) { // Verifica si la ID de empleado no está vacía
-    echo "ID de empleado no proporcionada."; // Muestra un mensaje de error si no se proporciona la ID
-    exit; // Detiene la ejecución del script
-}
-
-$id_empleado = $_GET['id']; // Obtener la ID del empleado desde la URL
-$conexion = (new Conectar())->conexion(); // Conectar a la base de datos
-
-// Obtener información del usuario
-$consulta = $conexion->prepare("SELECT * FROM Usuario U INNER JOIN Tipo_Usuarios TU ON U.ID_Tipo_Usuario = TU.ID WHERE U.ID_Usuario = ?");
-$consulta->bind_param("i", $id_empleado); // Asignar el valor de la ID del empleado al parámetro
-$consulta->execute(); // Ejecutar la consulta
-$resultado = $consulta->get_result(); // Obtener el resultado de la consulta
-
-if (!$row = $resultado->fetch_assoc()) { // Verificar si se encontró un empleado con la ID proporcionada
-    echo "No se encontró ningún empleado con la ID proporcionada."; // Muestra un mensaje de error si no se encuentra el empleado
-    exit; // Detiene la ejecución del script
-}
-
-$tipoActual = $row['ID_Tipo_Usuario']; // Obtener el tipo de usuario actual
-$tipoActualNombre = $row['Tipo_Usuario']; // Obtener el nombre del tipo de usuario actual
-$ID_Usuario = $row['ID_Usuario'];
-
-// Obtener cuentas asociadas y requisiciones pendientes
-$consulta2 = $conexion->prepare("SELECT 
-                                    C.ID, C.NombreCuenta, COUNT(REQ.IDRequisicionE) AS TotalRequisiciones
-                                FROM Cuenta C
-                                JOIN 
-                                    Usuario_Cuenta UC ON C.ID = UC.ID_Cuenta
-                                JOIN 
-                                    Usuario U ON UC.ID_Usuarios = U.ID_Usuario
-                                LEFT JOIN 
-                                    RequisicionE REQ ON C.ID = REQ.IdCuenta 
-                                    AND REQ.IdUsuario = U.ID_Usuario
-                                    AND REQ.Estatus IN ('Pendiente', 'Parcial', 'Autorizado')
-                                WHERE 
-                                    U.ID_Usuario = ?
-                                GROUP BY 
-                                    C.ID, C.NombreCuenta
-                                ORDER BY 
-                                    C.NombreCuenta");
-
-$consulta2->bind_param("i", $id_empleado);
-$consulta2->execute();
-$resultado2 = $consulta2->get_result();
-
-// Verificar requisiciones pendientes
-$tieneRequisiciones = false;
-$cuentasConRequisiciones = [];
-while ($cuenta = $resultado2->fetch_assoc()) {
-    if ($cuenta['TotalRequisiciones'] > 0) {
-        $tieneRequisiciones = true;
-        $cuentasConRequisiciones[] = $cuenta['ID'];
-    }
-}
-// Resetear  nel puntero para usarlo nuevamente
-$resultado2->data_seek(0);
-?>
-
-<div class="container mt-5">
-    <center><h2>Modificar Rol Usuario</h2></center>
-    <form id="FormUpdateRolUsuario" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Rol_Usuario.php" method="post" enctype="multipart/form-data" novalidate>
-        <input type="hidden" name="idTipoActual" value="<?php echo $tipoActual; ?>">
-        <input type="hidden" name="id" value="<?php echo $ID_Usuario; ?>">
-        <input type="hidden" id="DatosTablaCuenta" name="DatosTablaCuenta">
-        
-        <!-- Notificación -->
-        <div id="notificationContainer">
-            <?php if ($tieneRequisiciones && in_array($tipoActual, [3, 4])): ?>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> El usuario tiene requisiciones pendientes en algunas cuentas. 
-                    No se puede cambiar el rol hasta que se completen, pero puede agregar más cuentas.
-                </div>
-            <?php endif; ?>
-        </div>
-        
-        <!-- Sección para cambiar tipo de usuario -->
-        <div class="mb-3" id="seccionTipoUsuario" style="<?= in_array($tipoActual, [3, 4]) && $tieneRequisiciones ? 'display:none;' : '' ?>">
-            <label for="ID_Tipo" class="form-label">Tipo de Usuario:</label>
-            <select class="form-select" id="ID_Tipo" name="ID_Tipo" <?= in_array($tipoActual, [3, 4]) && $tieneRequisiciones ? 'disabled' : '' ?>>
-                <option value="">-- Seleccionar Tipo de Usuario --</option>
-                <?php
-                $sql = $conexion->query("SELECT ID, Tipo_Usuario FROM Tipo_Usuarios WHERE ID != $tipoActual");
-                while ($tipo = $sql->fetch_assoc()): ?>
-                    <option value="<?= $tipo['ID'] ?>" <?= $tipoActual == $tipo['ID'] ? 'selected disabled' : '' ?>>
-                        <?= $tipo['Tipo_Usuario'] ?>
-                        <?= $tipoActual == $tipo['ID'] ? '(Actual)' : '' ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-            <small class="text-muted">Actual: <?= $tipoActualNombre ?></small>
-        </div>
-        
-        <!-- Sección de cuentas (solo para tipos 3 y 4) -->
-        <div id="seccionCuentas" style="<?= !in_array($tipoActual, [3, 4]) ? 'display:none;' : '' ?>">
-            <div class="mb-3">
-                <label for="ID_Cuenta" class="form-label">Agregar Cuenta:</label>
-                <div class="input-group">
-                    <select class="form-select" id="ID_Cuenta">
-                        <option value="" selected>-- Seleccionar Cuenta --</option>
-                        <?php
-                        $sqlB = $conexion->query("SELECT c.ID, c.NombreCuenta
-                                                FROM Cuenta c
-                                                INNER JOIN Cuenta_Region cr ON c.ID = cr.ID_Cuentas
-                                                INNER JOIN Estado_Region er ON cr.ID_Regiones = er.ID_Regiones
-                                                WHERE er.ID_Regiones IS NOT NULL
-                                                AND er.ID_Estados IS NOT NULL
-                                                GROUP BY c.ID, c.NombreCuenta");
-                        while ($cuenta = $sqlB->fetch_assoc()): ?>
-                            <option value="<?= $cuenta['ID'] ?>"><?= $cuenta['NombreCuenta'] ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                    <button class="btn btn-secondary" type="button" id="btnAgregarCuenta">
-                        <i class="fas fa-plus">Agregar</i>
-                    </button>
-                </div>
+<!-- Modal para Cambiar Rol de Usuario -->
+<div class="modal fade" id="cambiarRolModal" tabindex="-1" aria-labelledby="cambiarRolModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="cambiarRolModalLabel">
+                    <i class="fas fa-user-tag me-2"></i>
+                    Cambiar Rol de Usuario
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <div class="mb-3">
-                <label class="form-label">Cuentas Asociadas:</label>
-                <table class="table table-bordered" id="tablaCuentas">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Requisiciones</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while($cuenta = $resultado2->fetch_assoc()): ?>
-                            <tr data-cuenta-id="<?= $cuenta['ID'] ?>">
-                                <td><?= $cuenta['ID'] ?></td>
-                                <td><?= $cuenta['NombreCuenta'] ?></td>
-                                <td><?= $cuenta['TotalRequisiciones'] > 0 ? '<span class="badge bg-warning">'.$cuenta['TotalRequisiciones'].' pendientes</span>' : '<span class="badge bg-success">Ninguna</span>' ?></td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm btnEliminarCuenta" 
-                                        <?= $cuenta['TotalRequisiciones'] > 0 ? 'disabled title="No se puede eliminar porque tiene requisiciones pendientes"' : '' ?>>
-                                        <i class="fas fa-trash">Eliminar</i>
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+            <div class="modal-body">
+                <!-- Loading -->
+                <div id="loadingRolData" class="text-center py-5">
+                    <div class="spinner-border text-turquoise" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Cargando datos del usuario...</p>
+                </div>
+                
+                <!-- Contenedor del Formulario -->
+                <div id="rolFormContainer" style="display: none;">
+                    <form id="FormUpdateRolUsuario" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Rol_Usuario.php" method="post">
+                        <input type="hidden" name="id" id="rol_id_usuario">
+                        <input type="hidden" name="idTipoActual" id="rol_tipo_actual">
+                        <input type="hidden" id="rol_DatosTablaCuenta" name="DatosTablaCuenta">
+                        
+                        <!-- Información del Usuario -->
+                        <div class="card border-navy mb-4">
+                            <div class="card-header bg-light text-navy">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-user-circle me-2 text-turquoise"></i>
+                                    Información del Usuario
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label text-navy">
+                                            <i class="fas fa-user me-1 text-turquoise"></i> Usuario
+                                        </label>
+                                        <p class="form-control-static bg-light p-2 rounded" id="rol_nombre_usuario">--</p>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label text-navy">
+                                            <i class="fas fa-tag me-1 text-turquoise"></i> Rol Actual
+                                        </label>
+                                        <p class="form-control-static bg-light p-2 rounded">
+                                            <span id="rol_tipo_actual_nombre">--</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contenedor de Notificaciones -->
+                        <div id="rol_notificationContainer" style="display: none;"></div>
+                        
+                        <!-- Sección para cambiar tipo de usuario -->
+                        <div class="card border-navy mb-4" id="rol_seccionTipoUsuario">
+                            <div class="card-header bg-light text-navy">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-exchange-alt me-2 text-turquoise"></i>
+                                    Cambiar Rol
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="rol_ID_Tipo" class="form-label text-navy">
+                                        <i class="fas fa-user-tag me-1 text-turquoise"></i> Nuevo Tipo de Usuario
+                                    </label>
+                                    <select class="form-select border-navy" id="rol_ID_Tipo" name="ID_Tipo">
+                                        <option value="" selected disabled>-- Cargando tipos de usuario... --</option>
+                                    </select>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Selecciona el nuevo rol para este usuario
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sección de cuentas (solo para tipos 3 y 4) -->
+                        <div class="card border-navy mb-4" id="rol_seccionCuentas" style="display: none;">
+                            <div class="card-header bg-light text-navy">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-building me-2 text-turquoise"></i>
+                                    Gestión de Cuentas
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="rol_ID_Cuenta" class="form-label text-navy">
+                                        <i class="fas fa-plus-circle me-1 text-turquoise"></i> Agregar Cuenta
+                                    </label>
+                                    <div class="input-group">
+                                        <select class="form-select border-navy" id="rol_ID_Cuenta">
+                                            <option value="" selected disabled>-- Seleccionar Cuenta --</option>
+                                        </select>
+                                        <button class="btn btn-turquoise" type="button" id="rol_btnAgregarCuenta">
+                                            <i class="fas fa-plus me-1"></i> Agregar
+                                        </button>
+                                    </div>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Las cuentas que no tengan requisiciones pendientes pueden ser eliminadas
+                                    </small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label text-navy">
+                                        <i class="fas fa-list me-1 text-turquoise"></i> Cuentas Asociadas
+                                    </label>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="rol_tablaCuentas">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th width="80">ID</th>
+                                                    <th>Nombre de Cuenta</th>
+                                                    <th width="120">Requisiciones</th>
+                                                    <th width="100">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Las cuentas se cargarán dinámicamente -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="rol_btnCancelar">
+                                <i class="fas fa-times me-1"></i> Cancelar
+                            </button>
+                            <button type="button" class="btn btn-primary" id="rol_btnGuardar">
+                                <i class="fas fa-save me-1"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        
-        <!-- Botones -->
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary" <?= $tieneRequisiciones && in_array($tipoActual, [3, 4]) ? '' : '' ?>>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                    <path d="M16 19h6" />
-                    <path d="M19 16v6" />
-                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                </svg>Guardar Cambios
-            </button>
-            <a href="../Registro_Usuario_Dev.php" class="btn btn-danger">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M4 7l16 0" />
-                    <path d="M10 11l0 6" />
-                    <path d="M14 11l0 6" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                </svg>Cancelar
-            </a>
-        </div>
-    </form>
+    </div>
 </div>
 
-<!-- Paso 1: PHP to JS -->
-<script>
-    const tipoActual = <?= $tipoActual ?>;
-    const tieneRequisiciones = <?= $tieneRequisiciones ? 'true' : 'false' ?>;
-    const cuentasConRequisiciones = <?= json_encode($cuentasConRequisiciones) ?>;
-</script>
+<style>
+/* Estilos específicos para el modal de cambio de rol */
+.card.border-navy {
+    border: 1px solid var(--color-navy);
+}
 
-<script src="../../../js/Update_Rol.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Rol_Usuario.js"></script>
+.form-control-static {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0;
+}
 
-<?php include('footer.php'); ?>
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+/* Animación de carga */
+.spinner-border.text-turquoise {
+    color: var(--color-turquoise) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-lg {
+        max-width: 95%;
+        margin: 0.5rem auto;
+    }
+    
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+</style>
+
+<!-- Scripts -->
+<script src="../../../js/Formularios/Formulario_Tipo_Usuario.js"></script>

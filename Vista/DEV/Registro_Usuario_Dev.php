@@ -1,6 +1,7 @@
 <?php include('head.php'); ?>
 <?php include('INSERT/Insert_Usuario_Dev.php'); ?>
 <?php include('UPDATE/Update_Usuario_Dev.php'); ?>
+<?php include('UPDATE/Update_Rol_Usuario_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -260,7 +261,7 @@
                                             </button>
                                             
                                             <!-- Botón Cambiar Rol -->
-                                            <button class="btn btn-sm btn-outline-turquoise" onclick="changeRole(<?php echo $row['ID_Usuario']; ?>)" title="Cambiar rol">
+                                            <button class="btn btn-sm btn-outline-turquoise" onclick="openRolModal(<?php echo $row['ID_Usuario']; ?>)" title="Cambiar rol">
                                                 <i class="fas fa-user-edit"></i> Cambiar Rol
                                             </button>
                                             
