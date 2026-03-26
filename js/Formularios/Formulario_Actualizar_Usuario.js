@@ -440,6 +440,9 @@ if (editForm) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Marcar que el formulario fue enviado exitosamente
+                window.formularioEditEnviado = true;
+        
                 Swal.fire({
                     icon: 'success',
                     title: '¡Actualización exitosa!',
@@ -571,6 +574,82 @@ function addRealTimeValidation() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
         });
     }
+}
+
+// ==================== PREVENIR CIERRE ACCIDENTAL CON CAMBIOS SIN GUARDAR ====================
+const modalEditar = document.getElementById('editarUsuarioModal');
+let formularioModificado = false;
+
+if (modalEditar) {
+    const formEditar = document.getElementById('FormUpdateUsuario');
+    const inputsEditar = formEditar ? formEditar.querySelectorAll('input, select, textarea') : [];
+    
+    // Detectar cambios en el formulario (excluyendo campos de contraseña que pueden estar ocultos)
+    inputsEditar.forEach(input => {
+        // Solo marcar si el campo está visible y tiene cambios
+        input.addEventListener('change', function() {
+            if (this.offsetParent !== null) { // Verificar si el elemento es visible
+                formularioModificado = true;
+            }
+        });
+        input.addEventListener('input', function() {
+            if (this.offsetParent !== null) {
+                formularioModificado = true;
+            }
+        });
+    });
+    
+    // Detectar cambios específicos en el select de contraseña
+    const opcionSelect = document.getElementById('edit_opcion');
+    if (opcionSelect) {
+        opcionSelect.addEventListener('change', function() {
+            formularioModificado = true;
+        });
+    }
+    
+    // Prevenir cierre si hay cambios sin guardar
+    modalEditar.addEventListener('hide.bs.modal', function(e) {
+        // Si el formulario ya se envió exitosamente, no mostrar confirmación
+        if (window.formularioEditEnviado) {
+            return;
+        }
+        
+        if (formularioModificado) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Descartar cambios?',
+                text: 'Tienes cambios sin guardar. ¿Estás seguro de que quieres cerrar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, descartar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    formularioModificado = false;
+                    modalEditar.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) backdrop.remove();
+                }
+            });
+        }
+    });
+    
+    // Marcar cuando se envía el formulario
+    const submitBtnEditar = document.getElementById('btnGuardarEditar');
+    if (submitBtnEditar) {
+        submitBtnEditar.addEventListener('click', function() {
+            window.formularioEditEnviado = true;
+        });
+    }
+    
+    // Resetear cuando se cierra correctamente
+    modalEditar.addEventListener('hidden.bs.modal', function() {
+        formularioModificado = false;
+        window.formularioEditEnviado = false;
+    });
 }
 
 // Inicializar validaciones en tiempo real cuando el DOM esté listo

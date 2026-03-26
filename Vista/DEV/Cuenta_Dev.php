@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Cuenta_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -11,12 +12,13 @@
                 <div>
                     <h1 class="h3 mb-0 text-navy">
                         <i class="fas fa-users me-2 text-turquoise"></i>
-                        Gestión de Cuentas
+                        Administra las Cuentas del Sistema
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Cuenta_Dev.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nueva Cuenta
-                </a>
+                <!-- Botón para abrir modal -->
+                <button type="button" class="btn btn-primary" onclick="openCuentaModal()">
+                    <i class="fas fa-plus-circle me-1"></i> Nueva Cuenta
+                </button>
             </div>
         </div>
     </div>

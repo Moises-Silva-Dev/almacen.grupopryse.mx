@@ -392,6 +392,5 @@
 <!-- JavaScript -->
 <script src="../../js/Tablas/Tabla_Usuarios.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Eliminar_Usuario.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <?php include('footer.php'); ?>

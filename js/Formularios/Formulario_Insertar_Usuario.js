@@ -580,6 +580,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Marcar que el formulario fue enviado exitosamente
+                    window.formularioEnviado = true;
+                    
                     Swal.fire({
                         icon: 'success',
                         title: '¡Registro exitoso!',
@@ -687,6 +690,70 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // ==================== PREVENIR CIERRE ACCIDENTAL CON CAMBIOS SIN GUARDAR ====================
+    const modalRegistro = document.getElementById('registroUsuarioModal');
+    let formularioModificado = false;
+
+    if (modalRegistro) {
+        const formRegistro = document.getElementById('FormInsertUsuarioNuevo');
+        const inputsRegistro = formRegistro ? formRegistro.querySelectorAll('input, select, textarea') : [];
+        
+        // Detectar cambios en el formulario
+        inputsRegistro.forEach(input => {
+            input.addEventListener('change', () => {
+                formularioModificado = true;
+            });
+            input.addEventListener('input', () => {
+                formularioModificado = true;
+            });
+        });
+        
+        // Prevenir cierre si hay cambios sin guardar
+        modalRegistro.addEventListener('hide.bs.modal', function(e) {
+            // Si el formulario ya se envió exitosamente, no mostrar confirmación
+            if (window.formularioEnviado) {
+                return;
+            }
+            
+            if (formularioModificado) {
+                e.preventDefault();
+                Swal.fire({
+                    title: '¿Descartar cambios?',
+                    text: 'Tienes cambios sin guardar. ¿Estás seguro de que quieres cerrar?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, descartar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        formularioModificado = false;
+                        modalRegistro.classList.remove('show');
+                        document.body.classList.remove('modal-open');
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                });
+            }
+        });
+        
+        // Resetear flag cuando se envía el formulario exitosamente
+        const submitBtnRegistro = document.getElementById('submitBtn');
+        if (submitBtnRegistro) {
+            submitBtnRegistro.addEventListener('click', function() {
+                // Marcar que se está enviando el formulario
+                window.formularioEnviado = true;
+            });
+        }
+        
+        // Resetear flag cuando se cierra correctamente
+        modalRegistro.addEventListener('hidden.bs.modal', function() {
+            formularioModificado = false;
+            window.formularioEnviado = false;
+        });
+    }
+
     // ==================== INICIALIZACIÓN ====================
     function init() {
         updateSteps();

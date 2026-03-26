@@ -40,8 +40,7 @@ try {
     ]);
     exit;
 } finally {
-    if (isset($conexion)) {
-        $conexion->close(); // Cerrar la conexión a la base de datos
-    }
+    if (isset($stmt)) $stmt->close();
+    if (isset($conexion)) $conexion->close();
 }
 ?>

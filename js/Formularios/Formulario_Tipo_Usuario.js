@@ -369,6 +369,9 @@ function submitRolForm() {
         try {
             const data = JSON.parse(text);
             if (data.success) {
+                // Marcar que el formulario fue enviado exitosamente
+                window.formularioRolEnviado = true;
+
                 Swal.fire({
                     icon: 'success',
                     title: '¡Cambios guardados!',
@@ -414,6 +417,87 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ==================== PREVENIR CIERRE ACCIDENTAL CON CAMBIOS SIN GUARDAR ====================
+const modalRolElement = document.getElementById('cambiarRolModal');
+let formularioRolModificado = false;
+
+if (modalRolElement) {
+    const formRol = document.getElementById('FormUpdateRolUsuario');
+    const inputsRol = formRol ? formRol.querySelectorAll('input, select, textarea') : [];
+    
+    // Detectar cambios en el formulario
+    inputsRol.forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.offsetParent !== null) {
+                formularioRolModificado = true;
+            }
+        });
+        input.addEventListener('input', function() {
+            if (this.offsetParent !== null) {
+                formularioRolModificado = true;
+            }
+        });
+    });
+    
+    // Detectar cambios en la tabla de cuentas (agregar/eliminar)
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+                formularioRolModificado = true;
+            }
+        });
+    });
+    
+    const tablaCuentas = document.querySelector('#rol_tablaCuentas tbody');
+    if (tablaCuentas) {
+        observer.observe(tablaCuentas, { childList: true, subtree: true });
+    }
+    
+    // Prevenir cierre si hay cambios sin guardar
+    modalRolElement.addEventListener('hide.bs.modal', function(e) {
+        // Si el formulario ya se envió exitosamente, no mostrar confirmación
+        if (window.formularioRolEnviado) {
+            return;
+        }
+        
+        if (formularioRolModificado) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Descartar cambios?',
+                text: 'Tienes cambios sin guardar. ¿Estás seguro de que quieres cerrar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, descartar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    formularioRolModificado = false;
+                    modalRolElement.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) backdrop.remove();
+                }
+            });
+        }
+    });
+    
+    // Marcar cuando se envía el formulario
+    const btnGuardarRol = document.getElementById('rol_btnGuardar');
+    if (btnGuardarRol) {
+        btnGuardarRol.addEventListener('click', function() {
+            window.formularioRolEnviado = true;
+        });
+    }
+    
+    // Resetear cuando se cierra correctamente
+    modalRolElement.addEventListener('hidden.bs.modal', function() {
+        formularioRolModificado = false;
+        window.formularioRolEnviado = false;
+    });
 }
 
 // ==================== EVENTOS ====================

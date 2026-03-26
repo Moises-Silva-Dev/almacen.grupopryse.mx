@@ -23,11 +23,6 @@ document.getElementById('selectAll').addEventListener('change', function(e) {
     });
 });
 
-// Funciones para acciones de usuario
-function editUser(id) {
-    window.location.href = `Update/Update_Cuenta_Dev.php?id=${id}`;
-}
-
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
 function eliminarRegistroCuenta(id) { 
     // Confirmación de SweetAlert

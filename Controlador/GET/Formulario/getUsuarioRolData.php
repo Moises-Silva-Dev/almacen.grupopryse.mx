@@ -149,5 +149,11 @@ try {
         'file' => $e->getFile(),
         'line' => $e->getLine()
     ]);
+} finally {
+    if (isset($conexion)) $conexion->close();
+    if (isset($stmt)) $stmt->close();
+    if (isset($stmtTipos)) $stmtTipos->close();
+    if (isset($stmtCuentas)) $stmtCuentas->close();
+    if (isset($stmtDisponibles)) $stmtDisponibles->close();
 }
 ?>

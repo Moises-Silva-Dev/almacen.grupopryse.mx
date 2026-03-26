@@ -168,5 +168,32 @@
     </div>
 </div>
 
+<style>
+/* Estilos para el modal de edición */
+.card.border-navy {
+    border: 1px solid var(--color-navy);
+}
+
+.requirements li {
+    font-size: 0.8rem;
+    color: #6c757d;
+    list-style: none;
+    margin-bottom: 0.25rem;
+}
+
+.requirements li.valid {
+    color: #28a745;
+}
+
+.requirements li.invalid {
+    color: #dc3545;
+}
+
+/* Spinner de carga */
+.spinner-border.text-turquoise {
+    color: var(--color-turquoise) !important;
+}
+</style>
+
 <!-- Scripts -->
 <script src="../../../js/Formularios/Formulario_Actualizar_Usuario.js"></script>
