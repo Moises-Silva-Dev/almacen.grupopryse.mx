@@ -19,7 +19,7 @@
                     <div class="mb-4">
                         <label for="NombreCuenta" class="form-label text-navy">
                             <i class="fas fa-building me-1 text-turquoise"></i>
-                            Nombre de la Cuenta *
+                            Nombre de la Cuenta <strong style="color: red;">*</strong>
                         </label>
                         <input type="text" 
                             class="form-control border-navy" 
@@ -41,7 +41,7 @@
                     <div class="mb-4">
                         <label for="NroElemetos" class="form-label text-navy">
                             <i class="fas fa-cubes me-1 text-turquoise"></i>
-                            Número de Elementos *
+                            Número de Elementos <strong style="color: red;">*</strong>
                         </label>
                         <input type="number" 
                             class="form-control border-navy" 

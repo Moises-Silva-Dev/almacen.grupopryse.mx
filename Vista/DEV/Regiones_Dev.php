@@ -253,13 +253,13 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editRegion(<?php echo $ID_Region; ?>)" title="Editar región">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarRegionModal(<?php echo $ID_Region; ?>)" title="Editar región">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>   
                                             
                                             <!-- Botón Eliminar -->
                                             <button class="btn btn-sm btn-outline-danger" onclick="eliminarRegistroRegion(<?php echo $ID_Region; ?>)" title="Eliminar región">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt"></i> Eliminar
                                             </button>
                                         </div>
                                     </td>
@@ -434,7 +434,7 @@
 </div>
 
 <?php include('INSERT/Insert_Region_Dev.php'); ?>
-<?php include('UPDATE/Update_Region_Dev.php'); ?>
+<?php include('Update/Update_Region_Dev.php'); ?>
 
 <!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Region.js"></script>

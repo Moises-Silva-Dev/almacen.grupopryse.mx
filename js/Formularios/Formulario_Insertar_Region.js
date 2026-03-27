@@ -1,9 +1,9 @@
 // ==================== MODAL DE REGISTRO DE REGIÓN - JS COMPLETO ====================
 
 let regionModal;
-let formularioRegionModificado = false;
-let formularioRegionEnviado = false;
-let contadorEstados = 0;
+let formularioInsertRegionModificado = false;
+let formularioInsertRegionEnviado = false;
+let contadorEstadosInsert = 0;
 
 // ==================== FUNCIÓN PARA ABRIR EL MODAL ====================
 async function openRegionModal() {
@@ -38,17 +38,17 @@ async function openRegionModal() {
     if (tablaBody) {
         tablaBody.innerHTML = '';
     }
-    contadorEstados = 0;
-    actualizarContadorEstados();
+    contadorEstadosInsert = 0;
+    actualizarContadorEstadosInsert();
     
     // Resetear flags
-    formularioRegionModificado = false;
-    formularioRegionEnviado = false;
+    formularioInsertRegionModificado = false;
+    formularioInsertRegionEnviado = false;
     
     // Cargar datos
     await Promise.all([
-        cargarCuentas(),
-        cargarEstados()
+        cargarCuentasInsert(),
+        cargarEstadosInsert()
     ]);
     
     // Habilitar selects después de cargar
@@ -59,7 +59,7 @@ async function openRegionModal() {
 }
 
 // ==================== CARGAR CUENTAS VÍA FETCH ====================
-async function cargarCuentas() {
+async function cargarCuentasInsert() {
     const cuentaSelect = document.getElementById('ID_Cuenta');
     if (!cuentaSelect) return;
     
@@ -86,18 +86,11 @@ async function cargarCuentas() {
         console.error('Error al cargar cuentas:', error);
         cuentaSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar cuentas</option>';
         cuentaSelect.disabled = true;
-        
-        Swal.fire({
-            icon: 'error',
-            title: 'Error de carga',
-            text: 'No se pudieron cargar las cuentas. Por favor, recarga la página.',
-            confirmButtonColor: '#001F3F'
-        });
     }
 }
 
 // ==================== CARGAR ESTADOS VÍA FETCH ====================
-async function cargarEstados() {
+async function cargarEstadosInsert() {
     const estadoSelect = document.getElementById('Nombre_Estado');
     if (!estadoSelect) return;
     
@@ -124,18 +117,11 @@ async function cargarEstados() {
         console.error('Error al cargar estados:', error);
         estadoSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar estados</option>';
         estadoSelect.disabled = true;
-        
-        Swal.fire({
-            icon: 'error',
-            title: 'Error de carga',
-            text: 'No se pudieron cargar los estados. Por favor, recarga la página.',
-            confirmButtonColor: '#001F3F'
-        });
     }
 }
 
 // ==================== AGREGAR ESTADO A LA TABLA ====================
-function agregarEstado() {
+function agregarEstadoInsert() {
     const estadoSelect = document.getElementById('Nombre_Estado');
     const idEstado = estadoSelect.value;
     const nombreEstado = estadoSelect.options[estadoSelect.selectedIndex]?.text;
@@ -156,7 +142,7 @@ function agregarEstado() {
     let existe = false;
     
     estadosExistentes.forEach(fila => {
-        const id = fila.querySelector('td:first-child')?.getAttribute('data-id');
+        const id = fila.querySelector('td:nth-child(2)')?.getAttribute('data-id');
         if (id === idEstado) {
             existe = true;
         }
@@ -173,13 +159,13 @@ function agregarEstado() {
     }
     
     // Agregar nueva fila
-    contadorEstados++;
+    contadorEstadosInsert++;
     const nuevaFila = document.createElement('tr');
     nuevaFila.innerHTML = `
-        <td width="50">${contadorEstados}</td>
+        <td width="50">${contadorEstadosInsert}</td>
         <td data-id="${idEstado}">${escapeHtml(nombreEstado)}</td>
         <td width="100">
-            <button type="button" class="btn btn-danger btn-sm btn-eliminar-estado">
+            <button type="button" class="btn btn-danger btn-sm btn-eliminar-estado-insert">
                 <i class="fas fa-trash"></i> Eliminar
             </button>
         </td>
@@ -188,23 +174,21 @@ function agregarEstado() {
     tablaBody.appendChild(nuevaFila);
     
     // Agregar evento de eliminación
-    nuevaFila.querySelector('.btn-eliminar-estado').addEventListener('click', function() {
-        eliminarEstado(nuevaFila);
+    nuevaFila.querySelector('.btn-eliminar-estado-insert').addEventListener('click', function() {
+        eliminarEstadoInsert(nuevaFila);
     });
     
     // Limpiar select
     estadoSelect.value = '';
-    formularioRegionModificado = true;
+    formularioInsertRegionModificado = true;
     
     // Actualizar contador
-    actualizarContadorEstados();
-    
-    // Actualizar campo oculto
-    actualizarDatosTablaRegion();
+    actualizarContadorEstadosInsert();
+    actualizarDatosTablaInsert();
 }
 
 // ==================== ELIMINAR ESTADO ====================
-function eliminarEstado(fila) {
+function eliminarEstadoInsert(fila) {
     const nombreEstado = fila.querySelector('td:nth-child(2)').textContent;
     
     Swal.fire({
@@ -219,11 +203,11 @@ function eliminarEstado(fila) {
     }).then((result) => {
         if (result.isConfirmed) {
             fila.remove();
-            contadorEstados--;
-            reordenarNumeros();
-            formularioRegionModificado = true;
-            actualizarContadorEstados();
-            actualizarDatosTablaRegion();
+            contadorEstadosInsert--;
+            reordenarNumerosInsert();
+            formularioInsertRegionModificado = true;
+            actualizarContadorEstadosInsert();
+            actualizarDatosTablaInsert();
             
             Swal.fire({
                 icon: 'success',
@@ -237,7 +221,7 @@ function eliminarEstado(fila) {
 }
 
 // ==================== REORDENAR NÚMEROS DE FILAS ====================
-function reordenarNumeros() {
+function reordenarNumerosInsert() {
     const tablaBody = document.getElementById('tablaEstadosRegiones');
     const filas = tablaBody.querySelectorAll('tr');
     
@@ -247,11 +231,11 @@ function reordenarNumeros() {
             numeroCelda.textContent = index + 1;
         }
     });
-    contadorEstados = filas.length;
+    contadorEstadosInsert = filas.length;
 }
 
 // ==================== ACTUALIZAR CONTADOR DE ESTADOS ====================
-function actualizarContadorEstados() {
+function actualizarContadorEstadosInsert() {
     const contadorSpan = document.getElementById('estadosCount');
     const tablaBody = document.getElementById('tablaEstadosRegiones');
     const cantidad = tablaBody.querySelectorAll('tr').length;
@@ -269,7 +253,7 @@ function actualizarContadorEstados() {
 }
 
 // ==================== ACTUALIZAR CAMPO OCULTO ====================
-function actualizarDatosTablaRegion() {
+function actualizarDatosTablaInsert() {
     const datosTabla = document.getElementById('datosTablaInsertRegion');
     const tablaBody = document.getElementById('tablaEstadosRegiones');
     const filas = tablaBody.querySelectorAll('tr');
@@ -288,7 +272,7 @@ function actualizarDatosTablaRegion() {
 }
 
 // ==================== VALIDACIÓN DEL FORMULARIO ====================
-function validarFormularioRegion() {
+function validarFormularioInsertRegion() {
     const cuentaSelect = document.getElementById('ID_Cuenta');
     const nombreRegion = document.getElementById('Nombre_Region');
     const tablaBody = document.getElementById('tablaEstadosRegiones');
@@ -296,7 +280,6 @@ function validarFormularioRegion() {
     
     let isValid = true;
     
-    // Validar cuenta
     if (!cuentaSelect.value) {
         cuentaSelect.classList.add('is-invalid');
         isValid = false;
@@ -304,7 +287,6 @@ function validarFormularioRegion() {
         cuentaSelect.classList.remove('is-invalid');
     }
     
-    // Validar nombre de región
     if (!nombreRegion.value.trim()) {
         nombreRegion.classList.add('is-invalid');
         isValid = false;
@@ -318,7 +300,6 @@ function validarFormularioRegion() {
         }
     }
     
-    // Validar que tenga al menos un estado
     if (estados.length === 0) {
         Swal.fire({
             icon: 'warning',
@@ -333,13 +314,12 @@ function validarFormularioRegion() {
 }
 
 // ==================== ENVÍO DEL FORMULARIO ====================
-function submitRegionForm() {
+function submitInsertRegionForm() {
     const form = document.getElementById('FormInsertRegionNueva');
     
-    // Actualizar datos de la tabla antes de validar
-    actualizarDatosTablaRegion();
+    actualizarDatosTablaInsert();
     
-    if (!validarFormularioRegion()) {
+    if (!validarFormularioInsertRegion()) {
         return;
     }
     
@@ -360,18 +340,16 @@ function submitRegionForm() {
     })
     .then(async response => {
         const text = await response.text();
-        console.log('Respuesta del servidor:', text);
-        
         try {
             const data = JSON.parse(text);
             if (data.success) {
-                formularioRegionEnviado = true;
-                formularioRegionModificado = false;
+                formularioInsertRegionEnviado = true;
+                formularioInsertRegionModificado = false;
                 
                 Swal.fire({
                     icon: 'success',
                     title: '¡Región registrada!',
-                    text: data.message || 'La región ha sido registrada exitosamente.',
+                    text: data.message,
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
@@ -408,14 +386,13 @@ function submitRegionForm() {
 }
 
 // ==================== VALIDACIÓN EN TIEMPO REAL ====================
-function addRealTimeValidationRegion() {
+function addRealTimeValidationInsertRegion() {
     const nombreInput = document.getElementById('Nombre_Region');
     const cuentaSelect = document.getElementById('ID_Cuenta');
     
     if (nombreInput) {
         nombreInput.addEventListener('input', function() {
-            formularioRegionModificado = true;
-            
+            formularioInsertRegionModificado = true;
             if (this.value.trim()) {
                 const nombreRegex = /^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]*$/;
                 if (nombreRegex.test(this.value)) {
@@ -431,7 +408,7 @@ function addRealTimeValidationRegion() {
     
     if (cuentaSelect) {
         cuentaSelect.addEventListener('change', function() {
-            formularioRegionModificado = true;
+            formularioInsertRegionModificado = true;
             if (this.value) {
                 this.classList.remove('is-invalid');
             }
@@ -451,43 +428,37 @@ function escapeHtml(text) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM cargado, inicializando modal de región...');
     
-    // Evento para botón de agregar estado
     const btnAgregar = document.getElementById('btn_AgregarRegionConEstado');
     if (btnAgregar) {
-        btnAgregar.addEventListener('click', agregarEstado);
+        btnAgregar.addEventListener('click', agregarEstadoInsert);
     }
     
-    // Evento para botón de guardar
     const btnGuardar = document.getElementById('btnGuardarRegion');
     if (btnGuardar) {
         btnGuardar.addEventListener('click', function(e) {
             e.preventDefault();
-            submitRegionForm();
+            submitInsertRegionForm();
         });
     }
     
-    // Validación en tiempo real
-    addRealTimeValidationRegion();
+    addRealTimeValidationInsertRegion();
     
-    // Configurar el modal
     const modalElement = document.getElementById('registrarRegionModal');
     if (modalElement) {
         const form = document.getElementById('FormInsertRegionNueva');
         
-        // Detectar cambios en el formulario
         if (form) {
             const inputs = form.querySelectorAll('input, select');
             inputs.forEach(input => {
-                input.addEventListener('change', () => { formularioRegionModificado = true; });
-                input.addEventListener('input', () => { formularioRegionModificado = true; });
+                input.addEventListener('change', () => { formularioInsertRegionModificado = true; });
+                input.addEventListener('input', () => { formularioInsertRegionModificado = true; });
             });
         }
         
-        // Prevenir cierre si hay cambios sin guardar
         modalElement.addEventListener('hide.bs.modal', function(e) {
-            if (formularioRegionEnviado) return;
+            if (formularioInsertRegionEnviado) return;
             
-            if (formularioRegionModificado) {
+            if (formularioInsertRegionModificado) {
                 e.preventDefault();
                 Swal.fire({
                     title: '¿Descartar cambios?',
@@ -500,8 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        formularioRegionModificado = false;
-                        formularioRegionEnviado = false;
+                        formularioInsertRegionModificado = false;
+                        formularioInsertRegionEnviado = false;
                         modalElement.classList.remove('show');
                         document.body.classList.remove('modal-open');
                         const backdrop = document.querySelector('.modal-backdrop');
@@ -511,10 +482,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Resetear cuando se cierra
         modalElement.addEventListener('hidden.bs.modal', function() {
-            formularioRegionModificado = false;
-            formularioRegionEnviado = false;
+            formularioInsertRegionModificado = false;
+            formularioInsertRegionEnviado = false;
             
             const form = document.getElementById('FormInsertRegionNueva');
             if (form) {
@@ -528,11 +498,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (tablaBody) {
                 tablaBody.innerHTML = '';
             }
-            contadorEstados = 0;
-            actualizarContadorEstados();
+            contadorEstadosInsert = 0;
+            actualizarContadorEstadosInsert();
         });
     }
 });
 
-// Función global para abrir el modal
 window.openRegionModal = openRegionModal;

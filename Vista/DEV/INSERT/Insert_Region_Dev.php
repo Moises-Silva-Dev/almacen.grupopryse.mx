@@ -1,5 +1,5 @@
 <!-- CSS Personalizado -->
-<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
+<link rel="stylesheet" href="../../../css/formulario_registro_usuario.css">
 
 <!-- Modal para Registrar Región -->
 <div class="modal fade" id="registrarRegionModal" tabindex="-1" aria-labelledby="registrarRegionModalLabel" aria-hidden="true">
@@ -21,7 +21,7 @@
                     <div class="mb-4">
                         <label for="ID_Cuenta" class="form-label text-navy">
                             <i class="fas fa-building me-1 text-turquoise"></i>
-                            Cuenta *
+                            Cuenta <strong style="color: red;">*</strong>
                         </label>
                         <select class="form-select border-navy" id="ID_Cuenta" name="ID_Cuenta" required>
                             <option value="" selected disabled>-- Cargando cuentas... --</option>
@@ -39,7 +39,7 @@
                     <div class="mb-4">
                         <label for="Nombre_Region" class="form-label text-navy">
                             <i class="fas fa-map-marker-alt me-1 text-turquoise"></i>
-                            Nombre de la Región *
+                            Nombre de la Región <strong style="color: red;">*</strong>
                         </label>
                         <input type="text" 
                                class="form-control border-navy" 
@@ -61,7 +61,7 @@
                     <div class="mb-4">
                         <label class="form-label text-navy">
                             <i class="fas fa-city me-1 text-turquoise"></i>
-                            Estados de la Región *
+                            Estados de la Región <strong style="color: red;">*</strong>
                         </label>
                         <div class="input-group">
                             <select class="form-select border-navy" id="Nombre_Estado">

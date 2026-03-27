@@ -190,7 +190,7 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
                                             <button class="btn btn-sm btn-outline-navy" onclick="openModificarCuentaModal(<?php echo $row['ID']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i> Modificar
+                                                <i class="fas fa-edit"></i> Editar
                                             </button>
                                             <!-- Botón Eliminar -->
                                             <button class="btn btn-sm btn-outline-danger" onclick="eliminarRegistroCuenta(<?php echo $row['ID']; ?>)" title="Eliminar usuario">
@@ -314,7 +314,7 @@
 </div>  
 
 <?php include('INSERT/Insert_Cuenta_Dev.php'); ?>
-<?php include('UPDATE/Update_Cuenta_Dev.php'); ?>
+<?php include('Update/Update_Cuenta_Dev.php'); ?>
 <script src="../../js/Tablas/Tabla_Cuenta.js"></script>
     
 <?php include('footer.php'); ?>
