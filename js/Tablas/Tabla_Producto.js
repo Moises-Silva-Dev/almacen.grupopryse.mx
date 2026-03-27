@@ -23,11 +23,6 @@ document.getElementById('selectAll').addEventListener('change', function(e) {
     });
 });
 
-// Funciones para acciones de usuario
-function editProductoDev(id) {
-    window.location.href = `Update/Update_Producto_Dev.php?id=${id}`;
-}
-
 function editProductoAlmacenista(id) {
     window.location.href = `Update/Update_Producto_ALMACENISTA.php?id=${id}`;
 }
@@ -87,7 +82,7 @@ function eliminarRegistroProducto(id) {
 
 // Versión alternativa usando JavaScript puro
 function mostrarProducto(idProducto) {
-    fetch(`../../Controlador/GET/getObtenerFotoProductoInfo.php?id=${idProducto}`)
+    fetch(`../../Controlador/GET/Formulario/getObtenerInfoProducto.php?id=${idProducto}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {

@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Region_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -433,7 +434,6 @@
     </div>
 </div>
 
-<?php include('INSERT/Insert_Region_Dev.php'); ?>
 <?php include('Update/Update_Region_Dev.php'); ?>
 
 <!-- JS Personalizado -->

@@ -1,5 +1,8 @@
 <?php include('head.php'); ?>
 
+<!-- Incluir el modal -->
+<?php include('INSERT/Insert_Producto_Dev.php'); ?>
+
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
 <link rel="stylesheet" href="../../css/modal_vista_producto.css">
@@ -12,12 +15,12 @@
                 <div>
                     <h1 class="h3 mb-0 text-navy">
                         <i class="fas fa-users me-2 text-turquoise"></i>
-                        Gestión de Productos
+                        Administra los Productos del Catálogo
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Producto_Dev.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nuevo Producto
-                </a>
+                <button type="button" class="btn btn-primary" onclick="openProductoModal()">
+                    <i class="fas fa-plus-circle me-1"></i> Nuevo Producto
+                </button>
             </div>
         </div>
     </div>

@@ -35,20 +35,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Obtiene los datos de la nueva empresa del formulario.
     $IdCEmpresa = $_POST['IdCEmpresa'];
-    $Nombre_Empresa = $_POST['Nombre_Empresa'];
-    $RazonSocial = $_POST['RazonSocial'];
-    $RFC = $_POST['RFC'];
-    $RegistroPatronal = $_POST['RegistroPatronal'];
-    $Especif = $_POST['Especif'];
+    $Nombre_Empresa = isset($_POST['Nombre_Empresa']) ? $_POST['Nombre_Empresa'] : null;
+    $RazonSocial = isset($_POST['RazonSocial']) ? $_POST['RazonSocial'] : null;
+    $RFC = isset($_POST['RFC']) ? $_POST['RFC'] : null;
+    $RegistroPatronal = isset($_POST['RegistroPatronal']) ? $_POST['RegistroPatronal'] : null;
+    $Especif = isset($_POST['Especif']) ? $_POST['Especif'] : null;
 
     // Obtiene la descripción de la nueva categoría del formulario.
     $IdCCate = $_POST['IdCCate'];
-    $Descrp = $_POST['Descrp'];
+    $Descrp = isset($_POST['Descrp']) ? $_POST['Descrp'] : null;
 
     // Obtiene la descripción y talla de la nueva talla del formulario.
     $IdCTipTall = $_POST['IdCTipTall'];
-    $Descrip = $_POST['descrip'];
-    $Talla = $_POST['Talla'];
+    $Descrip = isset($_POST['descrip']) ? $_POST['descrip'] : null;
+    $Talla = isset($_POST['Talla']) ? $_POST['Talla'] : null;
 
     if (!$IdCEmpresa || !$IdCCate || !$Descripcion || !$Especificacion || !$IdCTipTall) { // Verificar que los campos no estén vacíos
         echo json_encode([ // Devuelve un arreglo JSON con el mensaje de error
