@@ -23,10 +23,6 @@ document.getElementById('selectAll').addEventListener('change', function(e) {
     });
 });
 
-function editProductoAlmacenista(id) {
-    window.location.href = `Update/Update_Producto_ALMACENISTA.php?id=${id}`;
-}
-
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
 function eliminarRegistroProducto(id) { 
     // Confirmación de SweetAlert
@@ -82,7 +78,7 @@ function eliminarRegistroProducto(id) {
 
 // Versión alternativa usando JavaScript puro
 function mostrarProducto(idProducto) {
-    fetch(`../../Controlador/GET/Formulario/getObtenerInfoProducto.php?id=${idProducto}`)
+    fetch(`../../Controlador/GET/Formulario/getVisualizarInfoProducto.php?id=${idProducto}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {

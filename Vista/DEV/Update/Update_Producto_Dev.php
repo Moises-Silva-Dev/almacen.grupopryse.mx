@@ -1,157 +1,195 @@
-<?php include('head.php'); ?>
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../../css/formulario_registro_usuario.css">
 
-<?php
-include('../../../Modelo/Conexion.php');
-
-// Verifica si la variable $_GET['id'] está definida y no es nula
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $id_empleado = $_GET['id'];
-
-    // Realiza la consulta para obtener la información del empleado
-    $conexion = (new Conectar())->conexion();
-    $consulta = $conexion->prepare("SELECT * FROM Producto P 
-    INNER JOIN CCategorias CC on P.IdCCat = CC.IdCCate
-    INNER JOIN CEmpresas CE on P.IdCEmp = CE.IdCEmpresa
-    INNER JOIN CTipoTallas CTT on P.IdCTipTal = CTT.IdCTipTall WHERE IdCProducto = ?");
-    $consulta->bind_param("i", $id_empleado);
-    $consulta->execute();
-    $resultado = $consulta->get_result();
-
-    // Verifica si se encontraron resultados
-    if ($row = $resultado->fetch_assoc()) {
-
-        $imagen = $row['IMG']; // La ruta de la imagen que deseas procesar
-        $nombre_archivo = basename($imagen);
-        // Ahora, $row contiene la información del empleado que puedes usar en el formulario
-    } else {
-        // No se encontró ningún empleado con la ID proporcionada, puedes manejar esto según tus necesidades
-        echo "No se encontró ningún registro con la ID proporcionada.";
-        exit; // Puedes salir del script o redirigir a otra página
-    }
-} else {
-    // La variable $_GET['id'] no está definida o es nula, puedes manejar esto según tus necesidades
-    echo "ID de empleado no proporcionada.";
-    exit; // Puedes salir del script o redirigir a otra página
-}
-?>
-
-<div class="container mt-5">
-<center><h2>Modificar Registro Producto</h2></center>
-    <!-- Formulario -->
-    <form id="FormUpdateProducto" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Producto.php" method="post" enctype="multipart/form-data" novalidate>
-        <!-- ID (para edición) -->
-        <input type="hidden" name="id" id="id" value="<?php echo $row['IdCProducto']; ?>">
-
-        <div class="mb-3">
-            <label for="ID_Empresas" class="form-label">Nombre de Empresa:</label>
-            <select class="form-select mb-3" id="ID_Empresas" name="ID_Empresas" required>
-                <?php
-                $sql_tipos_colaborador = $conexion->query("SELECT * FROM CEmpresas");
-                while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['IdCEmp'] == $resultado_tipo_colaborador['IdCEmpresa']) ? 'selected' : '';
-                    echo "<option value='".$resultado_tipo_colaborador['IdCEmpresa']."' $selected>".$resultado_tipo_colaborador['Nombre_Empresa']."</option>";
-                }
-                ?>
-            </select>
-            <div class="invalid-feedback">
-                Por favor, Selecciona una Opción.
+<!-- Modal para Modificar Producto -->
+<div class="modal fade" id="modificarProductoModal" tabindex="-1" aria-labelledby="modificarProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="modificarProductoModalLabel">
+                    <i class="fas fa-edit me-2"></i>
+                    Modificar Producto
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                <div id="loadingProductoData" class="text-center py-5">
+                    <div class="spinner-border text-turquoise" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Cargando datos del producto...</p>
+                </div>
+                
+                <div id="editProductoFormContainer" style="display: none;">
+                    <form id="FormUpdateProducto" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Producto.php" method="post" enctype="multipart/form-data" novalidate>
+                        <input type="hidden" name="id" id="edit_producto_id">
+                        
+                        <!-- Empresa -->
+                        <div class="mb-4">
+                            <label for="edit_ID_Empresas" class="form-label text-navy">
+                                <i class="fas fa-building me-1 text-turquoise"></i>
+                                Empresa *
+                            </label>
+                            <select class="form-select border-navy" id="edit_ID_Empresas" name="ID_Empresas" required>
+                                <option value="" selected disabled>-- Cargando empresas... --</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona una empresa.
+                            </div>
+                        </div>
+                        
+                        <!-- Categoría -->
+                        <div class="mb-4">
+                            <label for="edit_Id_cate" class="form-label text-navy">
+                                <i class="fas fa-tags me-1 text-turquoise"></i>
+                                Categoría *
+                            </label>
+                            <select class="form-select border-navy" id="edit_Id_cate" name="Id_cate" required>
+                                <option value="" selected disabled>-- Cargando categorías... --</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona una categoría.
+                            </div>
+                        </div>
+                        
+                        <!-- Tipo de Talla -->
+                        <div class="mb-4">
+                            <label for="edit_Id_TipTall" class="form-label text-navy">
+                                <i class="fas fa-ruler-combined me-1 text-turquoise"></i>
+                                Tipo de Talla *
+                            </label>
+                            <select class="form-select border-navy" id="edit_Id_TipTall" name="Id_TipTall" required>
+                                <option value="" selected disabled>-- Cargando tipos de talla... --</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, selecciona un tipo de talla.
+                            </div>
+                        </div>
+                        
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="edit_Descripcion" class="form-label text-navy">
+                                <i class="fas fa-align-left me-1 text-turquoise"></i>
+                                Descripción *
+                            </label>
+                            <textarea class="form-control border-navy" id="edit_Descripcion" name="Descripcion" 
+                                      rows="3" placeholder="Ingresa la descripción del producto" required></textarea>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa la descripción.
+                            </div>
+                        </div>
+                        
+                        <!-- Especificación -->
+                        <div class="mb-4">
+                            <label for="edit_Especificacion" class="form-label text-navy">
+                                <i class="fas fa-info-circle me-1 text-turquoise"></i>
+                                Especificación *
+                            </label>
+                            <textarea class="form-control border-navy" id="edit_Especificacion" name="Especificacion" 
+                                      rows="3" placeholder="Ingresa la especificación del producto" required></textarea>
+                            <div class="invalid-feedback">
+                                Por favor, ingresa la especificación.
+                            </div>
+                        </div>
+                        
+                        <!-- Imagen Actual -->
+                        <div class="mb-4">
+                            <label class="form-label text-navy">
+                                <i class="fas fa-image me-1 text-turquoise"></i>
+                                Imagen Actual
+                            </label>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img id="edit_imagen_actual" src="" alt="Imagen actual" style="max-width: 80px; max-height: 80px; border-radius: 8px;">
+                                        <div>
+                                            <p class="mb-1 text-navy" id="edit_nombre_imagen">--</p>
+                                            <small class="text-muted">Archivo actual</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Opción cambiar imagen -->
+                        <div class="mb-4">
+                            <label for="edit_opcion" class="form-label text-navy">
+                                <i class="fas fa-upload me-1 text-turquoise"></i>
+                                ¿Subir nueva imagen?
+                            </label>
+                            <select class="form-select border-navy" id="edit_opcion" name="opcion">
+                                <option value="" selected disabled>-- Selecciona una Opción --</option>
+                                <option value="NO">No, mantener imagen actual</option>
+                                <option value="SI">Sí, cambiar imagen</option>
+                            </select>
+                            <div class="invalid-feedback" id="edit_opcionError">
+                                Por favor, selecciona una opción.
+                            </div>
+                        </div>
+                        
+                        <!-- Campo para nueva imagen (oculto inicialmente) -->
+                        <div id="edit_campoImagen" class="mb-4" style="display: none;">
+                            <label for="edit_Imagen" class="form-label text-navy">
+                                <i class="fas fa-file-image me-1 text-turquoise"></i>
+                                Nueva Imagen
+                            </label>
+                            <input type="file" class="form-control border-navy" id="edit_Imagen" name="Imagen" accept="image/*">
+                            <div class="invalid-feedback">
+                                Por favor, selecciona un archivo válido.
+                            </div>
+                            <small class="text-muted mt-1 d-block">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB
+                            </small>
+                        </div>
+                        
+                        <!-- Vista previa de nueva imagen -->
+                        <div id="edit_previewImagen" class="text-center mb-4" style="display: none;">
+                            <label class="form-label text-navy">Vista previa nueva imagen</label>
+                            <div>
+                                <img id="edit_imagenPreview" src="#" alt="Vista previa" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            </div>
+                        </div>
+                        
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="btnGuardarEditarProducto">
+                                <i class="fas fa-save me-1"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-
-        <div class="mb-3">
-            <label for="Id_cate" class="form-label">Categorias:</label>
-            <select class="form-select mb-3" id="Id_cate" name="Id_cate" required>
-                <?php
-                $sql_tipos_colaborador = $conexion->query("SELECT * FROM CCategorias");
-                while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['IdCCat'] == $resultado_tipo_colaborador['IdCCate']) ? 'selected' : '';
-                    echo "<option value='".$resultado_tipo_colaborador['IdCCate']."' $selected>".$resultado_tipo_colaborador['Descrp']."</option>";
-                }
-                ?>
-            </select>
-            <div class="invalid-feedback">
-                Por favor, Selecciona una Opción.
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="Id_TipTall" class="form-label">Tipo de Talla:</label>
-            <select class="form-select mb-3" id="Id_TipTall" name="Id_TipTall" required>
-                <?php
-                $sql_tipos_colaborador = $conexion->query("SELECT * FROM CTipoTallas");
-                while ($resultado_tipo_colaborador = $sql_tipos_colaborador->fetch_assoc()) {
-                    $selected = ($row['IdCTipTal'] == $resultado_tipo_colaborador['IdCTipTall']) ? 'selected' : '';
-                    echo "<option value='".$resultado_tipo_colaborador['IdCTipTall']."' $selected>".$resultado_tipo_colaborador['Descrip']."</option>";
-                }
-                ?>
-            </select>
-            <div class="invalid-feedback">
-                Por favor, Selecciona una Opción.
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="Descripción" class="form-label">Descripción:</label>
-            <textarea id="Descripcion" name="Descripcion" class="form-control" placeholder="Ingresa la Descripción" required><?php echo $row['Descripcion']; ?></textarea>
-            <div class="invalid-feedback">
-                Por favor, ingresa la Descripción.
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="Especificacion" class="form-label">Especificaciones:</label>
-            <textarea id="Especificacion" name="Especificacion" class="form-control" placeholder="Ingresa la Especificación" required><?php echo $row['Especificacion']; ?></textarea>
-            <div class="invalid-feedback">
-                Por favor, ingresa la Especificación.
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="Imagen" class="form-label">Archivo Actual:</label>
-            <input type="text" class="form-control" value="<?php echo $nombre_archivo ?>" disabled>
-        </div>
-
-        <div class="mb-3">
-            <label for="Imagen" class="form-label">¿Subir nueva imagen?</label>
-            <select class="form-select" id="opcion" name="opcion" onchange="mostrarOcultarInput()">
-                <option value="" selected disabled>-- Selecciona una Opción --</option>
-                <option value="SI">Sí</option>
-                <option value="NO">No</option>
-            </select>
-        </div>
-
-        <div class="mb-3" id="campoImagen" style="display:none;">
-            <label for="Imagen" class="form-label">Selecciona un nuevo Archivo:</label>
-            <input type="file" class="form-control" id="Imagen" name="Imagen">
-            <div class="invalid-feedback">
-                Por favor, selecciona un archivo válido.
-            </div>
-        </div>
-
-        <!-- Botones -->
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                    <path d="M16 19h6" />
-                    <path d="M19 16v6" />
-                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                </svg>Guardar</button>
-            <a href="../Producto_Dev.php" class="btn btn-danger">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M4 7l16 0" />
-                    <path d="M10 11l0 6" />
-                    <path d="M14 11l0 6" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                </svg>Cancelar</a>
-        </div>
-    </form>
+    </div>
 </div>
 
-<script src="../../../js/Form_Producto_Update.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Producto.js"></script>
+<style>
+/* Estilos específicos para el modal de modificar producto */
+#modificarProductoModal .modal-dialog {
+    max-width: 800px;
+}
 
-<?php include('footer.php'); ?>
+#modificarProductoModal .form-control:focus,
+#modificarProductoModal .form-select:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.2rem rgba(64, 224, 208, 0.25);
+}
+
+.card.bg-light {
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    #modificarProductoModal .modal-dialog {
+        max-width: 95%;
+        margin: 0.5rem auto;
+    }
+}
+</style>
+
+<script src="../../../js/Formularios/Formulario_Actualizar_Producto.js"></script>

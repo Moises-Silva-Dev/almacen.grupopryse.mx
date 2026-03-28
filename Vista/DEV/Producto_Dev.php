@@ -254,7 +254,7 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editProductoDev(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarProductoModal(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             
@@ -413,28 +413,28 @@
                             </h4>
                             
                             <div class="info-item mb-3">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-clipboard-list me-2"></i>Especificaciones:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoEspecificacion">Cargando...</p>
                             </div>
                             
                             <div class="info-item mb-3">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-building me-2"></i>Empresa:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoEmpresa">Cargando...</p>
                             </div>
                             
                             <div class="info-item mb-3">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-tags me-2"></i>Categoría:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoCategoria">Cargando...</p>
                             </div>
                             
                             <div class="info-item">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-ruler-combined me-2"></i>Tipo de Talla:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoTipoTalla">Cargando...</p>
@@ -452,6 +452,9 @@
     </div>
 </div>
 
+<?php include('Update/Update_Producto_Dev.php'); ?>
+
+<!-- JS -->
 <script src="../../js/Tablas/Tabla_Producto.js"></script>
 
 <?php include('footer.php'); ?>

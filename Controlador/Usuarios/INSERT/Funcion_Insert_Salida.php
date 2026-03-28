@@ -11,6 +11,7 @@ require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Incluir fu
 require_once("../../../Modelo/Funciones/Funciones_SalidaE.php"); // Incluir funciones de salida de elementos
 require_once("../../../Modelo/Funciones/Funciones_SalidaD.php"); // Incluir funciones de salida de detalles
 require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Incluir funciones de usuarios
+require_once("../../../Modelo/Funciones/Funciones_RequisicionE.php"); // Incluir funciones de requisición
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
 
@@ -68,6 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 throw new Exception("Los datos de la tabla no están en el formato JSON esperado.");
             }
 
+            if (empty($datosTabla)) { // Validar que no esté vacío
+                throw new Exception("No se recibieron productos para registrar la salida.");
+            }
+
+            $productosProcesados = 0; // Contador de productos procesados
+
             // Insertar en la tabla Salida_E_Detalle
             foreach ($datosTabla as $fila) {
                 // Insertar cada fila en la tabla Salida_E_Detalle
@@ -91,6 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     // Si hay un error al actualizar el inventario, mostrar un mensaje de error
                     throw new Exception("Error al actualizar el inventario.");
                 }
+                
+                $productosProcesados++;
+            }
+            
+            if ($productosProcesados === 0) {
+                throw new Exception("No se procesó ningún producto válido para la salida.");
             }
         } else {
             // Si no hay datos de la tabla, mostrar un mensaje de error

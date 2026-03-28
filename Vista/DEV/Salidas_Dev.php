@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Salida_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -11,7 +12,7 @@
                 <div>
                     <h1 class="h3 mb-0 text-navy">
                         <i class="fas fa-users me-2 text-turquoise"></i>
-                        Gestión de Salidas de Almacen
+                        Administra las Salidas de Almacen
                     </h1>
                 </div>
             </div>
@@ -217,7 +218,7 @@
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <span class="badge bg-light text-navy">
+                                        <span class="badge bg-light text-navy text-truncate-50" style="max-width: 200px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;">
                                             <i class="fas fa-building me-1"></i>
                                             <?php echo htmlspecialchars($row['CentroTrabajo']); ?>
                                         </span>
@@ -231,7 +232,7 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="insertSalidaDev(<?php echo $row['IDRequisicionE']; ?>)" title="Registrar Salida">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openSalidaModal(<?php echo $row['IDRequisicionE']; ?>)" title="Registrar Salida">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                         </div>
@@ -350,7 +351,8 @@
         </div>
     </div>
 </div>
-        
+
+<!-- JS -->
 <script src="../../js/Tablas/Tabla_Salida_Almacen.js"></script>
 
 <?php include('footer.php'); ?>
