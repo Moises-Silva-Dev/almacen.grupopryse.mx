@@ -1,5 +1,7 @@
 <?php include('head.php'); ?>
 
+<?php include('INSERT/Insert_Entrada_Almacen_Dev.php'); ?>
+
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
 
@@ -14,9 +16,9 @@
                         Gestión de Entradas de Almacén
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Entrada_Almacen_Dev.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nueva Entrada
-                </a>
+                <button type="button" class="btn btn-primary" onclick="openEntradaModal()">
+                    <i class="fas fa-plus-circle me-1"></i> Nueva Entrada
+                </button>
             </div>
         </div>
     </div>

@@ -10,7 +10,9 @@ try {
     }
     
     $sql = "SELECT Id_Estado, Nombre_estado FROM Estados ORDER BY Nombre_estado";
-    $result = $conexion->query($sql);
+    $sql_stmt = $conexion->prepare($sql);
+    $sql_stmt->execute();
+    $result = $sql_stmt->get_result();
     
     if ($result === false) {
         throw new Exception("Error en la consulta: " . $conexion->error);

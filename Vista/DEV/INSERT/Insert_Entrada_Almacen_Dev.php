@@ -1,230 +1,238 @@
-<?php include('head.php'); ?>
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
 
-<div class="container mt-5">
-    <center><h2>Registrar Nueva Entrada Almacén</h2></center>
-    <form id="FormInsertEntradaNuevo" class="needs-validation" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Entrada_Almacen.php" method="post" enctype="multipart/form-data" novalidate>
-    <input type="hidden" id="datosTablaInsertEntrada" name="datosTablaInsertEntrada">
-
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header " id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Información General
-                </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <div class="mb-3">
-                        <label for="Proveedor" class="form-label">Nombre del Proveedor:</label>
-                        <input type="text" class="form-control" id="Proveedor" name="Proveedor" placeholder="Ingresa el Nombre del Proveedor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-                        <div class="invalid-feedback">
-                            Por favor, Ingresa el Nombre del Proveedor.
-                        </div>
-                    </div>
-            
-                    <div class="mb-3">
-                        <label for="Receptor" class="form-label">Nombre del Receptor:</label>
-                        <input type="text" class="form-control" id="Receptor" name="Receptor" placeholder="Ingresa el Nombre del Receptor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-                        <div class="invalid-feedback">
-                            Por favor, Ingresa el Nombre del Receptor.
-                        </div>
-                    </div>
-            
-                    <div class="mb-3">
-                        <label for="Comentarios" class="form-label">Comentarios:</label>
-                        <textarea class="form-control" id="Comentarios" name="Comentarios" placeholder="Ingresa el comentario" required></textarea>
-                        <div class="invalid-feedback">
-                            Por favor, Ingresa el Comentario.
-                        </div>
-                    </div>
-                </div>
+<!-- Modal para Registrar Entrada de Almacén -->
+<div class="modal fade" id="registrarEntradaModal" tabindex="-1" aria-labelledby="registrarEntradaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="registrarEntradaModalLabel">
+                    <i class="fas fa-arrow-down me-2"></i>
+                    Registrar Entrada de Almacén
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Productos
-                </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <center>
-                        <div class="mb-2">
-                            <button type="button" class="btn btn-info" id="BtnMostrarTablaProductos">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="44" height="44" stroke-width="1.5"> 
-                                    <path d="M15 15m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path> 
-                                    <path d="M18.5 18.5l2.5 2.5"></path> 
-                                    <path d="M4 6h16"></path> 
-                                    <path d="M4 12h4"></path> 
-                                    <path d="M4 18h4"></path> 
-                                </svg>Catalogo</button>
-                        </div>
-                    </center>
-                    <table class="table table-responsive bg-info" id="tabla">
-                        <tbody>
-                            <tr class="fila-fija" data-id="1">
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="ID_Producto" class="form-label">Codigo:</label>
-                                        <select class="form-select mb-3" id="ID_Producto" name="ID_Producto[]">
-                                            <option value="" selected disabled>-- Seleccionar ID de Producto --</option>
-                                                <?php
-                                                    include('../../../Modelo/Conexion.php'); 
-                                                    $conexion = (new Conectar())->conexion();
-                                                
-                                                    $sql = $conexion->query("SELECT * FROM Producto;");
-                                                    while ($resultado = $sql->fetch_assoc()) {
-                                                        echo "<option value='" . $resultado['IdCProducto'] . "'>" . $resultado['IdCProducto'] . "</option>";
-                                                    }
-                                                ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Por favor, selecciona una opción.
+            
+            <div class="modal-body">
+                <div id="loadingEntradaData" class="text-center py-5">
+                    <div class="spinner-border text-turquoise" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Cargando datos...</p>
+                </div>
+                
+                <div id="entradaFormContainer" style="display: none;">
+                    <form id="FormInsertEntradaNuevo" action="../../../Controlador/Usuarios/INSERT/Funcion_Insert_Entrada_Almacen.php" method="post" enctype="multipart/form-data" novalidate>
+                        <input type="hidden" id="datosTablaInsertEntrada" name="datosTablaInsertEntrada">
+                        
+                        <!-- Acordeón con información general -->
+                        <div class="accordion mb-4" id="accordionEntrada">
+                            <div class="accordion-item border-navy">
+                                <h2 class="accordion-header" id="headingGeneral">
+                                    <button class="accordion-button bg-light text-navy" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneral" aria-expanded="true" aria-controls="collapseGeneral">
+                                        <i class="fas fa-info-circle me-2 text-turquoise"></i>
+                                        Información General
+                                    </button>
+                                </h2>
+                                <div id="collapseGeneral" class="accordion-collapse collapse show" aria-labelledby="headingGeneral" data-bs-parent="#accordionEntrada">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="Proveedor" class="form-label text-navy">
+                                                    <i class="fas fa-truck me-1 text-turquoise"></i>
+                                                    Nombre del Proveedor *
+                                                </label>
+                                                <input type="text" class="form-control border-navy" id="Proveedor" name="Proveedor" 
+                                                       placeholder="Ingresa el nombre del proveedor"
+                                                       onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Por favor, ingresa el nombre del proveedor.
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6 mb-3">
+                                                <label for="Receptor" class="form-label text-navy">
+                                                    <i class="fas fa-user-check me-1 text-turquoise"></i>
+                                                    Nombre del Receptor *
+                                                </label>
+                                                <input type="text" class="form-control border-navy" id="Receptor" name="Receptor" 
+                                                       placeholder="Ingresa el nombre del receptor"
+                                                       onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Por favor, ingresa el nombre del receptor.
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12 mb-3">
+                                                <label for="Comentarios" class="form-label text-navy">
+                                                    <i class="fas fa-comment me-1 text-turquoise"></i>
+                                                    Comentarios *
+                                                </label>
+                                                <textarea class="form-control border-navy" id="Comentarios" name="Comentarios" 
+                                                          rows="3" placeholder="Ingresa los comentarios de la entrada" required></textarea>
+                                                <div class="invalid-feedback">
+                                                    Por favor, ingresa los comentarios.
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </td>
-                                <td colspan="2">                        
-                                    <div class="mb-2">
-                                        <label for="ID_Talla" class="form-label">Talla:</label>
-                                            <select class="form-select mb-3" id="ID_Talla" name="ID_Talla[]">
-                                                <option value="" selected disabled>-- Seleccionar una Talla --</option>
-                                            </select>
-                                            <div class="invalid-feedback">
-                                                Por favor, Selecciona una Opción.
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item border-navy">
+                                <h2 class="accordion-header" id="headingProductos">
+                                    <button class="accordion-button collapsed bg-light text-navy" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProductos" aria-expanded="false" aria-controls="collapseProductos">
+                                        <i class="fas fa-boxes me-2 text-turquoise"></i>
+                                        Productos
+                                    </button>
+                                </h2>
+                                <div id="collapseProductos" class="accordion-collapse collapse" aria-labelledby="headingProductos" data-bs-parent="#accordionEntrada">
+                                    <div class="accordion-body">
+                                        <!-- Selección de Producto -->
+                                        <div class="card border-navy mb-4">
+                                            <div class="card-header bg-light text-navy">
+                                                <i class="fas fa-plus-circle me-2 text-turquoise"></i>
+                                                Agregar Producto
                                             </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-5 mb-3">
+                                                        <label for="ID_Producto" class="form-label text-navy">
+                                                            <i class="fas fa-barcode me-1 text-turquoise"></i>
+                                                            Producto *
+                                                        </label>
+                                                        <select class="form-select border-navy" id="ID_Producto" name="ID_Producto[]">
+                                                            <option value="" selected disabled>-- Cargando productos... --</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">
+                                                            Por favor, selecciona un producto.
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="ID_Talla" class="form-label text-navy">
+                                                            <i class="fas fa-ruler me-1 text-turquoise"></i>
+                                                            Talla *
+                                                        </label>
+                                                        <select class="form-select border-navy" id="ID_Talla" name="ID_Talla[]" disabled>
+                                                            <option value="" selected disabled>-- Selecciona una talla --</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">
+                                                            Por favor, selecciona una talla.
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-2 mb-3">
+                                                        <label for="Cantidad" class="form-label text-navy">
+                                                            <i class="fas fa-hashtag me-1 text-turquoise"></i>
+                                                            Cantidad *
+                                                        </label>
+                                                        <input type="text" class="form-control border-navy" id="Cantidad" name="Cantidad[]" 
+                                                               placeholder="0" pattern="[0-9]*" inputmode="numeric">
+                                                        <div class="invalid-feedback">
+                                                            Por favor, ingresa una cantidad válida.
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-2 mb-3 d-flex align-items-end">
+                                                        <button type="button" class="btn btn-turquoise w-100" id="btn_AgregarProductoEntrada">
+                                                            <i class="fas fa-plus me-1"></i> Agregar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Información del Producto Seleccionado -->
+                                        <div class="card border-navy mb-4" id="infoProductoCard" style="display: none;">
+                                            <div class="card-header bg-light text-navy">
+                                                <i class="fas fa-info-circle me-2 text-turquoise"></i>
+                                                Información del Producto
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-3 text-center">
+                                                        <div class="product-image-container">
+                                                            <img id="productoImagen" src="https://via.placeholder.com/150?text=Sin+Imagen" 
+                                                                 alt="Imagen del producto" class="img-fluid rounded" style="max-width: 150px; max-height: 150px;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="text-muted small">Empresa</label>
+                                                                <p class="fw-bold text-navy" id="infoEmpresa">--</p>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="text-muted small">Categoría</label>
+                                                                <p class="fw-bold text-navy" id="infoCategoria">--</p>
+                                                            </div>
+                                                            <div class="col-md-12 mb-2">
+                                                                <label class="text-muted small">Descripción</label>
+                                                                <p class="fw-bold text-navy" id="infoDescripcion">--</p>
+                                                            </div>
+                                                            <div class="col-md-12 mb-2">
+                                                                <label class="text-muted small">Especificación</label>
+                                                                <p class="fw-bold text-navy" id="infoEspecificacion">--</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td>                        
-                                    <div class="mb-2">
-                                        <label for="Cantidad" class="form-label">Cantidad:</label>
-                                        <input type="text" class="form-control" id="Cantidad" name="Cantidad[]" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" placeholder="Ingresa la Cantidad">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="mb-2">
-                                        <button type="button" class="btn btn-secondary" id="btnMostrarImagen">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                <path d="M11.102 17.957c-3.204 -.307 -5.904 -2.294 -8.102 -5.957c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a19.5 19.5 0 0 1 -.663 1.032" />
-                                                <path d="M15 19l2 2l4 -4" />
-                                            </svg>Mostrar Imagen
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="fila-fija2" data-id="1">
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="Empresa" class="form-label">Empresa:</label>
-                                        <input type="text" class="form-control" id="Empresa" name="Empresa[]" placeholder="Ingresa la Empresa" disabled>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="Categoria" class="form-label">Categoría:</label>
-                                        <input type="text" class="form-control" id="Categoria" name="Categoria[]" placeholder="Ingresa la Categoría" disabled>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="Descripcion" class="form-label">Descripción:</label>
-                                        <input type="text" class="form-control" id="Descripcion" name="Descripcion[]" placeholder="Ingresa la Descripción" disabled>
-                                    </div>
-                                </td>
-                                <td colspan="2">
-                                    <div class="mb-2">
-                                        <label for="Especificacion" class="form-label">Especificación:</label>
-                                        <input type="text" class="form-control" id="Especificacion" name="Especificacion[]" placeholder="Ingresa la Especificación" disabled>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tabla de Productos Agregados -->
+                        <div class="mb-4">
+                            <label class="form-label text-navy">
+                                <i class="fas fa-list me-1 text-turquoise"></i>
+                                Productos a Registrar
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="tablaProductosEntrada">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="50">#</th>
+                                            <th>Código</th>
+                                            <th>Empresa</th>
+                                            <th>Categoría</th>
+                                            <th>Descripción</th>
+                                            <th>Especificación</th>
+                                            <th>Talla</th>
+                                            <th>Cantidad</th>
+                                            <th width="80">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaProductosBody">
+                                        <!-- Productos se agregarán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <small class="text-muted mt-1 d-block" id="productosCount">
+                                <i class="fas fa-info-circle me-1"></i>
+                                No hay productos agregados
+                            </small>
+                        </div>
+                        
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="btnGuardarEntrada">
+                                <i class="fas fa-save me-1"></i> Registrar Entrada
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <br>
-    <!-- Botones -->
-    <div class="mb-3">
-        <button id="btn_AgregarProductoEntrada" type="button" class="btn btn-success">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-text-wrap" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M4 6l16 0" />
-                <path d="M4 18l5 0" />
-                <path d="M4 12h13a3 3 0 0 1 0 6h-4l2 -2m0 4l-2 -2" />
-            </svg>Agregar Producto</button>
-        <button type="submit" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                <path d="M16 19h6" />
-                <path d="M19 16v6" />
-                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-            </svg>Guardar
-        </button>
-        <a href="../Almacen_Dev.php" class="btn btn-danger">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M4 7l16 0" />
-                <path d="M10 11l0 6" />
-                <path d="M14 11l0 6" />
-                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-            </svg>Cancelar
-        </a>
-    </div>
-    </form>
-
-    <!-- Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="modalImagen">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title">Imagen del Producto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <center><img src="" alt="Imagen del Producto" id="imagenProducto" style="max-width: 100%;"></center>
-                    </div>
-                    <br>
-                    <div>
-                        <h6>Descripción:</h6>
-                        <p id="descripcionProducto"></p>
-                    </div>
-                    <div>
-                        <h6>Especificación:</h6>
-                        <p id="especificacionProducto"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="table-responsive">
-        <table class="table table-sm table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Codigo</th>
-                    <th scope="col">Empresa</th>
-                    <th scope="col">Categoría</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Especificación</th>
-                    <th scope="col">Talla</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Cancelar</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
     <!-- Modal -->
     <div class="modal fade" id="tablaModal" tabindex="-1" aria-labelledby="tablaModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -262,9 +270,61 @@
     </div>
 </div>
 
-<script src="../../../js/Insert_Entrada_Producto_datosTabla.js"></script>
-<script src="../../../js/Busqueda_Entrada_Productos.js"  defer></script>
-<script src="../../../js/VistaTablaProductos.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Insertar_Entrada.js"></script>
+<style>
+/* Estilos específicos para el modal de entrada */
+#registrarEntradaModal .modal-dialog {
+    max-width: 1200px;
+}
 
-<?php include('footer.php'); ?>
+#registrarEntradaModal .accordion-button:not(.collapsed) {
+    background-color: rgba(0, 31, 63, 0.05);
+    color: var(--color-navy);
+}
+
+#registrarEntradaModal .accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--color-turquoise);
+}
+
+#registrarEntradaModal .form-control:focus,
+#registrarEntradaModal .form-select:focus {
+    border-color: var(--color-turquoise);
+    box-shadow: 0 0 0 0.2rem rgba(64, 224, 208, 0.25);
+}
+
+.product-image-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    display: inline-block;
+}
+
+#productoImagen {
+    transition: all 0.3s ease;
+}
+
+#productoImagen:hover {
+    transform: scale(1.05);
+}
+
+#tablaProductosEntrada th {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#tablaProductosEntrada td {
+    vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+    #registrarEntradaModal .modal-dialog {
+        max-width: 95%;
+        margin: 0.5rem auto;
+    }
+}
+</style>
+
+<script src="../../../js/Formularios/Formulario_Insertar_Entrada.js"></script>
+<script src="../../../js/VistaTablaProductos.js"></script>

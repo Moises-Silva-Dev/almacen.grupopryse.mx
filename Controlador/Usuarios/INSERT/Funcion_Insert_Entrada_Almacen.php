@@ -8,7 +8,6 @@ date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria d
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
 require_once("../../../Modelo/Funciones/Funciones_EntradaD.php"); // Carga la clase de funciones de la entradaD
 require_once("../../../Modelo/Funciones/Funciones_EntradaE.php"); // Carga la clase de funciones de la entradaE
-require_once("../../../Modelo/Funciones/Funciones_Inventario.php"); // Carga la clase de funciones de la inventario
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 require_once("../../../Modelo/Funciones/Funciones_Usuarios.php"); // Carga la clase de funciones de usuarios
 
@@ -81,12 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (!InsertarNuevaEntradaD($conexion, $id_EntradaE, $idProducto, $idtall, $cant)) {
                         // Lanzar una excepción en caso de error en la inserción
                         throw new Exception("Error al insertar en EntradaD");
-                    }
-
-                    // Inserta en la tabla Inventario
-                    if (!insertarInventario($conexion, $idProducto, $idtall, $cant)){
-                        // Lanzar una excepción en caso de error en la inserción
-                        throw new Exception("Error al insertar en Inventario");
                     }
                 }
             } else {
