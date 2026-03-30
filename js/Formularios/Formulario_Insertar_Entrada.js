@@ -5,6 +5,195 @@ let formularioEntradaModificado = false;
 let formularioEntradaEnviado = false;
 let contadorProductos = 0;
 let productosData = []; // Almacenar datos de productos para búsqueda
+let currentStep = 1;
+const totalSteps = 3;
+
+// ==================== FUNCIONES DE NAVEGACIÓN POR CÍRCULOS ====================
+function updateStepIndicators() {
+    const circles = [
+        document.getElementById('stepCircle1'),
+        document.getElementById('stepCircle2'),
+        document.getElementById('stepCircle3')
+    ];
+    
+    const labels = [
+        document.getElementById('stepLabel1'),
+        document.getElementById('stepLabel2'),
+        document.getElementById('stepLabel3')
+    ];
+    
+    const lines = [
+        document.getElementById('stepLine1-2'),
+        document.getElementById('stepLine2-3')
+    ];
+    
+    // Resetear todos los estados
+    circles.forEach(circle => {
+        if (circle) {
+            circle.classList.remove('active', 'completed');
+        }
+    });
+    labels.forEach(label => {
+        if (label) {
+            label.classList.remove('active', 'completed');
+        }
+    });
+    lines.forEach(line => {
+        if (line) {
+            line.classList.remove('active', 'completed');
+        }
+    });
+    
+    // Marcar círculos completados (anteriores al actual)
+    for (let i = 0; i < currentStep - 1; i++) {
+        if (circles[i]) circles[i].classList.add('completed');
+        if (labels[i]) labels[i].classList.add('completed');
+        if (i < lines.length && lines[i]) {
+            lines[i].classList.add('completed');
+        }
+    }
+    
+    // Marcar círculo actual como activo
+    if (currentStep <= circles.length) {
+        if (circles[currentStep - 1]) circles[currentStep - 1].classList.add('active');
+        if (labels[currentStep - 1]) labels[currentStep - 1].classList.add('active');
+        
+        // Activar la línea anterior si existe
+        if (currentStep - 2 >= 0 && lines[currentStep - 2]) {
+            lines[currentStep - 2].classList.add('active');
+        }
+    }
+}
+
+function updateSteps() {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Ocultar todos los pasos
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'none';
+    if (step3) step3.style.display = 'none';
+    
+    // Mostrar el paso actual
+    if (currentStep === 1 && step1) step1.style.display = 'block';
+    if (currentStep === 2 && step2) step2.style.display = 'block';
+    if (currentStep === 3 && step3) step3.style.display = 'block';
+    
+    // Actualizar botones
+    if (prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
+    if (nextBtn) nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-block';
+    if (submitBtn) submitBtn.style.display = currentStep === totalSteps ? 'inline-block' : 'none';
+    
+    // Actualizar indicadores de pasos
+    updateStepIndicators();
+}
+
+function goToNextStep() {
+    if (validateCurrentStep()) {
+        currentStep++;
+        updateSteps();
+        
+        // Scroll suave al inicio del modal
+        const modalBody = document.querySelector('#registrarEntradaModal .modal-body');
+        if (modalBody) {
+            modalBody.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    } else {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Por favor, completa todos los campos requeridos antes de continuar.',
+            confirmButtonColor: '#001F3F'
+        });
+    }
+}
+
+function goToPrevStep() {
+    currentStep--;
+    updateSteps();
+    
+    // Scroll suave al inicio del modal
+    const modalBody = document.querySelector('#registrarEntradaModal .modal-body');
+    if (modalBody) {
+        modalBody.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+}
+
+function validateCurrentStep() {
+    if (currentStep === 1) {
+        return validateStep1();
+    }
+    if (currentStep === 2) {
+        return validateStep2();
+    }
+    if (currentStep === 3) {
+        return validateStep3();
+    }
+    return true;
+}
+
+function validateStep1() {
+    const proveedor = document.getElementById('Proveedor');
+    const receptor = document.getElementById('Receptor');
+    const comentarios = document.getElementById('Comentarios');
+    
+    let isValid = true;
+    
+    if (!proveedor.value.trim()) {
+        proveedor.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        proveedor.classList.remove('is-invalid');
+    }
+    
+    if (!receptor.value.trim()) {
+        receptor.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        receptor.classList.remove('is-invalid');
+    }
+    
+    if (!comentarios.value.trim()) {
+        comentarios.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        comentarios.classList.remove('is-invalid');
+    }
+    
+    return isValid;
+}
+
+function validateStep2() {
+    // Paso 2 no tiene validación obligatoria, solo informativa
+    return true;
+}
+
+function validateStep3() {
+    const tablaBody = document.getElementById('tablaProductosBody');
+    const productos = tablaBody.querySelectorAll('tr');
+    
+    if (productos.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Sin productos',
+            text: 'Debes agregar al menos un producto antes de registrar la entrada.',
+            confirmButtonColor: '#001F3F'
+        });
+        return false;
+    }
+    
+    return true;
+}
 
 // ==================== FUNCIÓN PARA ABRIR EL MODAL ====================
 async function openEntradaModal() {
@@ -22,12 +211,43 @@ async function openEntradaModal() {
     // Resetear flags
     formularioEntradaModificado = false;
     formularioEntradaEnviado = false;
+    currentStep = 1;
     
     entradaModal.show();
     
     try {
         // Cargar productos
         await cargarProductos();
+        
+        // Resetear formulario
+        const form = document.getElementById('FormInsertEntradaNuevo');
+        if (form) {
+            form.reset();
+            document.querySelectorAll('#registrarEntradaModal .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+        }
+        
+        // Limpiar tabla de productos
+        const tablaBody = document.getElementById('tablaProductosBody');
+        if (tablaBody) tablaBody.innerHTML = '';
+        contadorProductos = 0;
+        actualizarContadorProductos();
+        
+        // Resetear campos de producto
+        const productoSelect = document.getElementById('ID_Producto');
+        const tallaSelect = document.getElementById('ID_Talla');
+        const cantidadInput = document.getElementById('Cantidad');
+        if (productoSelect) productoSelect.value = '';
+        if (tallaSelect) {
+            tallaSelect.innerHTML = '<option value="" selected disabled>-- Selecciona una talla --</option>';
+            tallaSelect.disabled = true;
+        }
+        if (cantidadInput) cantidadInput.value = '';
+        document.getElementById('infoProductoCard').style.display = 'none';
+        
+        // Actualizar pasos
+        updateSteps();
         
         // Ocultar loading y mostrar formulario
         if (loadingDiv) loadingDiv.style.display = 'none';
@@ -71,12 +291,12 @@ async function cargarProductos() {
             productoSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Producto --</option>';
             data.data.forEach(producto => {
                 productoSelect.innerHTML += `<option value="${producto.IdCProducto}" 
-                                                   data-empresa="${escapeHtmlEntrada(producto.Nombre_Empresa)}"
-                                                   data-categoria="${escapeHtmlEntrada(producto.Descrp)}"
-                                                   data-descripcion="${escapeHtmlEntrada(producto.Descripcion)}"
-                                                   data-especificacion="${escapeHtmlEntrada(producto.Especificacion)}"
-                                                   data-imagen="${producto.IMG || ''}">
-                                                ${producto.IdCProducto} - ${producto.Descripcion.substring(0, 50)}...
+                                                data-empresa="${escapeHtmlEntrada(producto.Nombre_Empresa)}"
+                                                data-categoria="${escapeHtmlEntrada(producto.Descrp)}"
+                                                data-descripcion="${escapeHtmlEntrada(producto.Descripcion)}"
+                                                data-especificacion="${escapeHtmlEntrada(producto.Especificacion)}"
+                                                data-imagen="${producto.IMG || '../../../img/Armar_Requicision.png'}">
+                                                ${producto.IdCProducto} - ${producto.Descripcion}, ${producto.Especificacion}...
                                             </option>`;
             });
             productoSelect.disabled = false;
@@ -142,7 +362,7 @@ function actualizarInfoProducto(productoId) {
         if (producto.IMG && producto.IMG !== '') {
             imagenElement.src = producto.IMG;
         } else {
-            imagenElement.src = 'https://via.placeholder.com/150?text=Sin+Imagen';
+            imagenElement.src = '../../../img/Armar_Requicision.png';
         }
         
         infoCard.style.display = 'block';
@@ -195,7 +415,6 @@ function agregarProducto() {
     const cantidadInput = document.getElementById('Cantidad');
     
     const productoId = productoSelect.value;
-    const productoNombre = productoSelect.options[productoSelect.selectedIndex]?.text;
     const tallaId = tallaSelect.value;
     const tallaNombre = tallaSelect.options[tallaSelect.selectedIndex]?.getAttribute('data-nombre');
     const cantidad = parseInt(cantidadInput.value) || 0;
@@ -258,7 +477,7 @@ function agregarProducto() {
             icon: 'success',
             title: 'Producto actualizado',
             text: `Se ha actualizado la cantidad a ${nuevaCantidad} unidades.`,
-            timer: 1500,
+            timer: 800,
             showConfirmButton: false
         });
     } else {
@@ -292,7 +511,7 @@ function agregarProducto() {
             icon: 'success',
             title: 'Producto agregado',
             text: 'El producto ha sido agregado correctamente.',
-            timer: 1500,
+            timer: 800,
             showConfirmButton: false
         });
     }
@@ -334,7 +553,7 @@ function eliminarProducto(fila) {
             Swal.fire({
                 icon: 'success',
                 title: 'Producto eliminado',
-                timer: 1500,
+                timer: 800,
                 showConfirmButton: false
             });
         }
@@ -363,12 +582,9 @@ function actualizarContadorProductos() {
     
     if (contadorSpan) {
         if (cantidad === 0) {
-            contadorSpan.innerHTML = '<i class="fas fa-info-circle me-1"></i> No hay productos agregados';
-            contadorSpan.classList.add('text-muted');
+            contadorSpan.innerHTML = '<i class="fas fa-info-circle me-1 text-muted"></i> <span class="text-muted">No hay productos agregados</span>';
         } else {
-            contadorSpan.innerHTML = `<i class="fas fa-check-circle me-1 text-success"></i> ${cantidad} producto(s) agregado(s)`;
-            contadorSpan.classList.remove('text-muted');
-            contadorSpan.classList.add('text-success');
+            contadorSpan.innerHTML = `<i class="fas fa-check-circle me-1 text-success"></i> <span class="text-success">${cantidad} producto(s) agregado(s)</span>`;
         }
     }
 }
@@ -395,57 +611,13 @@ function actualizarDatosTablaEntrada() {
     }
 }
 
-// ==================== VALIDACIÓN DEL FORMULARIO ====================
-function validarFormularioEntrada() {
-    const proveedor = document.getElementById('Proveedor');
-    const receptor = document.getElementById('Receptor');
-    const comentarios = document.getElementById('Comentarios');
-    const tablaBody = document.getElementById('tablaProductosBody');
-    const productos = tablaBody.querySelectorAll('tr');
-    
-    let isValid = true;
-    
-    if (!proveedor.value.trim()) {
-        proveedor.classList.add('is-invalid');
-        isValid = false;
-    } else {
-        proveedor.classList.remove('is-invalid');
-    }
-    
-    if (!receptor.value.trim()) {
-        receptor.classList.add('is-invalid');
-        isValid = false;
-    } else {
-        receptor.classList.remove('is-invalid');
-    }
-    
-    if (!comentarios.value.trim()) {
-        comentarios.classList.add('is-invalid');
-        isValid = false;
-    } else {
-        comentarios.classList.remove('is-invalid');
-    }
-    
-    if (productos.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Sin productos',
-            text: 'Debes agregar al menos un producto.',
-            confirmButtonColor: '#001F3F'
-        });
-        isValid = false;
-    }
-    
-    return isValid;
-}
-
 // ==================== ENVÍO DEL FORMULARIO ====================
 function submitEntradaForm() {
     const form = document.getElementById('FormInsertEntradaNuevo');
     
     actualizarDatosTablaEntrada();
     
-    if (!validarFormularioEntrada()) {
+    if (!validateStep3()) {
         return;
     }
     
@@ -590,6 +762,7 @@ function setupPrevenirCierreEntrada() {
         if (tablaBody) tablaBody.innerHTML = '';
         contadorProductos = 0;
         actualizarContadorProductos();
+        currentStep = 1;
     });
 }
 
@@ -602,13 +775,19 @@ document.addEventListener('DOMContentLoaded', function() {
         btnAgregar.addEventListener('click', agregarProducto);
     }
     
-    const btnGuardar = document.getElementById('btnGuardarEntrada');
+    const btnGuardar = document.getElementById('submitBtn');
     if (btnGuardar) {
         btnGuardar.addEventListener('click', function(e) {
             e.preventDefault();
             submitEntradaForm();
         });
     }
+    
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    
+    if (nextBtn) nextBtn.addEventListener('click', goToNextStep);
+    if (prevBtn) prevBtn.addEventListener('click', goToPrevStep);
     
     setupProductoEvents();
     setupPrevenirCierreEntrada();
