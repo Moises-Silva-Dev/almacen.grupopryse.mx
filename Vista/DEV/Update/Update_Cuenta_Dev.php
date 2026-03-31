@@ -105,5 +105,3 @@
 </style>
 
 <script src="../../../js/Formularios/Formulario_Actualizar_Cuenta.js"></script>
-
-<?php include('footer.php'); ?>

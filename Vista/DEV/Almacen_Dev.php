@@ -228,13 +228,8 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editEntradaDev(<?php echo $row['IdEntE']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            
-                                            <!-- Botón Eliminar -->
-                                            <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="eliminarRegistroEntradaE(<?php echo $row['IdEntE']; ?>)">
-                                                <i class="fas fa-trash-alt"></i>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarEntradaModal(<?php echo $row['IdEntE']; ?>)" title="Editar usuario">
+                                                <i class="fas fa-edit"></i> Modificar
                                             </button>
                                         </div>
                                     </td>
@@ -353,6 +348,9 @@
     </div>
 </div>
 
+<?php include('Update/Update_Entrada_Almacen_Dev.php'); ?>
+
+<!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Entrada_Producto.js"></script>
 
 <?php include('footer.php'); ?>   

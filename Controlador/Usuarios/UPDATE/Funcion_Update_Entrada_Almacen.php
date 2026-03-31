@@ -8,7 +8,6 @@ date_default_timezone_set('America/Mexico_City'); // Establece la zona horaria d
 include('../../../Modelo/Conexion.php'); // Incluir el archivo de conexión
 require_once("../../../Modelo/Funciones/Funciones_EntradaD.php"); // Carga la clase de funciones de la entradaD
 require_once("../../../Modelo/Funciones/Funciones_EntradaE.php"); // Carga la clase de funciones de la entradaE
-require_once("../../../Modelo/Funciones/Funciones_Inventario.php"); // Carga la clase de funciones de la inventario
 require_once("../../../Modelo/Funciones/Funcion_TipoUsuario.php"); // Carga la clase de funciones de tipo de usuario
 
 $conexion = (new Conectar())->conexion(); // Conectar a la base de datos
@@ -46,22 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conexion->begin_transaction();
 
     try {
-        $InformacionEntradaD = SeleccionarInformacionEntradaD($conexion, $id_EntradaE);
-
-        if (!$InformacionEntradaD) { // Verificar si se ha insertado correctamente la región
-            // Lanzar una excepción en caso de error en la inserción
-            throw new Exception("Error al buscar en la tabla requisicionE.");
-        }
-
+        // Actualizar la entrada en la tabla EntradaE
         if (!ActualizarEntradE($conexion, $registro, $nuevoNumeroModif, $Proveedor, $Receptor, $Comentarios, $estatus, $id_EntradaE)) {// Verificar si se ha insertado correctamente la región
             // Lanzar una excepción en caso de error en la inserción
             throw new Exception("Error al buscar en la tabla entradaE.");
-        }
-
-        // Inserta en la tabla EntradaD
-        if (!ActualizarInventario($conexion, $InformacionEntradaD)) {
-            // Si la inserción falla, se lanza una excepción
-            throw new Exception("Error al insertar en EntradaD");
         }
 
         // Eliminar la entrada en la tabla EntradaD
@@ -90,12 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if (!InsertarNuevaEntradaD($conexion, $id_EntradaE, $idProducto, $idtall, $cant)) {
                         // Si la inserción falla, se lanza una excepción
                         throw new Exception("Error al insertar en EntradaD");
-                    }
-    
-                    // Inserta en la tabla Inventario
-                    if (!insertarInventario($conexion, $idProducto, $idtall, $cant)){
-                        // Si la inserción falla, se lanza una excepción
-                        throw new Exception("Error al insertar en Inventario");
                     }
                 }
             } else {

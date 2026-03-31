@@ -1,340 +1,456 @@
-<?php include('head.php'); ?>
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
 
-<?php
-include('../../../Modelo/Conexion.php');
-
-// Verifica si la variable $_GET['id'] está definida y no es nula
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $ID_PRO = $_GET['id'];
-
-    // Realiza la consulta para obtener la información del empleado
-    $conexion = (new Conectar())->conexion();
-    $consulta = $conexion->prepare("SELECT * FROM EntradaD ED
-    INNER JOIN EntradaE EE on ED.IdEntradaE = EE.IdEntE
-    WHERE IdEntE = ?;");
-
-    $consulta->bind_param("i", $ID_PRO);
-    $consulta->execute();
-    $resultado = $consulta->get_result();
-
-    // Verifica si se encontraron resultados
-    if ($row = $resultado->fetch_assoc()) {
-        // Ahora, $row contiene la información del empleado que puedes usar en el formulario
-        $query = "SELECT * FROM EntradaD ED 
-            INNER JOIN EntradaE EE ON EE.IdEntE = ED.IdEntradaE 
-            INNER JOIN Producto P on ED.IdProd = P.IdCProducto 
-            INNER JOIN CTallas CT on ED.IdTalla = CT.IdCTallas 
-            INNER JOIN CCategorias CC on P.IdCCat = CC.IdCCate 
-            INNER JOIN CTipoTallas CTT on CT.IdCTipTal = CTT.IdCTipTall
-            INNER JOIN CEmpresas CE on P.IdCEmp = CE.IdCEmpresa
-        WHERE IdEntE = ?;";
-                    
-        $stmt = $conexion->prepare($query);
-        $stmt->bind_param("i", $ID_PRO);
-        $stmt->execute();
-        $resultadoConsulta = $stmt->get_result();
-    } else {
-        // No se encontró ningún empleado con la ID proporcionada, puedes manejar esto según tus necesidades
-        echo "No se encontró ningún registro con la ID proporcionada.";
-        exit; // Puedes salir del script o redirigir a otra página
-    }
-} else {
-    // La variable $_GET['id'] no está definida o es nula, puedes manejar esto según tus necesidades
-    echo "ID de empleado no proporcionada.";
-    exit; // Puedes salir del script o redirigir a otra página
-}
-?>
-
-<div class="container mt-5">
-    <center><h2>Modificar Entrada Almacén</h2></center>
-    <form id="FormUpdateEntrada" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Entrada_Almacen.php" method="post" novalidate>
-        <input type="hidden" name="id" id="id" value="<?php echo $row['IdEntD']; ?>">
-        <input type="hidden" name="IdEntE" id="IdEntE" value="<?php echo $row['IdEntE']; ?>">
-        <input type="hidden" name="Nro_Modif" id="Nro_Modif" value="<?php echo $row['Nro_Modif']; ?>">
-        <input type="hidden" id="datosTablaUpdateEntrada" name="datosTablaUpdateEntrada">
-
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header " id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Información General
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <div class="mb-3">
-                            <label for="Proveedor" class="form-label">Nombre del Proveedor:</label>
-                            <input type="text" class="form-control" id="Proveedor" name="Proveedor" placeholder="Ingresa el Nombre del Proveedor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" value="<?php echo $row['Proveedor']; ?>" required>
-                            <div class="invalid-feedback">
-                                Por favor, Ingresa el Nombre del Proveedor.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Receptor" class="form-label">Nombre del Receptor:</label>
-                            <input type="text" class="form-control" id="Receptor" name="Receptor" placeholder="Ingresa el Nombre del Receptor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" value="<?php echo $row['Receptor']; ?>" required>
-                            <div class="invalid-feedback">
-                                Por favor, Ingresa el Nombre del Receptor.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Comentarios" class="form-label">Comentarios:</label>
-                            <textarea class="form-control" id="Comentarios" name="Comentarios" placeholder="Ingresa el comentario" required><?php echo $row['Comentarios']; ?></textarea>
-                            <div class="invalid-feedback">
-                                Por favor, Ingresa el Comentario.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- Modal para Modificar Entrada de Almacén -->
+<div class="modal fade" id="modificarEntradaModal" tabindex="-1" aria-labelledby="modificarEntradaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="modificarEntradaModalLabel">
+                    <i class="fas fa-edit me-2"></i>
+                    Modificar Entrada de Almacén
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Productos
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <center>
-                            <div class="mb-2">
-                                <button type="button" class="btn btn-info" id="BtnMostrarTablaProductos">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="44" height="44" stroke-width="1.5"> 
-                                        <path d="M15 15m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path> 
-                                        <path d="M18.5 18.5l2.5 2.5"></path> 
-                                        <path d="M4 6h16"></path> 
-                                        <path d="M4 12h4"></path> 
-                                        <path d="M4 18h4"></path> 
-                                    </svg>Catalogo</button>
+            
+            <div class="modal-body">
+                <div id="loadingModificarEntradaData" class="text-center py-5">
+                    <div class="spinner-border text-turquoise" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Cargando datos de la entrada...</p>
+                </div>
+                
+                <div id="modificarEntradaFormContainer" style="display: none;">
+                    <form id="FormUpdateEntrada" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Entrada_Almacen.php" method="post" novalidate>
+                        <input type="hidden" name="id" id="edit_entrada_id">
+                        <input type="hidden" name="IdEntE" id="edit_IdEntE">
+                        <input type="hidden" name="Nro_Modif" id="edit_Nro_Modif">
+                        <input type="hidden" id="datosTablaUpdateEntrada" name="datosTablaUpdateEntrada">
+                        
+                        <!-- Sistema de navegación por círculos -->
+                        <div class="step-indicator-container">
+                            <div class="step-indicator">
+                                <div class="step-circle" id="edit_stepCircle1">
+                                    <span class="step-number">1</span>
+                                    <i class="fas fa-check step-check"></i>
+                                </div>
+                                <div class="step-line" id="edit_stepLine1-2"></div>
+                                <div class="step-circle" id="edit_stepCircle2">
+                                    <span class="step-number">2</span>
+                                    <i class="fas fa-check step-check"></i>
+                                </div>
+                                <div class="step-line" id="edit_stepLine2-3"></div>
+                                <div class="step-circle" id="edit_stepCircle3">
+                                    <span class="step-number">3</span>
+                                    <i class="fas fa-check step-check"></i>
+                                </div>
                             </div>
-                        </center>
-                        <table class="table table-responsive bg-info" id="tabla">
-                            <tbody>
-                                <tr class="fila-fija" data-id="1">
-                                    <td>
-                                        <div class="mb-2">
-                                            <label for="ID_Producto" class="form-label">Codigo:</label>
-                                            <select class="form-select mb-3" id="ID_Producto" name="ID_Producto[]">
-                                                <option value="" selected disabled>-- Seleccionar ID de Producto --</option>
-                                                    <?php
-                                                        $sql = $conexion->query("SELECT * FROM Producto;");
-                                                        while ($resultado = $sql->fetch_assoc()) {
-                                                            echo "<option value='" . $resultado['IdCProducto'] . "'>" . $resultado['IdCProducto'] . "</option>";
-                                                        }
-                                                    ?>
-                                            </select>
+                            <div class="step-labels">
+                                <div class="step-label" id="edit_stepLabel1">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Información General</span>
+                                </div>
+                                <div class="step-label" id="edit_stepLabel2">
+                                    <i class="fas fa-boxes"></i>
+                                    <span>Seleccionar Producto</span>
+                                </div>
+                                <div class="step-label" id="edit_stepLabel3">
+                                    <i class="fas fa-list"></i>
+                                    <span>Confirmar Productos</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PASO 1: Información General -->
+                        <div id="edit_step1" class="form-step">
+                            <div class="card border-navy mb-4">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-info-circle me-2 text-turquoise"></i>
+                                    Datos de la Entrada
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_Proveedor" class="form-label text-navy">
+                                                <i class="fas fa-truck me-1 text-turquoise"></i>
+                                                Nombre del Proveedor *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_Proveedor" name="Proveedor" 
+                                                   placeholder="Ingresa el nombre del proveedor"
+                                                   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                                                   required>
                                             <div class="invalid-feedback">
-                                                Por favor, selecciona una opción.
+                                                Por favor, ingresa el nombre del proveedor.
                                             </div>
                                         </div>
-                                    </td>
-                                    <td colspan="2">                        
-                                        <div class="mb-2">
-                                            <label for="ID_Talla" class="form-label">Talla:</label>
-                                                <select class="form-select mb-3" id="ID_Talla" name="ID_Talla[]">
-                                                    <option value="" selected disabled>-- Seleccionar una Talla --</option>
-                                                </select>
-                                                <div class="invalid-feedback">
-                                                    Por favor, Selecciona una Opción.
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_Receptor" class="form-label text-navy">
+                                                <i class="fas fa-user-check me-1 text-turquoise"></i>
+                                                Nombre del Receptor *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_Receptor" name="Receptor" 
+                                                   placeholder="Ingresa el nombre del receptor"
+                                                   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" 
+                                                   required>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa el nombre del receptor.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-12 mb-3">
+                                            <label for="edit_Comentarios" class="form-label text-navy">
+                                                <i class="fas fa-comment me-1 text-turquoise"></i>
+                                                Comentarios *
+                                            </label>
+                                            <textarea class="form-control border-navy" id="edit_Comentarios" name="Comentarios" 
+                                                      rows="3" placeholder="Ingresa los comentarios de la entrada" required></textarea>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa los comentarios.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PASO 2: Seleccionar Producto -->
+                        <div id="edit_step2" class="form-step" style="display: none;">
+                            <div class="card border-navy mb-4">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-box-open me-2 text-turquoise"></i>
+                                    Datos del Producto
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_ID_Producto" class="form-label text-navy">
+                                                <i class="fas fa-barcode me-1 text-turquoise"></i>
+                                                Producto *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_ID_Producto" name="ID_Producto[]">
+                                                <option value="" selected disabled>-- Cargando productos... --</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona un producto.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mb-3">
+                                            <label for="edit_ID_Talla" class="form-label text-navy">
+                                                <i class="fas fa-ruler me-1 text-turquoise"></i>
+                                                Talla *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_ID_Talla" name="ID_Talla[]" disabled>
+                                                <option value="" selected disabled>-- Selecciona una talla --</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona una talla.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mb-3">
+                                            <label for="edit_Cantidad" class="form-label text-navy">
+                                                <i class="fas fa-hashtag me-1 text-turquoise"></i>
+                                                Cantidad *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_Cantidad" name="Cantidad[]" 
+                                                   placeholder="0" pattern="[0-9]*" inputmode="numeric">
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa una cantidad válida.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Información del Producto Seleccionado -->
+                                    <div id="edit_infoProductoCard" class="mt-4" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-md-3 text-center">
+                                                <div class="product-image-container">
+                                                    <img id="edit_productoImagen" src="../../../img/Armar_Requicision.png" 
+                                                         alt="Imagen del producto" class="img-fluid rounded" style="max-width: 150px; max-height: 150px;">
                                                 </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="text-muted small">Empresa</label>
+                                                        <p class="fw-bold text-navy" id="edit_infoEmpresa">--</p>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="text-muted small">Categoría</label>
+                                                        <p class="fw-bold text-navy" id="edit_infoCategoria">--</p>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <label class="text-muted small">Descripción</label>
+                                                        <p class="fw-bold text-navy" id="edit_infoDescripcion">--</p>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <label class="text-muted small">Especificación</label>
+                                                        <p class="fw-bold text-navy" id="edit_infoEspecificacion">--</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>
-                                    <td>                        
-                                        <div class="mb-2">
-                                            <label for="Cantidad" class="form-label">Cantidad:</label>
-                                            <input type="text" class="form-control" id="Cantidad" name="Cantidad[]" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" placeholder="Ingresa la Cantidad">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="mb-2">
-                                            <button type="button" class="btn btn-secondary" id="btnMostrarImagen">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                    <path d="M11.102 17.957c-3.204 -.307 -5.904 -2.294 -8.102 -5.957c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a19.5 19.5 0 0 1 -.663 1.032" />
-                                                    <path d="M15 19l2 2l4 -4" />
-                                                </svg>Mostrar Imagen
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="fila-fija2" data-id="1">
-                                    <td>
-                                        <div class="mb-2">
-                                            <label for="Empresa" class="form-label">Empresa:</label>
-                                            <input type="text" class="form-control" id="Empresa" name="Empresa[]" placeholder="Ingresa la Empresa" disabled>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="mb-2">
-                                            <label for="Categoria" class="form-label">Categoría:</label>
-                                            <input type="text" class="form-control" id="Categoria" name="Categoria[]" placeholder="Ingresa la Categoría" disabled>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="mb-2">
-                                            <label for="Descripcion" class="form-label">Descripción:</label>
-                                            <input type="text" class="form-control" id="Descripcion" name="Descripcion[]" placeholder="Ingresa la Descripción" disabled>
-                                        </div>
-                                    </td>
-                                    <td colspan="2">
-                                        <div class="mb-2">
-                                            <label for="Especificacion" class="form-label">Especificación:</label>
-                                            <input type="text" class="form-control" id="Especificacion" name="Especificacion[]" placeholder="Ingresa la Especificación" disabled>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <!-- Botones -->
-        <div class="mb-3">
-            <button id="btn_AgregarProductoEntrada" type="button" class="btn btn-success">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-text-wrap" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M4 6l16 0" />
-                    <path d="M4 18l5 0" />
-                    <path d="M4 12h13a3 3 0 0 1 0 6h-4l2 -2m0 4l-2 -2" />
-                </svg>Agregar Producto</button>
-            <button type="submit" class="btn btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                    <path d="M16 19h6" />
-                    <path d="M19 16v6" />
-                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                </svg>Guardar
-            </button>
-            <a href="../Almacen_Dev.php" class="btn btn-danger">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M4 7l16 0" />
-                    <path d="M10 11l0 6" />
-                    <path d="M14 11l0 6" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                </svg>Cancelar
-            </a>
-        </div>
-    </form>
-
-    <div class="modal" tabindex="-1" role="dialog" id="modalImagen">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Imagen del Producto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            
-                <div class="modal-body">
-                    <div>
-                        <center><img src="" alt="Imagen del Producto" id="imagenProducto" style="max-width: 100%;"></center>
-                    </div>
-                    <br>
-                    <div>
-                        <h6>Descripción:</h6>
-                        <p id="descripcionProducto"></p>
-                    </div>
-                    <div>
-                        <h6>Especificación:</h6>
-                        <p id="especificacionProducto"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mt-5">
-        <div class="table-responsive">
-            <table class="table table-sm table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">Codigo</th>
-                        <th scope="col">Empresa</th>
-                        <th scope="col">Categoría</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Especificación</th>
-                        <th scope="col">Talla</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Cancelar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        // Comprobar si hay resultados antes de continuar
-                        if ($resultadoConsulta->num_rows > 0) {
-                            // Iterar sobre cada fila de resultados
-                            while ($row1 = $resultadoConsulta->fetch_assoc()) {
-                    ?>
-                        <tr>
-                            <!-- Llamamos información de la consulta -->
-                            <td><?php echo $row1['IdProd']; ?></td>
-                            <td><?php echo $row1['Nombre_Empresa']; ?></td>
-                            <td><?php echo $row1['Descrp']; ?></td>
-                            <td><?php echo $row1['Descripcion']; ?></td>
-                            <td><?php echo $row1['Especificacion']; ?></td>
-                            <td data-id="<?php echo $row1['IdTalla']; ?>"><?php echo $row1['Talla']; ?></td>
-                            <td><?php echo $row1['Cantidad']; ?></td>
-                            <td>
-                                <button type="button" class="btn btn-warning btn-anular">Eliminar</button> 
-                            </td>
-                        </tr>
-                    <?php
-                            }
-                        } else {
-                            // Mostrar un mensaje si no hay resultados
-                            echo "<tr><td colspan='8'>No se encontraron productos.</td></tr>";
-                        }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="tablaModal" tabindex="-1" aria-labelledby="tablaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tablaModalLabel">Lista de Productos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Buscador -->
-                    <input type="text" id="buscador" class="form-control mb-3" placeholder="Buscar producto...">
-                    
-                    <!-- Tabla -->
-                    <table class="table table-responsive table-hover table-striped">
-                        <thead>
-                            <tr class="table-primary">
-                                <th scope="col">Identificador</th>
-                                <th scope="col">Nombre de Empresa</th>
-                                <th scope="col">Categoría</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Especificación</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaCuerpo">
-                            <!-- Datos generados dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                    
+                                    <div class="mt-4 text-center">
+                                        <button type="button" class="btn btn-turquoise" id="edit_btn_AgregarProductoEntrada">
+                                            <i class="fas fa-plus me-2"></i> Agregar Producto
+                                        </button>
+                                        <button type="button" class="btn btn-info" id="BtnMostrarTablaProductos">
+                                            <i class="fas fa-eye me-2"></i> Mostrar Catalogo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PASO 3: Confirmar Productos -->
+                        <div id="edit_step3" class="form-step" style="display: none;">
+                            <div class="card border-navy mb-4">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-list me-2 text-turquoise"></i>
+                                    Productos a Registrar
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="edit_tablaProductosEntrada">
+                                            <thead class="table-light">
+                                                    <th width="50">#</th>
+                                                    <th>Código</th>
+                                                    <th>Empresa</th>
+                                                    <th>Categoría</th>
+                                                    <th>Descripción</th>
+                                                    <th>Especificación</th>
+                                                    <th>Talla</th>
+                                                    <th>Cantidad</th>
+                                                    <th width="80">Acción</th>
+                                                 </tr>
+                                            </thead>
+                                            <tbody id="edit_tablaProductosBody">
+                                                <!-- Productos se cargarán dinámicamente -->
+                                            </tbody>
+                                         </table>
+                                    </div>
+                                    <div class="text-center mt-3" id="edit_productosCount">
+                                        <i class="fas fa-info-circle me-1 text-muted"></i>
+                                        <span class="text-muted">No hay productos agregados</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de navegación -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-secondary" id="edit_prevBtn" style="display: none;">
+                                <i class="fas fa-arrow-left me-1"></i> Anterior
+                            </button>
+                            <div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-1"></i> Cancelar
+                                </button>
+                                <button type="button" class="btn btn-navy" id="edit_nextBtn">
+                                    Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                                <button type="button" class="btn btn-primary" id="edit_submitBtn" style="display: none;">
+                                    <i class="fas fa-save me-1"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="../../../js/Update_Entrada_Producto_datosTabla.js"></script>
-<script src="../../../js/Busqueda_Entrada_Productos.js"  defer></script>
-<script src="../../../js/VistaTablaProductos.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Entrada.js"></script>
+<style>
+/* Estilos para el indicador de pasos */
+.step-indicator-container {
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+}
 
-<?php include('footer.php'); ?>
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.step-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    border: 3px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.step-circle.active {
+    border-color: var(--color-turquoise);
+    background-color: var(--color-turquoise);
+    box-shadow: 0 0 0 5px rgba(64, 224, 208, 0.2);
+}
+
+.step-circle.completed {
+    border-color: #28a745;
+    background-color: #28a745;
+}
+
+.step-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step-circle.active .step-number {
+    color: var(--color-navy);
+}
+
+.step-circle.completed .step-number {
+    display: none;
+}
+
+.step-check {
+    font-size: 1.2rem;
+    color: white;
+    display: none;
+}
+
+.step-circle.completed .step-check {
+    display: block;
+}
+
+.step-line {
+    flex: 1;
+    height: 3px;
+    background-color: #dee2e6;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.step-line.active {
+    background-color: var(--color-turquoise);
+}
+
+.step-line.completed {
+    background-color: #28a745;
+}
+
+.step-labels {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.step-label {
+    text-align: center;
+    flex: 1;
+    font-size: 0.85rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step-label i {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.step-label.active {
+    color: var(--color-turquoise);
+    font-weight: 600;
+}
+
+.step-label.completed {
+    color: #28a745;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(64, 224, 208, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(64, 224, 208, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(64, 224, 208, 0);
+    }
+}
+
+.step-circle.active {
+    animation: pulse 1.5s infinite;
+}
+
+.form-step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.product-image-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .step-circle {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .step-number, .step-check {
+        font-size: 1rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .step-label i {
+        font-size: 1rem;
+    }
+    
+    .step-line {
+        margin: 0 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .step-label span {
+        display: none;
+    }
+    
+    .step-label i {
+        font-size: 1.2rem;
+        margin-bottom: 0;
+    }
+}
+</style>
+
+<!-- JS -->
+<script src="../../../js/Formularios/Formulario_Actualizar_Entrada.js"></script>

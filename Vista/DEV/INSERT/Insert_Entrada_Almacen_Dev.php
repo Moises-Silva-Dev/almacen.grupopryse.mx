@@ -196,9 +196,6 @@
                                         <button type="button" class="btn btn-turquoise" id="btn_AgregarProductoEntrada">
                                             <i class="fas fa-plus me-2"></i> Agregar Producto
                                         </button>
-                                        <button type="button" class="btn btn-info" id="BtnMostrarTablaProductos">
-                                            <i class="fas fa-eye me-2"></i> Mostrar Catalogo
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +212,6 @@
                                     <div class="table-responsive">
                                         <table class="table table-hover" id="tablaProductosEntrada">
                                             <thead class="table-light">
-                                                应用
                                                     <th width="50">#</th>
                                                     <th>Código</th>
                                                     <th>Empresa</th>
@@ -259,44 +255,6 @@
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="tablaModal" tabindex="-1" aria-labelledby="tablaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tablaModalLabel">Lista de Productos</h5>
-                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Buscador -->
-                <input type="text" id="buscador" class="form-control mb-3" placeholder="Buscar producto...">
-                
-                <!-- Tabla -->
-                <table class="table table-responsive table-hover table-striped">
-                    <thead>
-                        <tr class="table-primary">
-                            <th scope="col">Identificador</th>
-                            <th scope="col">Nombre de Empresa</th>
-                            <th scope="col">Categoría</th>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Especificación</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaCuerpo">
-                        <!-- Datos generados dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -497,5 +455,5 @@
 }
 </style>
 
+<!-- JS -->
 <script src="../../../js/Formularios/Formulario_Insertar_Entrada.js"></script>
-<script src="../../../js/VistaTablaProductos.js"></script>
