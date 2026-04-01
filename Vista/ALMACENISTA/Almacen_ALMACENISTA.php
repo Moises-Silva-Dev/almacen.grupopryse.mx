@@ -1,5 +1,7 @@
 <?php include('head.php'); ?>
 
+<?php include('INSERT/Insert_Entrada_Almacen_ALMACENISTA.php'); ?>
+
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
 
@@ -14,9 +16,9 @@
                         Gestión de Entradas de Almacén
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Entrada_Almacen_ALMACENISTA.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nueva Entrada
-                </a>
+                <button type="button" class="btn btn-primary" onclick="openEntradaModal()">
+                    <i class="fas fa-plus-circle me-1"></i> Nueva Entrada
+                </button>
             </div>
         </div>
     </div>
@@ -125,7 +127,7 @@
                                             AND (EE.Estatus='Creada' OR EE.Estatus='Modificado')";
                                         }
 
-                                        $sql .= " GROUP BY EE.IdEntE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " ORDER BY EE.IdEntE DESC LIMIT ? OFFSET ?";
                                         
                                         // Consulta para obtener el total de registros
                                         $sql_total = "SELECT 
@@ -226,13 +228,8 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editEntradaAlmacenita(<?php echo $row['IdEntE']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            
-                                            <!-- Botón Eliminar -->
-                                            <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="eliminarRegistroEntradaE(<?php echo $row['IdEntE']; ?>)">
-                                                <i class="fas fa-trash-alt"></i>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarEntradaModal(<?php echo $row['IdEntE']; ?>)" title="Editar usuario">
+                                                <i class="fas fa-edit"></i> Modificar
                                             </button>
                                         </div>
                                     </td>
@@ -351,6 +348,9 @@
     </div>
 </div>
 
+<?php include('Update/Update_Entrada_Almacen_ALMACENISTA.php'); ?>
+
+<!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Entrada_Producto.js"></script>
 
 <?php include('footer.php'); ?>   

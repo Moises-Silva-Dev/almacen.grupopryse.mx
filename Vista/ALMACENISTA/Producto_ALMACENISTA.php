@@ -1,5 +1,8 @@
 <?php include('head.php'); ?>
 
+<!-- Incluir el modal -->
+<?php include('INSERT/Insert_Producto_ALMACENISTA.php'); ?>
+
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
 <link rel="stylesheet" href="../../css/modal_vista_producto.css">
@@ -12,12 +15,12 @@
                 <div>
                     <h1 class="h3 mb-0 text-navy">
                         <i class="fas fa-users me-2 text-turquoise"></i>
-                        Gestión de Productos
+                        Administra los Productos del Catálogo
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Producto_ALMACENISTA.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nuevo Producto
-                </a>
+                <button type="button" class="btn btn-primary" onclick="openProductoModal()">
+                    <i class="fas fa-plus-circle me-1"></i> Nuevo Producto
+                </button>
             </div>
         </div>
     </div>
@@ -117,8 +120,12 @@
                                         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
                         
                                         // Consulta SQL modificada con búsqueda
-                                        $sql = "SELECT P.IdCProducto, CE.Nombre_Empresa, CC.Descrp, CTT.Descrip, 
-                                                    P.Descripcion, P.Especificacion FROM Producto P
+                                        $sql = "SELECT P.IdCProducto, 
+                                                    ANY_VALUE(CE.Nombre_Empresa) AS Nombre_Empresa, 
+                                                    ANY_VALUE(CC.Descrp) AS Categoria, 
+                                                    ANY_VALUE(CTT.Descrip) AS TipoTalla, 
+                                                    P.Descripcion, 
+                                                    ANY_VALUE(P.Especificacion) AS Especificacion FROM Producto P
                                                 INNER JOIN 
                                                     CEmpresas CE on P.IdCEmp = CE.IdCEmpresa
                                                 INNER JOIN 
@@ -139,7 +146,10 @@
                                             )";
                                         }
 
-                                        $sql .= " GROUP BY P.IdCProducto DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY P.IdCProducto, P.Descripcion 
+                                                ORDER BY FIELD(ANY_VALUE(CC.Descrp), 'Uniformes', 'Equipamiento', 'Accesorios') ASC, 
+                                                P.Descripcion ASC 
+                                                LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(DISTINCT P.IdCProducto) as total
@@ -232,19 +242,19 @@
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
                                             <i class="fas fa-tags"></i>
-                                            <?php echo htmlspecialchars($row['Descrp']); ?>
+                                            <?php echo htmlspecialchars($row['Categoria']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
                                             <i class="fas fa-tags"></i>
-                                            <?php echo htmlspecialchars($row['Descrip']); ?>
+                                            <?php echo htmlspecialchars($row['TipoTalla']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editProductoAlmacenista(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarProductoModal(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             
@@ -403,28 +413,28 @@
                             </h4>
                             
                             <div class="info-item mb-3">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-clipboard-list me-2"></i>Especificaciones:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoEspecificacion">Cargando...</p>
                             </div>
                             
                             <div class="info-item mb-3">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-building me-2"></i>Empresa:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoEmpresa">Cargando...</p>
                             </div>
                             
                             <div class="info-item mb-3">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-tags me-2"></i>Categoría:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoCategoria">Cargando...</p>
                             </div>
                             
                             <div class="info-item">
-                                <h6 class="text-turquoise mb-1">
+                                <h6 class="text-primary-navy mb-1">
                                     <i class="fas fa-ruler-combined me-2"></i>Tipo de Talla:
                                 </h6>
                                 <p class="mb-0 text-muted" id="productoTipoTalla">Cargando...</p>
@@ -442,6 +452,9 @@
     </div>
 </div>
 
+<?php include('Update/Update_Producto_ALMACENISTA.php'); ?>
+
+<!-- JS -->
 <script src="../../js/Tablas/Tabla_Producto.js"></script>
 
 <?php include('footer.php'); ?>

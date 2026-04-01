@@ -71,7 +71,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Proveedor" class="form-label text-navy">
                                                 <i class="fas fa-truck me-1 text-turquoise"></i>
-                                                Nombre del Proveedor *
+                                                Nombre del Proveedor <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="Proveedor" name="Proveedor" 
                                                    placeholder="Ingresa el nombre del proveedor"
@@ -85,7 +85,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Receptor" class="form-label text-navy">
                                                 <i class="fas fa-user-check me-1 text-turquoise"></i>
-                                                Nombre del Receptor *
+                                                Nombre del Receptor <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="Receptor" name="Receptor" 
                                                    placeholder="Ingresa el nombre del receptor"
@@ -99,7 +99,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="Comentarios" class="form-label text-navy">
                                                 <i class="fas fa-comment me-1 text-turquoise"></i>
-                                                Comentarios *
+                                                Comentarios <strong style="color: red;">*</strong>
                                             </label>
                                             <textarea class="form-control border-navy" id="Comentarios" name="Comentarios" 
                                                       rows="3" placeholder="Ingresa los comentarios de la entrada" required></textarea>

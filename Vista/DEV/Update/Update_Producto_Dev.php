@@ -29,7 +29,7 @@
                         <div class="mb-4">
                             <label for="edit_ID_Empresas" class="form-label text-navy">
                                 <i class="fas fa-building me-1 text-turquoise"></i>
-                                Empresa *
+                                Empresa <strong style="color: red;">*</strong>
                             </label>
                             <select class="form-select border-navy" id="edit_ID_Empresas" name="ID_Empresas" required>
                                 <option value="" selected disabled>-- Cargando empresas... --</option>
@@ -43,7 +43,7 @@
                         <div class="mb-4">
                             <label for="edit_Id_cate" class="form-label text-navy">
                                 <i class="fas fa-tags me-1 text-turquoise"></i>
-                                Categoría *
+                                Categoría <strong style="color: red;">*</strong>
                             </label>
                             <select class="form-select border-navy" id="edit_Id_cate" name="Id_cate" required>
                                 <option value="" selected disabled>-- Cargando categorías... --</option>
@@ -57,7 +57,7 @@
                         <div class="mb-4">
                             <label for="edit_Id_TipTall" class="form-label text-navy">
                                 <i class="fas fa-ruler-combined me-1 text-turquoise"></i>
-                                Tipo de Talla *
+                                Tipo de Talla <strong style="color: red;">*</strong>
                             </label>
                             <select class="form-select border-navy" id="edit_Id_TipTall" name="Id_TipTall" required>
                                 <option value="" selected disabled>-- Cargando tipos de talla... --</option>
@@ -71,7 +71,7 @@
                         <div class="mb-4">
                             <label for="edit_Descripcion" class="form-label text-navy">
                                 <i class="fas fa-align-left me-1 text-turquoise"></i>
-                                Descripción *
+                                Descripción <strong style="color: red;">*</strong>
                             </label>
                             <textarea class="form-control border-navy" id="edit_Descripcion" name="Descripcion" 
                                       rows="3" placeholder="Ingresa la descripción del producto" required></textarea>
@@ -84,7 +84,7 @@
                         <div class="mb-4">
                             <label for="edit_Especificacion" class="form-label text-navy">
                                 <i class="fas fa-info-circle me-1 text-turquoise"></i>
-                                Especificación *
+                                Especificación <strong style="color: red;">*</strong>
                             </label>
                             <textarea class="form-control border-navy" id="edit_Especificacion" name="Especificacion" 
                                       rows="3" placeholder="Ingresa la especificación del producto" required></textarea>
