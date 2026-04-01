@@ -1,72 +1,76 @@
-// Este script JavaScript se encarga de generar un PDF de entradas de almacén basado en las fechas seleccionadas en un formulario. 
-// Una vez que se envían las fechas al script PHP que genera el PDF, el PDF se muestra en un visor dentro de una ventana modal.
 function Generar_PDF_Entradas_Fechas(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío del formulario y recarga de la página)
+    // 1. Previene el comportamiento por defecto
     event.preventDefault();
     
-    // Obtener el formulario de entradas por fechas a través de su ID
+    // 2. Validación previa del formulario
     var form = document.getElementById('entradasFormFechas');
-    
-    // Verificar si el formulario cumple con las reglas de validación
     if (!form.checkValidity()) {
-        // Agregar una clase CSS para mostrar visualmente los errores de validación
         form.classList.add('was-validated');
-        return; // Salir de la función si el formulario no es válido
+        return; 
     }
 
-    // Crear un objeto FormData para recopilar los datos del formulario
+    // 3. Mostrar SweetAlert de carga
+    Swal.fire({
+        title: 'Generando Reporte',
+        text: 'Consultando entradas de almacén...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // 4. Preparar datos y promesas
     var formData = new FormData(form);
-    
-    // URL del script PHP que generará el PDF en el servidor
     var url = '../../Controlador/Reportes/Reporte_Entrada_Almacen_Por_Fechas.php';
+    
+    // Definimos el temporizador de 2 segundos
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Realizar una solicitud fetch para enviar los datos del formulario
-    fetch(url, {
-        method: 'POST', // Especificar el método HTTP
-        body: formData   // Incluir los datos del formulario en la solicitud
-    })
-    // Convertir la respuesta del servidor en un objeto Blob
-    .then(response => response.blob())
-    .then(blob => {
-        // Convertir el Blob a texto para verificar si contiene un mensaje de error
-        return blob.text().then(text => {
-            try {
-                // Intentar analizar el contenido como JSON
-                const json = JSON.parse(text);
-                
-                // Verificar si el JSON contiene un mensaje de error
+    // Ejecutamos la petición fetch
+    const peticion = fetch(url, {
+        method: 'POST',
+        body: formData
+    });
+
+    // 5. Esperar a que AMBAS terminen (la petición Y los 2 segundos)
+    Promise.all([peticion, timer])
+    .then(([response]) => {
+        const contentType = response.headers.get('Content-Type');
+
+        // Caso A: El servidor responde con JSON (probablemente un error)
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(json => {
+                Swal.close(); // Cerramos carga
                 if (json.error) {
-                    // Mostrar el mensaje de error en el elemento correspondiente
                     document.getElementById('errorMessage').innerText = json.error;
-
-                    // Mostrar la ventana modal que indica el error
                     var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show(); // Mostrar la ventana modal
-                } else {
-                    // Si no hay error en el JSON, interpretar el texto como contenido PDF
-                    var pdfBlob = new Blob([text], { type: 'application/pdf' });
-                    var pdfUrl = URL.createObjectURL(pdfBlob); // Crear una URL temporal para el Blob
-
-                    // Establecer la fuente del visor de PDF para mostrar el PDF generado
-                    document.getElementById('pdfViewerEntradasFechas').src = pdfUrl;
-
-                    // Mostrar la ventana modal con el visor de PDF
-                    var myModal = new bootstrap.Modal(document.getElementById('pdfModalEntradaFechas'));
-                    myModal.show(); // Mostrar la ventana modal
+                    myModalError.show();
                 }
-            } catch (e) {
-                // Si no es JSON válido, tratar el Blob directamente como contenido PDF
+            });
+        } 
+        // Caso B: El servidor responde con el archivo PDF (Blob)
+        else {
+            return response.blob().then(blob => {
+                Swal.close(); // Cerramos carga
+
                 var pdfUrl = URL.createObjectURL(blob);
                 
-                // Establecer la fuente del visor de PDF
+                // Establecer la fuente del visor y mostrar el modal correspondiente
                 document.getElementById('pdfViewerEntradasFechas').src = pdfUrl;
-
-                // Mostrar la ventana modal con el visor de PDF
-                var myModal = new bootstrap.Modal(document.getElementById('pdfModalEntradaFechas'));
-                myModal.show(); // Mostrar la ventana modal
-            }
-        });
+                var pdfModalElement = document.getElementById('pdfModalEntradaFechas');
+                var myModal = new bootstrap.Modal(pdfModalElement);
+                myModal.show();
+            });
+        }
     })
-    // Manejar errores en la solicitud o en el procesamiento de datos
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        // Manejo de errores de red o excepciones
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de red',
+            text: 'No se pudo generar el reporte de entradas.'
+        });
+    });
 }

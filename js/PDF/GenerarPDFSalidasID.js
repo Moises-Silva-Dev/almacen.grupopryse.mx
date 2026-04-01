@@ -1,78 +1,77 @@
-// Este script JavaScript se encarga de generar un PDF de salida basado en la ID seleccionada en un formulario. 
-// Una vez que se envié la ID al script PHP que genera el PDF, el PDF se muestra en un visor dentro de una ventana modal.
 function Generar_PDF_Salida_ID(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío de formulario)
+    // 1. Previene el comportamiento por defecto
     event.preventDefault();
     
-    // Obtener el formulario de salidas por ID
+    // 2. Obtener y validar el formulario
     var form = document.getElementById('salidaFormID');
-    
-    // Verificar si el formulario es válido
     if (!form.checkValidity()) {
-        // Agregar una clase de validación si el formulario no es válido y salir de la función
         form.classList.add('was-validated');
-        return; // Salir de la función si el formulario no es válido
+        return; 
     }
 
-    // Crear un objeto FormData con los datos del formulario
-    var formData = new FormData(form);
-    
-    // URL del script PHP que procesará la solicitud y generará el PDF
-    var url = '../../Controlador/Reportes/Reporte_Salida_Almacen_Por_ID.php';
+    // 3. Mostrar SweetAlert de carga (Spinner)
+    Swal.fire({
+        title: 'Generando Reporte',
+        text: 'Buscando el registro de salida...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
-    // Realizar una solicitud fetch para enviar los datos del formulario al servidor
-    fetch(url, {
-        method: 'POST', // Especificar el método HTTP
-        body: formData // Incluir los datos del formulario en el cuerpo de la solicitud
-    })
-    // Convertir la respuesta a un objeto Blob
-    .then(response => {
-        if (response.ok) {
-            return response.blob(); // Convertir la respuesta en un Blob si es exitosa
-        } else {
-            // Si la respuesta no es exitosa, obtener el texto de la respuesta
-            return response.text().then(text => {
-                // Si la respuesta no es ok, asumir que es un error y lanzar una excepción
-                throw new Error(text);
+    // 4. Preparar datos y promesas
+    var formData = new FormData(form);
+    var url = '../../Controlador/Reportes/Reporte_Salida_Almacen_Por_ID.php';
+    
+    // Timer de 2 segundos para dar una sensación de procesamiento robusto
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Ejecución de la petición fetch
+    const peticion = fetch(url, {
+        method: 'POST',
+        body: formData
+    });
+
+    // 5. Esperar a que terminen la petición Y el temporizador de 2 segundos
+    Promise.all([peticion, timer])
+    .then(([response]) => {
+        const contentType = response.headers.get('Content-Type');
+
+        // Caso A: El servidor devuelve un JSON (Error de negocio o registro no encontrado)
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(json => {
+                Swal.close(); // Cerramos el loading
+                if (json.error) {
+                    // Cargamos el mensaje en el modal de error existente
+                    document.getElementById('errorMessage').innerText = json.error;
+                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
+                    myModalError.show();
+                }
+            });
+        } 
+        // Caso B: El servidor devuelve el PDF (Blob)
+        else {
+            return response.blob().then(blob => {
+                Swal.close(); // Cerramos el loading
+
+                var pdfUrl = URL.createObjectURL(blob);
+                
+                // Asignar al iframe específico y mostrar el modal de éxito
+                document.getElementById('pdfIframeSalidaID').src = pdfUrl;
+                var pdfModalElement = document.getElementById('pdfModalSalidaID');
+                var myModal = new bootstrap.Modal(pdfModalElement);
+                myModal.show();
             });
         }
     })
-    .then(blob => {
-        // Intentar analizar el Blob como texto para verificar si es un JSON de error
-        blob.text().then(text => {
-            try {
-                // Intentar analizar el texto como JSON
-                const json = JSON.parse(text);
-
-                // Verificar si el JSON contiene un mensaje de error
-                if (json.error) {
-                    // Mostrar el mensaje de error en el modal
-                    document.getElementById('errorMessage').innerText = json.error;
-
-                    // Mostrar la ventana modal que contiene el visor de PDF
-                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show(); // Mostrar la ventana modal
-                }
-            } catch (e) {
-                // Crear una URL local para el Blob generado
-                var pdfUrl = URL.createObjectURL(blob);
-                
-                // Establecer la fuente del visor de PDF para mostrar el PDF generado
-                document.getElementById('pdfIframeSalidaID').src = pdfUrl;
-
-                // Mostrar la ventana modal que contiene el visor de PDF
-                var myModal = new bootstrap.Modal(document.getElementById('pdfModalSalidaID'));
-                myModal.show(); // Mostrar la ventana modal
-            }
-        });
-    })
-    // Manejar errores si ocurren durante la solicitud fetch
     .catch(error => {
-        // Mostrar un mensaje de error en el modal si ocurre un error
-        document.getElementById('errorMessage').innerText = 'Ocurrió un error al generar el PDF: ' + error.message;
-
-        // Mostrar la ventana modal que contiene el visor de error
-        var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-        myModalError.show(); // Mostrar la ventana modal
+        // Manejo de errores de conexión o excepciones críticas
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de comunicación',
+            text: 'No se pudo obtener el reporte de salida por ID.'
+        });
     });
 }

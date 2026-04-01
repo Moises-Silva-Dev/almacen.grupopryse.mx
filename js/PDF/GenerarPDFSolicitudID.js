@@ -1,77 +1,77 @@
-// Este script JavaScript se encarga de generar un PDF de solicitud basado en la ID seleccionada en un formulario.
-// Una vez que se envié la ID al script PHP que genera el PDF, el PDF se muestra en un visor dentro de una ventana modal.
 function Generar_PDF_Solicitud_ID(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío de formulario)
+    // 1. Previene el comportamiento por defecto
     event.preventDefault();
     
-    // Obtener el formulario de solicitudes por ID
+    // 2. Obtener y validar el formulario
     var form = document.getElementById('solicitudFormID');
-    
-    // Verificar si el formulario es válido
     if (!form.checkValidity()) {
-        // Agregar una clase de validación si el formulario no es válido y salir de la función
         form.classList.add('was-validated');
-        return; // Salir de la función si el formulario no es válido
+        return; 
     }
 
-    // Crear un objeto FormData con los datos del formulario
-    var formData = new FormData(form);
-    
-    // URL del script PHP que procesará la solicitud y generará el PDF
-    var url = '../../Controlador/Reportes/Reporte_Solicitud_Por_ID.php';
+    // 3. Mostrar SweetAlert de carga (Spinner)
+    Swal.fire({
+        title: 'Generando Reporte',
+        text: 'Consultando los datos de la solicitud...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
-    // Realizar una solicitud fetch para enviar los datos del formulario al servidor
-    fetch(url, {
-        method: 'POST', // Especificar el método HTTP
-        body: formData // Enviar los datos del formulario como cuerpo de la solicitud
-    })
-    // Convertir la respuesta a un objeto Blob
-    .then(response => {
-        if (response.ok) {
-            return response.blob(); // Convertir la respuesta en un Blob si es exitosa
-        } else {
-            return response.text().then(text => {
-                // Si la respuesta no es ok, asumir que es un error y lanzar una excepción
-                throw new Error(text);
+    // 4. Preparar datos y promesas
+    var formData = new FormData(form);
+    var url = '../../Controlador/Reportes/Reporte_Solicitud_Por_ID.php';
+    
+    // Timer de 2 segundos para mantener la consistencia visual del sistema
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Petición fetch al servidor
+    const peticion = fetch(url, {
+        method: 'POST',
+        body: formData
+    });
+
+    // 5. Esperar a que terminen la petición Y el temporizador
+    Promise.all([peticion, timer])
+    .then(([response]) => {
+        const contentType = response.headers.get('Content-Type');
+
+        // Caso A: El servidor devuelve un JSON (Error de ID no encontrado o validación)
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(json => {
+                Swal.close(); // Cerramos el loading
+                if (json.error) {
+                    // Cargamos el mensaje en tu modal de error estándar
+                    document.getElementById('errorMessage').innerText = json.error;
+                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
+                    myModalError.show();
+                }
+            });
+        } 
+        // Caso B: El servidor devuelve el PDF (Blob)
+        else {
+            return response.blob().then(blob => {
+                Swal.close(); // Cerramos el loading
+
+                var pdfUrl = URL.createObjectURL(blob);
+                
+                // Configurar el iframe específico y mostrar el modal de la solicitud
+                document.getElementById('pdfIframeSolicitudID').src = pdfUrl;
+                var pdfModalElement = document.getElementById('pdfModalSolicitudID');
+                var myModal = new bootstrap.Modal(pdfModalElement);
+                myModal.show();
             });
         }
     })
-    .then(blob => {
-        // Intentar analizar el Blob como texto para verificar si es un JSON de error
-        blob.text().then(text => {
-            try {
-                // Intentar analizar el texto como JSON
-                const json = JSON.parse(text);
-
-                // Verificar si el JSON contiene un mensaje de error
-                if (json.error) {
-                    // Mostrar el mensaje de error en el modal
-                    document.getElementById('errorMessage').innerText = json.error;
-
-                    // Mostrar la ventana modal que contiene el visor de PDF
-                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show(); // Mostrar la ventana modal
-                }
-            } catch (e) {
-                // Crear una URL local para el Blob generado
-                var pdfUrl = URL.createObjectURL(blob);
-                
-                // Establecer la fuente del visor de PDF para mostrar el PDF generado
-                document.getElementById('pdfIframeSolicitudID').src = pdfUrl;
-
-                // Mostrar la ventana modal que contiene el visor de PDF
-                var myModal = new bootstrap.Modal(document.getElementById('pdfModalSolicitudID'));
-                myModal.show(); // Mostrar la ventana modal
-            }
-        });
-    })
-    // Manejar errores si ocurren durante la solicitud fetch
     .catch(error => {
-        // Mostrar un mensaje de error en el modal si ocurre un error
-        document.getElementById('errorMessage').innerText = 'Ocurrió un error al generar el PDF: ' + error.message;
-
-        // Mostrar la ventana modal que contiene el visor de error
-        var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-        myModalError.show(); // Mostrar la ventana modal
+        // Manejo de fallos de red o errores inesperados
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo generar el reporte. Verifique su conexión o intente más tarde.'
+        });
     });
 }

@@ -1,79 +1,77 @@
-// Este script JavaScript se encarga de generar un PDF de entrada basado en la ID seleccionada en un formulario.
-// Una vez que se envíe la ID al script PHP que genera el PDF, el PDF se muestra en un visor dentro de una ventana modal.
 function Generar_PDF_Entrada_ID(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío del formulario y la recarga de la página)
+    // 1. Previene el comportamiento por defecto
     event.preventDefault();
     
-    // Obtener el formulario de entradas por ID a través de su ID
+    // 2. Obtener y validar el formulario
     var form = document.getElementById('entradaFormID');
-    
-    // Verificar si el formulario cumple con las reglas de validación
     if (!form.checkValidity()) {
-        // Agregar la clase CSS 'was-validated' para mostrar errores de validación visualmente
         form.classList.add('was-validated');
-        return; // Salir de la función si el formulario no es válido
+        return; 
     }
 
-    // Crear un objeto FormData con los datos del formulario
-    var formData = new FormData(form);
-    
-    // Definir la URL del script PHP que generará el PDF
-    var url = '../../Controlador/Reportes/Reporte_Entrada_Almacen_Por_ID.php';
+    // 3. Mostrar SweetAlert de carga (Spinner)
+    Swal.fire({
+        title: 'Generando Reporte',
+        text: 'Buscando entrada por ID...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
-    // Realizar una solicitud fetch para enviar los datos del formulario
-    fetch(url, {
-        method: 'POST', // Especificar el método HTTP
-        body: formData   // Incluir los datos del formulario en el cuerpo de la solicitud
-    })
-    // Verificar si la respuesta fue exitosa
-    .then(response => {
-        if (response.ok) {
-            // Si la respuesta es exitosa, convertirla en un Blob
-            return response.blob();
-        } else {
-            // Si la respuesta no es exitosa, obtener el texto
-            return response.text().then(text => {
-                throw new Error(text); // Lanzar una excepción con el mensaje de error
+    // 4. Preparar datos y promesas
+    var formData = new FormData(form);
+    var url = '../../Controlador/Reportes/Reporte_Entrada_Almacen_Por_ID.php';
+    
+    // Timer de 2 segundos para evitar parpadeos si el servidor es muy rápido
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Petición fetch
+    const peticion = fetch(url, {
+        method: 'POST',
+        body: formData
+    });
+
+    // 5. Esperar a que AMBAS promesas se cumplan
+    Promise.all([peticion, timer])
+    .then(([response]) => {
+        const contentType = response.headers.get('Content-Type');
+
+        // Caso A: El servidor devuelve un JSON (Error de negocio)
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(json => {
+                Swal.close(); // Cerramos el loading
+                if (json.error) {
+                    // Cargamos el error en tu modal de error tradicional
+                    document.getElementById('errorMessage').innerText = json.error;
+                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
+                    myModalError.show();
+                }
+            });
+        } 
+        // Caso B: El servidor devuelve el PDF (Blob)
+        else {
+            return response.blob().then(blob => {
+                Swal.close(); // Cerramos el loading
+
+                var pdfUrl = URL.createObjectURL(blob);
+                
+                // Asignar al iframe específico y mostrar el modal de éxito
+                document.getElementById('pdfIframeEntradaID').src = pdfUrl;
+                var pdfModalElement = document.getElementById('pdfModalEntradaID');
+                var myModal = new bootstrap.Modal(pdfModalElement);
+                myModal.show();
             });
         }
     })
-    // Procesar el Blob recibido
-    .then(blob => {
-        // Intentar interpretar el Blob como texto para detectar errores JSON
-        blob.text().then(text => {
-            try {
-                // Intentar analizar el texto como un objeto JSON
-                const json = JSON.parse(text);
-
-                // Verificar si el JSON contiene un mensaje de error
-                if (json.error) {
-                    // Mostrar el mensaje de error en el elemento correspondiente
-                    document.getElementById('errorMessage').innerText = json.error;
-
-                    // Mostrar la ventana modal con el mensaje de error
-                    var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-                    myModalError.show(); // Mostrar la ventana modal
-                }
-            } catch (e) {
-                // Si no es un JSON de error, tratar el Blob como un PDF
-                var pdfUrl = URL.createObjectURL(blob);
-
-                // Configurar el visor de PDF con la URL generada
-                document.getElementById('pdfIframeEntradaID').src = pdfUrl;
-
-                // Mostrar la ventana modal que contiene el visor de PDF
-                var myModal = new bootstrap.Modal(document.getElementById('pdfModalEntradaID'));
-                myModal.show(); // Mostrar la ventana modal
-            } 
-        });
-    })
-    // Manejar errores que ocurran en la solicitud fetch o durante el procesamiento
     .catch(error => {
-        // Mostrar el mensaje de error en el elemento correspondiente
-        document.getElementById('errorMessage').innerText = 'Ocurrió un error al generar el PDF: ' + error.message;
-
-        // Mostrar la ventana modal con el mensaje de error
-        var myModalError = new bootstrap.Modal(document.getElementById('pdfModalERROR'));
-        myModalError.show(); // Mostrar la ventana modal
+        // Manejo de errores de red o excepciones graves
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error inesperado',
+            text: 'No se pudo procesar la solicitud del ID.'
+        });
     });
 }
