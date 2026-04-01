@@ -107,69 +107,59 @@ try {
     $pdf->SetFillColor(200, 220, 255);
     $pdf->SetFont('helvetica', 'B', 8);
 
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(15, "ID"),
-        $pdf->getStringHeight(30, "Nombre Solicitante"),
-        $pdf->getStringHeight(30, "Fecha y Hora"),
-        $pdf->getStringHeight(30, "Estatus"),
-        $pdf->getStringHeight(30, "Cuenta"),
-        $pdf->getStringHeight(30, "Supervisor"),
-        $pdf->getStringHeight(30, "Centro de Trabajo"),
-        $pdf->getStringHeight(30, "Receptor"),
-        $pdf->getStringHeight(35, "Justificación")
-    ];
+    $html = '
+    <table border="1" cellpadding="4">
+        <thead>
+            <tr style="background-color:#34495e; color:white; text-align:center; font-weight:bold;">
+                <th width="5%">ID</th>
+                <th width="15%">Solicitante</th>
+                <th width="10%">Fecha</th>
+                <th width="10%">Hora</th>
+                <th width="10%">Estatus</th>
+                <th width="10%">Cuenta</th>
+                <th width="10%">Supervisor</th>
+                <th width="10%">Centro Trabajo</th>
+                <th width="10%">Receptor</th>
+                <th width="10%">Justificación</th>
+            </tr>
+        </thead>
+        <tbody>
+    ';   
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Encabezados de la tabla usando MultiCell para cada columna
-    $pdf->MultiCell(15, $maxHeightEncabezado, 'ID', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Nombre Solicitante', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Fecha y Hora', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Estatus', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Cuenta', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Supervisor', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Centro de Trabajo', 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, 'Receptor', 1, 'C', true, 0);
-    $pdf->MultiCell(35, $maxHeightEncabezado, 'Justificación', 1, 'C', true, 1);
+    $color = true;
 
-    // Contenido de la tabla
-    $pdf->SetFont('helvetica', '', 12);
     while ($filaD = $resultadoD->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(15, $filaD['IDRequisicionE']),
-            $pdf->getStringHeight(30, $filaD['Nombre'] . ' ' . $filaD['Apellido_Paterno'] . ' ' . $filaD['Apellido_Materno']),
-            $pdf->getStringHeight(30, $filaD['Fecha'] . ' ' . $filaD['HoraMinutos']),
-            $pdf->getStringHeight(30, $filaD['Estatus']),
-            $pdf->getStringHeight(30, $filaD['NombreCuenta']),
-            $pdf->getStringHeight(30, $filaD['Supervisor']),
-            $pdf->getStringHeight(30, $filaD['CentroTrabajo']),
-            $pdf->getStringHeight(30, $filaD['Receptor']),
-            $pdf->getStringHeight(35, $filaD['Justificacion'])
-        ];
-    
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
-        $pdf->MultiCell(15, $maxHeight, $filaD['IDRequisicionE'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['Nombre'] . ' ' . $filaD['Apellido_Paterno'] . ' ' . $filaD['Apellido_Materno'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['Fecha'] . ' ' . $filaD['HoraMinutos'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['Estatus'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['NombreCuenta'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['Supervisor'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['CentroTrabajo'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['Receptor'], 1, 'C', false, 0);
-        $pdf->MultiCell(35, $maxHeight, $filaD['Justificacion'], 1, 'C', false, 1);
-    }    
+        $fondo = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
 
-    // Cerrar el statement y la conexión a la base de datos
-    $stmtD->close();
-    
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
+        $html .= '
+            <tr style="background-color:'.$fondo.'; text-align:center;">
+                <td width="5%">'.$filaD['IDRequisicionE'].'</td>
+                <td width="15%">'.$filaD['Nombre'].' '.$filaD['Apellido_Paterno'].' '.$filaD['Apellido_Materno'].'</td>
+                <td width="10%">'.$filaD['Fecha'].'</td>
+                <td width="10%">'.$filaD['HoraMinutos'].'</td>
+                <td width="10%">'.$filaD['Estatus'].'</td>
+                <td width="10%">'.$filaD['NombreCuenta'].'</td>
+                <td width="10%">'.$filaD['Supervisor'].'</td>
+                <td width="10%">'.$filaD['CentroTrabajo'].'</td>
+                <td width="10%">'.$filaD['Receptor'].'</td>
+                <td width="10%">'.$filaD['Justificacion'].'</td>
+            </tr>
+        ';
+    }
+
+    $html .= '
+        </tbody>
+    </table>';
+
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $stmtD->close(); // Cerrar el statement y la conexión a la base de datos
+    $conexion->close(); // Cerrar la conexión a la base de datos
+
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
 
     // Generar y descargar el PDF
     $pdf->Output('Reporte_Solicitud_Por_Fechas_' . date('YmdHis') . '.pdf', 'I');

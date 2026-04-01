@@ -185,59 +185,55 @@ try {
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
 
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(25, "Identificador"),
-        $pdf->getStringHeight(30, "Empresa"),
-        $pdf->getStringHeight(50, "Descripción"),
-        $pdf->getStringHeight(50, "Especificación"),
-        $pdf->getStringHeight(20, "Talla"),
-        $pdf->getStringHeight(20, "Cantidad")
-    ];
+    $pdf->SetFont("helvetica", "", 10);
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla EntradaD
-    $pdf->MultiCell(25, $maxHeightEncabezado, "Identificador", 1, "C", true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, "Empresa", 1, "C", true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, "Descripción", 1, "C", true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, "Especificación", 1, "C", true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, "Talla", 1, "C", true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, "Cantidad", 1, "C", true, 1);
-    
-    // Agregar datos a la tabla EntradaD
-    $pdf->SetFont("helvetica", "", 10); // Restaurar el estilo de fuente normal
+    $html .= '
+    <table border="1" cellpadding="4">
+        <thead>
+            <tr style="background-color:#2c3e50;color:white;font-weight:bold;text-align:center;">
+                <th width="10%">Identificador</th>
+                <th width="15%">Empresa</th>
+                <th width="25%">Descripción</th>
+                <th width="28%">Especificación</th>
+                <th width="10%">Talla</th>
+                <th width="12%">Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+    ';
+
+    $color = true;
+
     while ($filaD = $resultadoD->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(25, $filaD['Identificador']),
-            $pdf->getStringHeight(50, $filaD['Nombre_Empresa']),
-            $pdf->getStringHeight(50, $filaD['Descripcion']),
-            $pdf->getStringHeight(50, $filaD['Especificacion']),
-            $pdf->getStringHeight(50, $filaD['Talla']),
-            $pdf->getStringHeight(20, $filaD['Cantidad'])
-        ];
-    
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-        
-        $pdf->MultiCell(25, $maxHeight, $filaD['Identificador'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaD['Nombre_Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaD['Descripcion'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaD['Especificacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $filaD['Talla'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $filaD['Cantidad'], 1, 'C', false, 1);
-    }
-    
-    // Cerrar el statement de productos
-    $stmtD->close();
 
-    // Cerrar el statement de Salida_E
-    $stmtE->close();
-    
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
+        $bg = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
+
+        $html .= '
+            <tr style="background-color:'.$bg.'; text-align:center;">
+                <td width="10%">'.$filaD['Identificador'].'</td>
+                <td width="15%">'.$filaD['Nombre_Empresa'].'</td>
+                <td width="25%">'.$filaD['Descripcion'].'</td>
+                <td width="28%">'.$filaD['Especificacion'].'</td>
+                <td width="10%">'.$filaD['Talla'].'</td>
+                <td width="12%">'.$filaD['Cantidad'].'</td>
+            </tr>
+        ';
+    }
+
+    $html .= '
+        </tbody>
+    </table>';
+
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $stmtD->close(); // Cerrar el statement de productos
+    $stmtE->close(); // Cerrar el statement de Salida_E
+    $conexion->close(); // Cerrar la conexión a la base de datos
+
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
     
     // Generar el PDF
     $pdf->Output('Reporte_Entrada_Por_ID_' . date('YmdHis') . '.pdf', 'I');

@@ -237,56 +237,50 @@ try {
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
 
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(40, "Nombre de la Empresa"),
-        $pdf->getStringHeight(55, "Descripción"),
-        $pdf->getStringHeight(50, "Especificación"),
-        $pdf->getStringHeight(25, "Talla"),
-        $pdf->getStringHeight(20, "Cantidad")
-    ];
+    $html = '
+    <table border="1" cellpadding="4">
+        <thead>
+            <tr style="background-color:#2c3e50; color:white; text-align:center; font-weight:bold;">
+                <th width="20%">Empresa</th>
+                <th width="30%">Descripción</th>
+                <th width="30%">Especificación</th>
+                <th width="10%">Talla</th>
+                <th width="10%">Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+    ';
+    
+    $color = true;
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla 
-    $pdf->MultiCell(40, $maxHeightEncabezado, 'Nombre de la Empresa', 1, 'C', true, 0);
-    $pdf->MultiCell(55, $maxHeightEncabezado, 'Descripción', 1, 'C', true, 0);
-    $pdf->MultiCell(50, $maxHeightEncabezado, 'Especificación', 1, 'C', true, 0);
-    $pdf->MultiCell(25, $maxHeightEncabezado, 'Talla', 1, 'C', true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, 'Cantidad', 1, 'C', true, 1);
-    
-    // Agregar datos a la tabla
-    $pdf->SetFont("helvetica", '', 10); // Restaurar el estilo de fuente normal
     while ($filaProducto = $resultadoProductos->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(40, $filaProducto['Nombre_Empresa']),
-            $pdf->getStringHeight(55, $filaProducto['Descripcion']),
-            $pdf->getStringHeight(50, $filaProducto['Especificacion']),
-            $pdf->getStringHeight(25, $filaProducto['Talla']),
-            $pdf->getStringHeight(20, $filaProducto['Cantidad'])
-        ];
-    
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
-        $pdf->MultiCell(40, $maxHeight, $filaProducto['Nombre_Empresa'], 1, 'C', false, 0);
-        $pdf->MultiCell(55, $maxHeight, $filaProducto['Descripcion'], 1, 'C', false, 0);
-        $pdf->MultiCell(50, $maxHeight, $filaProducto['Especificacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(25, $maxHeight, $filaProducto['Talla'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $filaProducto['Cantidad'], 1, 'C', false, 1);
+        $fondo = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
+
+        $html .= '
+            <tr style="background-color:'.$fondo.'; text-align:center;">
+                <td width="20%">'.$filaProducto['Nombre_Empresa'].'</td>
+                <td width="30%">'.$filaProducto['Descripcion'].'</td>
+                <td width="30%">'.$filaProducto['Especificacion'].'</td>
+                <td width="10%">'.$filaProducto['Talla'].'</td>
+                <td width="10%">'.$filaProducto['Cantidad'].'</td>
+            </tr>
+        ';
     }
+
+    $html .= '
+        </tbody>
+    </table>';
+
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $stmtProductos->close(); // Después de procesar $resultadoProductos
+    $stmtE->close(); // Cerrar el statement de Salida_E
+    $conexion->close(); // Cerrar la conexión a la base de datos
     
-    // Después de procesar $resultadoProductos
-    $stmtProductos->close();
-    
-    // Cerrar el statement de Salida_E
-    $stmtE->close();
-    
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
     
     // Generar el PDF
     $pdf->Output('Reporte_Solicitud_Por_ID_' . date('YmdHis') . '.pdf', 'I');

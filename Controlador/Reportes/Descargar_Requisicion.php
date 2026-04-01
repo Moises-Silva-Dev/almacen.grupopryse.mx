@@ -432,9 +432,7 @@ try {
     $stmtSumaProductos->close();
     $stmtProductos->close();
     $stmtE->close();
-    
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
+    $conexion->close(); // Cerrar la conexión a la base de datos
 
     // Limpiar el buffer de salida
     if (ob_get_level()) {

@@ -98,57 +98,57 @@ try {
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
 
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(25, "Identificador"),
-        $pdf->getStringHeight(40, "Fecha de Creación"),
-        $pdf->getStringHeight(40, "Proveedor"),
-        $pdf->getStringHeight(40, "Receptor"),
-        $pdf->getStringHeight(40, "Comentarios"),
-        $pdf->getStringHeight(30, "Estatus")
-    ];
+    $html = '
+    <table border="1" cellpadding="4">
+        <thead>
+            <tr style="background-color:#2c3e50;color:white;font-weight:bold;text-align:center;">
+                <th width="10%">Identificador</th>
+                <th width="15%">Fecha</th>
+                <th width="20%">Proveedor</th>
+                <th width="20%">Receptor</th>
+                <th width="25%">Comentarios</th>
+                <th width="10%">Estatus</th>
+            </tr>
+        </thead>
+        <tbody>
+    ';
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-    
-    // Cabecera de la tabla EntradaE
-    $pdf->MultiCell(25, $maxHeightEncabezado, "Identificador", 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Fecha Creación", 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Proveedor", 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Receptor", 1, 'C', true, 0);
-    $pdf->MultiCell(40, $maxHeightEncabezado, "Comentarios", 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, "Estatus", 1, 'C', true, 1);
+    $color = true;
 
-    // Agregar datos a la tabla EntradaE
-    $pdf->SetFont("helvetica", "", 12); // Restaurar el estilo de fuente normal
     while ($filaE = $resultadoE->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(25, $filaE['IdEntE']),
-            $pdf->getStringHeight(40, $filaE['Fecha_Creacion']),
-            $pdf->getStringHeight(40, $filaE['Proveedor']),
-            $pdf->getStringHeight(40, $filaE['Receptor']),
-            $pdf->getStringHeight(40, $filaE['Comentarios']),
-            $pdf->getStringHeight(30, $filaE['Estatus'])
-        ];
-        
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
-        $pdf->MultiCell(25, $maxHeight, $filaE['IdEntE'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaE['Fecha_Creacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaE['Proveedor'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaE['Receptor'], 1, 'C', false, 0);
-        $pdf->MultiCell(40, $maxHeight, $filaE['Comentarios'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaE['Estatus'], 1, 'C', false, 1);
-    }
-    
-    // Cerrar las sentencias
-    $stmtE->close();
 
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
+        $bg = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
+
+        // color dinámico por estatus (🔥 PRO)
+        $colorEstatus = ($filaE['Estatus'] == 'Cancelado') 
+            ? 'color:red;font-weight:bold;' 
+            : 'color:green;';
+
+        $html .= '
+            <tr style="background-color:'.$bg.'; text-align:center;">
+                <td width="10%">'.$filaE['IdEntE'].'</td>
+                <td width="15%">'.$filaE['Fecha_Creacion'].'</td>
+                <td width="20%">'.$filaE['Proveedor'].'</td>
+                <td width="20%">'.$filaE['Receptor'].'</td>
+                <td width="25%">'.$filaE['Comentarios'].'</td>
+                <td width="10%" style="'.$colorEstatus.'">'.$filaE['Estatus'].'</td>
+            </tr>
+        ';
+    }
+
+    $html .= '
+        </tbody>
+    </table>';
+
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $stmtE->close(); // Cerrar las sentencias
+    $conexion->close(); // Cerrar la conexión a la base de datos
+
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
 
     // Generar y descargar el PDF
     $pdf->Output('Reporte_Entradas_Por_Fechas_' . date('YmdHis') . '.pdf', 'I');

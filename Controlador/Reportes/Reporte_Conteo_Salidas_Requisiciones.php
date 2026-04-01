@@ -123,78 +123,63 @@ try {
     // Estilo de la tabla EntradaE
     $pdf->SetFillColor(200, 220, 255); // Color de fondo de las celdas
     $pdf->SetFont("helvetica", "B", 9);
+
+    $html = '
+    <table border="1" cellpadding="4">
+        <thead>
+            <tr style="background-color:#2c3e50;color:white;font-weight:bold;text-align:center;">
+                <th width="8%">Identificador</th>
+                <th width="10%">Fecha</th>
+                <th width="10%">Usuario</th>
+                <th width="8%">Cuenta</th>
+                <th width="10%">Región</th>
+                <th width="12%">Estado</th>
+                <th width="6%">Identificador Producto</th>
+                <th width="12%">Descripción</th>
+                <th width="12%">Especificación</th>
+                <th width="6%">Pedida</th>
+                <th width="6%">Salida</th>
+            </tr>
+        </thead>
+        <tbody>
+    ';
     
-    // Calcular la altura de la fila más alta
-    $cellHeightsEncabezado = [
-        $pdf->getStringHeight(22, "Identificador"),
-        $pdf->getStringHeight(25, "Fecha de Creación"),
-        $pdf->getStringHeight(25, "Usuario"),
-        $pdf->getStringHeight(20, "Cuenta"),
-        $pdf->getStringHeight(25, "Región"),
-        $pdf->getStringHeight(30, "Estado"),
-        $pdf->getStringHeight(22, "Identificador de Prodcuto"),
-        $pdf->getStringHeight(30, "Descripción"),
-        $pdf->getStringHeight(30, "Especificación"),
-        $pdf->getStringHeight(17, "Cantidad Pedida"),
-        $pdf->getStringHeight(17, "Cantidad Salida")
-    ];
+    $color = true;
 
-    // Definir la altura máxima para la fila actual
-    $maxHeightEncabezado = max($cellHeightsEncabezado);
-
-    // Cabecera de la tabla EntradaE
-    $pdf->MultiCell(22, $maxHeightEncabezado, "Identificador", 1, 'C', true, 0);
-    $pdf->MultiCell(25, $maxHeightEncabezado, "Fecha de Creación", 1, 'C', true, 0);
-    $pdf->MultiCell(25, $maxHeightEncabezado, "Usuario", 1, 'C', true, 0);
-    $pdf->MultiCell(20, $maxHeightEncabezado, "Cuenta", 1, 'C', true, 0);
-    $pdf->MultiCell(25, $maxHeightEncabezado, "Región", 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, "Estado", 1, 'C', true, 0);
-    $pdf->MultiCell(22, $maxHeightEncabezado, "Identificador de Prodcuto", 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, "Descripción", 1, 'C', true, 0);
-    $pdf->MultiCell(30, $maxHeightEncabezado, "Especificación", 1, 'C', true, 0);
-    $pdf->MultiCell(17, $maxHeightEncabezado, "Cantidad Pedida", 1, 'C', true, 0);
-    $pdf->MultiCell(17, $maxHeightEncabezado, "Cantidad Salida", 1, 'C', true, 1);
-
-    // Agregar datos a la tabla EntradaE
-    $pdf->SetFont("helvetica", "", 12); // Restaurar el estilo de fuente normal
     while ($filaE = $resultadoE->fetch_assoc()) {
-        // Calcular la altura de la fila más alta
-        $cellHeights = [
-            $pdf->getStringHeight(22, $filaE['Identificador_Requisicion']),
-            $pdf->getStringHeight(25, $filaE['Fecha_Creacion']),
-            $pdf->getStringHeight(25, $filaE['Usuario']),
-            $pdf->getStringHeight(20, $filaE['Cuenta']),
-            $pdf->getStringHeight(25, $filaE['Region']),
-            $pdf->getStringHeight(30, $filaE['Estado']),
-            $pdf->getStringHeight(22, $filaE['Identificador_Producto']),
-            $pdf->getStringHeight(30, $filaE['Descripcion']),
-            $pdf->getStringHeight(30, $filaE['Especificacion']),
-            $pdf->getStringHeight(17, $filaE['Cantidad_Requerida']),
-            $pdf->getStringHeight(17, $filaE['Cantidad_Salida'])
-        ];
-        
-        // Definir la altura máxima para la fila actual
-        $maxHeight = max($cellHeights);
-    
-        // Usar MultiCell para cada columna con la misma altura máxima y centrado
-        $pdf->MultiCell(22, $maxHeight, $filaE['Identificador_Requisicion'], 1, 'C', false, 0);
-        $pdf->MultiCell(25, $maxHeight, $filaE['Fecha_Creacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(25, $maxHeight, $filaE['Usuario'], 1, 'C', false, 0);
-        $pdf->MultiCell(20, $maxHeight, $filaE['Cuenta'], 1, 'C', false, 0);
-        $pdf->MultiCell(25, $maxHeight, $filaE['Region'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaE['Estado'], 1, 'C', false, 0);
-        $pdf->MultiCell(22, $maxHeight, $filaE['Identificador_Producto'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaE['Descripcion'], 1, 'C', false, 0);
-        $pdf->MultiCell(30, $maxHeight, $filaE['Especificacion'], 1, 'C', false, 0);
-        $pdf->MultiCell(17, $maxHeight, $filaE['Cantidad_Requerida'], 1, 'C', false, 0);
-        $pdf->MultiCell(17, $maxHeight, $filaE['Cantidad_Salida'], 1, 'C', false, 1);
-    }
-    
-    // Cerrar las sentencias
-    $stmtE->close();
 
-    // Cerrar la conexión a la base de datos
-    $conexion->close();
+        $bg = $color ? '#f2f2f2' : '#ffffff';
+        $color = !$color;
+
+        $html .= '
+            <tr style="background-color:'.$bg.'; text-align:center;">
+                <td width="8%">'.$filaE['Identificador_Requisicion'].'</td>
+                <td width="10%">'.$filaE['Fecha_Creacion'].'</td>
+                <td width="10%">'.$filaE['Usuario'].'</td>
+                <td width="8%">'.$filaE['Cuenta'].'</td>
+                <td width="10%">'.$filaE['Region'].'</td>
+                <td width="12%">'.$filaE['Estado'].'</td>
+                <td width="6%">'.$filaE['Identificador_Producto'].'</td>
+                <td width="12%">'.$filaE['Descripcion'].'</td>
+                <td width="12%">'.$filaE['Especificacion'].'</td>
+                <td width="6%">'.$filaE['Cantidad_Requerida'].'</td>
+                <td width="6%">'.$filaE['Cantidad_Salida'].'</td>
+            </tr>
+        ';
+    }
+
+    $html .= '
+        </tbody>
+    </table>';
+
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $stmtE->close(); // Cerrar las sentencias
+    $conexion->close(); // Cerrar la conexión a la base de datos
+
+    // Limpiar el buffer de salida
+    if (ob_get_level()) {
+        ob_end_clean();
+    }
 
     // Generar y descargar el PDF
     $pdf->Output('Reporte_Coteo_Salidas_Requisionces_Por_Fechas_' . date('YmdHis') . '.pdf', 'I');
