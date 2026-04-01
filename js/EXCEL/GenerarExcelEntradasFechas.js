@@ -1,52 +1,78 @@
-// Función para generar y descargar un archivo Excel basado en las fechas seleccionadas en el formulario
 function Generar_Excel_Entradas_Fechas(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío de formulario y recarga de la página)
     event.preventDefault();
         
-    // Obtener el formulario de entradas por su ID
     var form = document.getElementById('entradasFormFechas');
         
-    // Verificar si el formulario es válido
     if (!form.checkValidity()) {
-        // Agregar una clase CSS al formulario para mostrar mensajes de validación visuales
         form.classList.add('was-validated');
-        return; // Salir de la función si el formulario no es válido
+        return;
     }
 
-    // Obtener las fechas seleccionadas del formulario como un objeto FormData
+    // 1. Mostrar SweetAlert de carga
+    Swal.fire({
+        title: 'Generando Reporte de Entradas',
+        text: 'Buscando registros y preparando archivo, por favor espere...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     var formData = new FormData(form);
-        
-    // Especificar la URL del script PHP que genera el archivo Excel
     var url = '../../Controlador/EXCEL/Excel_Entrada_Almacen_Por_Fechas.php';
 
-    // Usar fetch para enviar los datos del formulario al servidor con el método POST
-    fetch(url, {
-        method: 'POST', // Indica que los datos se enviarán con POST
-        body: formData  // Carga los datos del formulario como cuerpo de la solicitud
-    })
-    // Convertir la respuesta a un objeto Blob (representación binaria del archivo generado)
-    .then(response => response.blob()) 
-    .then(blob => {
-        // Crear una URL temporal para el Blob generado
-        var url = URL.createObjectURL(blob);
-            
-        // Crear un elemento <a> para descargar el archivo Excel
-        var a = document.createElement('a');
-        a.href = url; // Asignar la URL del archivo al atributo href del elemento
-        a.download = 'Entradas_Almacen_' + 
-            new Date().toISOString().slice(0, 19) // Obtener la fecha y hora actual en formato ISO
-            .replace(/[-T]/g, '_') // Reemplazar caracteres no válidos en nombres de archivo
-            .replace(/:/g, '-') + 
-            '.xlsx'; // Agregar extensión .xlsx al archivo
+    // 2. Definir tiempo mínimo de espera (2 segundos)
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // 3. Iniciar la petición fetch
+    const peticion = fetch(url, {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Error en el servidor: ' + response.statusText);
+        }
+        return response.blob();
+    });
+
+    // 4. Esperar a que AMBAS terminen (Petición + Timer)
+    Promise.all([peticion, timer])
+    .then(([blob]) => {
+        // Cerramos el SweetAlert de carga
+        Swal.close();
+
+        // Crear la descarga del archivo
+        const urlDownload = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlDownload;
         
-        // Agregar el elemento <a> al DOM, simular un clic para iniciar la descarga, y luego eliminarlo
-        document.body.appendChild(a); // Agregar el elemento temporalmente al DOM
-        a.click(); // Simular un clic para iniciar la descarga
-        document.body.removeChild(a); // Eliminar el elemento <a> después de la descarga
-            
-        // Revocar la URL temporal para liberar memoria
-        URL.revokeObjectURL(url);
+        // Formatear fecha para el nombre del archivo
+        const fecha = new Date().toISOString().slice(0, 19).replace(/[-T]/g, '_').replace(/:/g, '-');
+        a.download = `Entradas_Almacen_${fecha}.xlsx`;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Liberar memoria
+        URL.revokeObjectURL(urlDownload);
+
+        // 5. Mostrar aviso de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Reporte Listo!',
+            text: 'El archivo de entradas se ha generado correctamente.',
+            timer: 2000,
+            showConfirmButton: false
+        });
     })
-    // Manejar errores si ocurren durante la solicitud fetch
-    .catch(error => console.error('Error:', error)); 
+    .catch(error => {
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de Generación',
+            text: 'Hubo un problema al procesar las entradas. Por favor, intente de nuevo.'
+        });
+    });
 }

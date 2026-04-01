@@ -7,13 +7,17 @@ function Generar_Excel_Producto_x_Estado(event) {
         text: 'Por favor, espere mientras se procesa el archivo Excel.',
         allowOutsideClick: false,
         didOpen: () => {
-            Swal.showLoading(); // Activa el spinner de carga
+            Swal.showLoading();
         }
     });
 
     const url = '../../Controlador/EXCEL/Excel_Producto_x_Estado.php';
 
-    fetch(url, {
+    // 2. Definir el tiempo mínimo de espera (2 segundos) para consistencia visual
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // 3. Iniciar la petición fetch
+    const peticion = fetch(url, {
         method: 'GET',
     })
     .then(response => {
@@ -21,18 +25,23 @@ function Generar_Excel_Producto_x_Estado(event) {
             throw new Error('Error en el servidor: ' + response.statusText);
         }
         return response.blob();
-    })
-    .then(blob => {
-        // 2. Validación de contenido (evita descargar archivos vacíos o errores PHP ocultos)
+    });
+
+    // 4. Esperar a que AMBAS (petición y timer) terminen
+    Promise.all([peticion, timer])
+    .then(([blob]) => {
+        // Validación de contenido
         if (blob.size === 0) {
             throw new Error('El archivo recibido está vacío.');
         }
 
-        // 3. Gestión de la descarga mediante ObjectURL
+        // Cerramos la alerta de carga
+        Swal.close();
+
+        // Gestión de la descarga
         const urlBlob = URL.createObjectURL(blob);
         const a = document.createElement('a');
         
-        // Generación dinámica del nombre de archivo (Timestamping)
         const timestamp = new Date().toISOString().slice(0, 19).replace(/[-T]/g, '_').replace(/:/g, '-');
         
         a.href = urlBlob;
@@ -43,7 +52,7 @@ function Generar_Excel_Producto_x_Estado(event) {
         document.body.removeChild(a);
         URL.revokeObjectURL(urlBlob);
 
-        // 4. Notificación de éxito
+        // 5. Notificación de éxito
         Swal.fire({
             icon: 'success',
             title: '¡Descarga completada!',
@@ -53,7 +62,8 @@ function Generar_Excel_Producto_x_Estado(event) {
         });
     })
     .catch(error => {
-        // 5. Gestión de excepciones y errores de red
+        // Gestión de errores
+        Swal.close();
         console.error('Runtime Error:', error);
         Swal.fire({
             icon: 'error',

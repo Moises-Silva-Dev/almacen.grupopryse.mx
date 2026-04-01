@@ -1,52 +1,83 @@
-// Función para generar y descargar un archivo Excel basado en el identificador del usuario en el formulario
 function Generar_Excel_Requisicion_Usuario(event) {
-    // Previene el comportamiento por defecto del formulario (evita el envío del formulario y recarga de la página)
     event.preventDefault();
         
-    // Obtener el formulario de solicitudes por su ID
     var form = document.getElementById('RequisicionUsuarioFormID');
         
-    // Verificar si el formulario es válido
     if (!form.checkValidity()) {
-        // Agregar una clase CSS para mostrar visualmente los errores de validación
         form.classList.add('was-validated');
-        return; // Salir de la función si el formulario no es válido
+        return;
     }
 
-    // Crear un objeto FormData con los datos del formulario
+    // 1. Mostrar SweetAlert de carga
+    Swal.fire({
+        title: 'Generando Reporte de Usuario',
+        text: 'Consultando requisiciones, por favor espere...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     var formData = new FormData(form);
-        
-    // Definir la URL del script PHP que generará el archivo Excel
     var url = '../../Controlador/EXCEL/Excel_Requision_Usuario_Por_ID.php';
 
-    // Usar fetch para enviar los datos al servidor utilizando el método POST
-    fetch(url, {
-        method: 'POST', // Especificar el método HTTP
-        body: formData   // Incluir los datos del formulario en la solicitud
+    // 2. Definir el tiempo mínimo de espera (2 segundos)
+    const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+    // 3. Iniciar la petición fetch
+    const peticion = fetch(url, {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Error en el servidor: ' + response.statusText);
+        }
+        return response.blob();
+    });
+
+    // 4. Esperar a que AMBAS promesas terminen
+    Promise.all([peticion, timer])
+    .then(([blob]) => {
+        // Validación de contenido
+        if (blob.size === 0) {
+            throw new Error('El archivo generado está vacío.');
+        }
+
+        // Cerramos el cargando
+        Swal.close();
+
+        // Crear la descarga del archivo
+        const urlDownload = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlDownload;
+        
+        const fecha = new Date().toISOString().slice(0, 19).replace(/[-T]/g, '_').replace(/:/g, '-');
+        a.download = `Requisiciones_Usuario_${fecha}.xlsx`;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Liberar memoria
+        URL.revokeObjectURL(urlDownload);
+
+        // 5. Mostrar aviso de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Reporte Generado!',
+            text: 'Las requisiciones del usuario se han descargado correctamente.',
+            timer: 2000,
+            showConfirmButton: false
+        });
     })
-    // Convertir la respuesta en un objeto Blob (representación binaria del archivo generado)
-    .then(response => response.blob()) 
-    .then(blob => {
-        // Crear una URL temporal para el objeto Blob
-        var url = URL.createObjectURL(blob);
-            
-        // Crear dinámicamente un elemento <a> para descargar el archivo
-        var a = document.createElement('a');
-        a.href = url; // Asignar la URL del Blob al atributo href
-        a.download = 'Requisiciones_Del_Usuario_' + 
-            new Date().toISOString().slice(0, 19) // Generar una marca de tiempo
-            .replace(/[-T]/g, '_') // Reemplazar caracteres no válidos en nombres de archivo
-            .replace(/:/g, '-') + 
-            '.xlsx'; // Agregar la extensión del archivo
-            
-        // Agregar el enlace temporal al DOM, simular un clic para iniciar la descarga y luego eliminarlo
-        document.body.appendChild(a); // Insertar el enlace en el documento
-        a.click(); // Simular un clic en el enlace
-        document.body.removeChild(a); // Eliminar el enlace del DOM
-            
-        // Revocar la URL temporal para liberar memoria
-        URL.revokeObjectURL(url);
-    })
-    // Manejar errores si ocurren durante el proceso de solicitud o descarga
-    .catch(error => console.error('Error:', error)); 
+    .catch(error => {
+        // En caso de error, cerrar carga y notificar al usuario
+        Swal.close();
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo generar el reporte: ' + error.message
+        });
+    });
 }
