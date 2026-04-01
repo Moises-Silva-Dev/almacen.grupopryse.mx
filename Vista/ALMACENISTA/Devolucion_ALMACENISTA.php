@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Devolucion_ALMACENISTA.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -14,9 +15,9 @@
                         Gestión de Devolución
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Devolucion_ALMACENISTA.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nueva Devolución
-                </a>
+                <button type="button" class="btn btn-primary" onclick="openDevolucionModal()">
+                    <i class="fas fa-undo-alt me-1"></i> Nueva Devolución
+                </button>
             </div>
         </div>
     </div>
@@ -96,10 +97,16 @@
                                         <i class="fas fa-tags"></i>Telefono
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-tags"></i>Justificación
+                                        <i class="fas fa-tags"></i>Tipo
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-tags"></i>Tipo
+                                        <i class="fas  me-2"></i>Fecha de Entrada
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas  me-2"></i>Estatus
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy text-center">
+                                        <i class="fas  me-2"></i>Acciones
                                     </th>
                                 </tr>
                             </thead>
@@ -122,7 +129,7 @@
                                             )";
                                         }
 
-                                        $sql .= " GROUP BY DE.IdDevolucionE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " ORDER BY DE.IdDevolucionE DESC LIMIT ? OFFSET ?";
 
                                         // Calcular total para paginación (incluyendo búsqueda)
                                         $sql_total = "SELECT COUNT(*) as total
@@ -184,20 +191,14 @@
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-tags"></i>
+                                            <i class="fas fa-user"></i>
                                             <?php echo htmlspecialchars($row['Nombre_Devuelve']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-tags"></i>
+                                            <i class="fas fa-phone"></i>
                                             <?php echo htmlspecialchars($row['Telefono_Devuelve']); ?>
-                                        </span>
-                                    </td>
-                                    <td class="py-3 px-4">
-                                        <span class="badge bg-light text-navy">
-                                            <i class="fas fa-tags"></i>
-                                            <?php echo htmlspecialchars($row['Justificacion']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
@@ -219,6 +220,35 @@
                                         <span class="badge <?php echo $badgeClass; ?>">
                                             <?php echo htmlspecialchars($estatus); ?>
                                         </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-navy">
+                                            <i class="fas fa-calendar-alt me-1"></i>
+                                            <?php echo date("d/m/Y", strtotime($row['Fch_Devolucion'])); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?php
+                                            $estatus = $row['Estatus'];
+                                            if ($estatus == "Devolucion_Completa") {
+                                                $badgeClass = 'bg-warning';
+                                            } elseif ($estatus == "Completada_Parcial") {
+                                                $badgeClass = 'bg-success';
+                                            } else {
+                                                $badgeClass = 'bg-secondary';
+                                            }
+                                        ?>
+                                        <span class="badge <?php echo $badgeClass; ?>">
+                                            <?php echo htmlspecialchars($estatus); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Botón Editar -->
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarDevolucionModal(<?php echo $row['IdDevolucionE']; ?>)" title="Editar usuario">
+                                                <i class="fas fa-edit"></i> Modificar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php

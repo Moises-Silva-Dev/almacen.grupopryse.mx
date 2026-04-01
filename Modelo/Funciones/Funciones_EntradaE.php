@@ -20,8 +20,8 @@ function InsertarNuevaEntradaE($conexion, $registro, $id_Usuario, $Proveedor, $R
 }
 
 function ActualizarEstatusEntradaE($conexion, $id_EntradaE) {
-    // Prepara la consulta SQL para cambiar el estatus a "Eliminado"
-    $SetenciaActualizarEstatusEntradaE = "UPDATE EntradaE SET Estatus = 'Eliminado' WHERE IdEntE = ?";
+    // Prepara la consulta SQL para cambiar el estatus a inventariado
+    $SetenciaActualizarEstatusEntradaE = "UPDATE EntradaE SET Estatus = 'Inventariado' WHERE IdEntE = ?";
 
     // Prepara la sentencia
     $StmtActualizarEstatusEntradaE = $conexion->prepare($SetenciaActualizarEstatusEntradaE);

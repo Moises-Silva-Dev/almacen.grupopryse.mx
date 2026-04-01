@@ -43,8 +43,8 @@ function ModificarEstatusDevolucionE($conexion, $id_DevolucionE, $Identificador,
                             IFNULL(SUM(SD.Cantidad), 0) AS Cantidad_Salida,
                             IFNULL(SUM(DD.Cantidad), 0) AS Cantidad_Devuelta
                         FROM DevolucionE DE
-                        LEFT JOIN Requisicione RE ON DE.IdRequiE = RE.IDRequisicionE
-                        LEFT JOIN Requisiciond RD ON RD.IdReqE = RE.IDRequisicionE
+                        LEFT JOIN RequisicionE RE ON DE.IdRequiE = RE.IDRequisicionE
+                        LEFT JOIN RequisicionD RD ON RD.IdReqE = RE.IDRequisicionE
                         LEFT JOIN Salida_E SE ON SE.ID_ReqE = RE.IDRequisicionE
                         LEFT JOIN Salida_D SD ON SD.Id = SE.Id_SalE AND SD.IdCProd = RD.IdCProd AND SD.IdTallas = RD.IdTalla
                         LEFT JOIN DevolucionD DD ON DD.IdDevE = DE.IdDevolucionE AND DD.IdCProd = RD.IdCProd AND DD.IdTalla = RD.IdTalla
