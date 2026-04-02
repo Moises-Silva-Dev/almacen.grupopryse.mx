@@ -1,6 +1,6 @@
 <?php include('head.php'); ?>
 
-<?php include('INSERT/Insert_Entrada_Almacen_Dev.php'); ?>
+<?php include('INSERT/Insert_Entrada_Almacen_ALMACENISTA.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -118,7 +118,7 @@
                                         $sql = "SELECT EE.IdEntE, EE.Proveedor, EE.Receptor, 
                                                     EE.Fecha_Creacion, EE.Estatus
                                                 FROM EntradaE EE
-                                                WHERE (EE.Estatus = 'Creada' OR EE.Estatus = 'Modificado')";
+                                                WHERE (EE.Estatus = 'Creada' OR EE.Estatus = 'Modificado' or EE.Estatus = 'Inventariado')";
 
                                         // Si hay búsqueda, agregar condiciones
                                         if (!empty($search)) {
@@ -133,7 +133,7 @@
                                         $sql_total = "SELECT 
                                                         COUNT(*) as total
                                                     FROM EntradaE EE
-                                                    WHERE (EE.Estatus='Creada' OR EE.Estatus='Modificado')";
+                                                    WHERE (EE.Estatus='Creada' OR EE.Estatus='Modificado' or EE.Estatus = 'Inventariado')";
                                         
                                         if (!empty($search)) {
                                             $sql_total .= " AND
@@ -212,10 +212,13 @@
                                             $badgeClass = '';
                                             switch ($estatus) {
                                                 case 'Creada':
-                                                    $badgeClass = 'bg-success';
+                                                    $badgeClass = 'bg-turquoise text-dark';
                                                     break;
                                                 case 'Modificado':
                                                     $badgeClass = 'bg-warning text-dark';
+                                                    break;
+                                                case 'Inventariado':
+                                                    $badgeClass = 'bg-success text-white';
                                                     break;
                                                 default:
                                                     $badgeClass = 'bg-secondary';
@@ -227,10 +230,16 @@
                                     </td>
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarEntradaModal(<?php echo $row['IdEntE']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i> Modificar
-                                            </button>
+                                            <?php if ($row['Estatus'] !== 'Inventariado'): ?>
+                                                <!-- Botón Editar -->
+                                                <button class="btn btn-sm btn-outline-navy" onclick="openModificarEntradaModal(<?php echo $row['IdEntE']; ?>)" title="Editar usuario">
+                                                    <i class="fas fa-edit"></i> Modificar
+                                                </button>
+                                                <!-- Botón Dar de Alta en Inventario -->
+                                                <button class="btn btn-sm btn-outline-success" onclick="DarAltaInventarioEntrada(<?php echo $row['IdEntE']; ?>)" title="Dar Alta en Inventario">
+                                                    <i class="fas fa-check-circle"></i> Dar de Alta en Inventario
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -348,9 +357,10 @@
     </div>
 </div>
 
-<?php include('Update/Update_Entrada_Almacen_Dev.php'); ?>
+<?php include('Update/Update_Entrada_Almacen_ALMACENISTA.php'); ?>
 
 <!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Entrada_Producto.js"></script>
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Dar_Allta_Entrada.js"></script>
 
 <?php include('footer.php'); ?>   

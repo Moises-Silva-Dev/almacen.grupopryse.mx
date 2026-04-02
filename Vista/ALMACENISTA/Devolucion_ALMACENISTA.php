@@ -232,7 +232,7 @@
                                             $estatus = $row['Estatus'];
                                             if ($estatus == "Devolucion_Completa") {
                                                 $badgeClass = 'bg-warning';
-                                            } elseif ($estatus == "Completada_Parcial") {
+                                            } elseif ($estatus == "Devolucion_Parcial") {
                                                 $badgeClass = 'bg-success';
                                             } else {
                                                 $badgeClass = 'bg-secondary';
@@ -244,10 +244,16 @@
                                     </td>
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarDevolucionModal(<?php echo $row['IdDevolucionE']; ?>)" title="Editar usuario">
-                                                <i class="fas fa-edit"></i> Modificar
-                                            </button>
+                                            <?php if ($row['Estatus'] !== 'Inventariado'): ?>
+                                                <!-- Botón Editar -->
+                                                <button class="btn btn-sm btn-outline-navy" onclick="openModificarDevolucionModal(<?php echo $row['IdDevolucionE']; ?>)" title="Editar Devolucion">
+                                                    <i class="fas fa-edit"></i> Modificar
+                                                </button>
+                                                <!-- Botón Dar de Alta en Inventario -->
+                                                <button class="btn btn-sm btn-outline-success" onclick="DarAltaInventarioDevolucion(<?php echo $row['IdEntE']; ?>)" title="Dar Alta en Inventario">
+                                                    <i class="fas fa-check-circle"></i> Dar de Alta en Inventario
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -365,6 +371,9 @@
     </div>
 </div>
 
+<?php include('Update/Update_Devolucion_ALMACENISTA.php'); ?>
+
+<!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Devolucion.js"></script>
 
 <?php include('footer.php'); ?>

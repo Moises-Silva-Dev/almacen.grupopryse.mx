@@ -32,6 +32,39 @@ function InsertarNuevaDevolucionE($conexion, $Nombre_Devuelve, $Telefono_Devuelv
     }
 }
 
+// Función para actualizar la devolución en la tabla DevolucionE
+function ActualizarDevolucionE($conexion, $Nombre_Devuelve, $Telefono_Devuelve, $Justificacion, $fecha, $Opcion, $Identificador, $id_DevolucionE) {
+    if ($Opcion == 'Requisicion') {
+        // Preparar la sentencia SQL
+        $SetenciaActualizarEntradaE = "UPDATE DevolucionE SET Nombre_Devuelve = ?, Telefono_Devuelve = ?, Justificacion = ?, Fch_Devolucion = ?, IdRequiE = ? WHERE IdDevolucionE = ?";
+    } else if ($Opcion == 'Prestamo') {
+        // Preparar la sentencia SQL
+        $SetenciaActualizarEntradaE = "UPDATE DevolucionE SET Nombre_Devuelve = ?, Telefono_Devuelve = ?, Justificacion = ?, Fch_Devolucion = ?, IdPrestE = ? WHERE IdDevolucionE = ?";
+    } else {
+        // Preparar la sentencia SQL
+        $SetenciaActualizarEntradaE = "UPDATE DevolucionE SET Nombre_Devuelve = ?, Telefono_Devuelve = ?, Justificacion = ?, Fch_Devolucion = ? WHERE IdDevolucionE = ?";
+    }
+    
+    // Preparar la sentencia SQL con los parámetros
+    $StmtActualizarEntradaE = $conexion->prepare($SetenciaActualizarEntradaE);
+    
+    if ($Opcion == 'Requisicion' || $Opcion == 'Prestamo') {
+        // Asignar los valores a los parámetros
+        $StmtActualizarEntradaE->bind_param("ssssii", $Nombre_Devuelve, $Telefono_Devuelve, $Justificacion, $fecha, $Identificador, $id_DevolucionE);
+    } else {
+        // Asignar los valores a los parámetros
+        $StmtActualizarEntradaE->bind_param("ssssi", $Nombre_Devuelve, $Telefono_Devuelve, $Justificacion, $fecha, $id_DevolucionE);
+    }
+    
+    // Ejecutar la sentencia SQL
+    if ($StmtActualizarEntradaE->execute()) {
+        return true; // Si se ejecuta correctamente, devuelve true
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al actualizar entradaE: " . $conexion->error);
+    }
+}
+
 // Función para actualizar el estatus de la devolución
 function ModificarEstatusDevolucionE($conexion, $id_DevolucionE, $Identificador, $Opcion) {
     if ($Opcion == 'Requisicion') { // Si es una requisición

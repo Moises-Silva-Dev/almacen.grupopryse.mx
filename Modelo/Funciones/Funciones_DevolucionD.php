@@ -19,6 +19,24 @@ function InsertarNuevaDevolucionD($conexion, $id_DevolucionE, $idProducto, $idta
     }
 }
 
+// Función para eliminar la devolución en la tabla DevolucionD
+function EliminarDevolucionD($conexion, $id_DevolucionE) {
+    // Preparar la sentencia SQL
+    $SentenciaEliminarDevolucionD = "DELETE FROM DevolucionD WHERE IdDevE = ?";
+
+    // Preparar la sentencia SQL con los parámetros
+    $StmtEliminarDevolucionD = $conexion->prepare($SentenciaEliminarDevolucionD);
+    $StmtEliminarDevolucionD->bind_param("i", $id_DevolucionE);
+
+    // Ejecutar la sentencia SQL
+    if ($StmtEliminarDevolucionD->execute()) {
+        return true; // Si se ejecuta correctamente, devuelve true
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al eliminar devoluciónD: " . $conexion->error);
+    }
+}
+
 // Función para obtener todas las entradas de la tabla EntradaD
 function ObtenerDevolucionD($conexion, $id_DevolucionE) {
     // Preparar la sentencia SQL
