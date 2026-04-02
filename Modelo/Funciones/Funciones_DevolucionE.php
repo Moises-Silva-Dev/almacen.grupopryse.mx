@@ -65,6 +65,25 @@ function ActualizarDevolucionE($conexion, $Nombre_Devuelve, $Telefono_Devuelve, 
     }
 }
 
+function ActualizarEstatusDevolucionE($conexion, $id_EntradaE) {
+    // Prepara la consulta SQL para cambiar el estatus a inventariado
+    $SetenciaActualizarEstatusEntradaE = "UPDATE DevolucionE SET Estatus = 'Inventariado' WHERE IdDevolucionE = ?";
+
+    // Prepara la sentencia
+    $StmtActualizarEstatusEntradaE = $conexion->prepare($SetenciaActualizarEstatusEntradaE);
+
+    // Vincula parámetros
+    $StmtActualizarEstatusEntradaE->bind_param("i", $id_EntradaE);
+
+    // Ejecuta la consulta
+    if ($StmtActualizarEstatusEntradaE->execute()) {
+        return true;
+    } else {
+        // Lanzar una excepción para activar el bloque catch
+        throw new Exception("Error al cambiar estatus de entradaE: " . $conexion->error);
+    }
+}
+
 // Función para actualizar el estatus de la devolución
 function ModificarEstatusDevolucionE($conexion, $id_DevolucionE, $Identificador, $Opcion) {
     if ($Opcion == 'Requisicion') { // Si es una requisición

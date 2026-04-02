@@ -233,6 +233,8 @@
                                             if ($estatus == "Devolucion_Completa") {
                                                 $badgeClass = 'bg-warning';
                                             } elseif ($estatus == "Devolucion_Parcial") {
+                                                $badgeClass = 'bg-infor';
+                                            }elseif ($estatus == "Inventariado") {
                                                 $badgeClass = 'bg-success';
                                             } else {
                                                 $badgeClass = 'bg-secondary';
@@ -250,7 +252,7 @@
                                                     <i class="fas fa-edit"></i> Modificar
                                                 </button>
                                                 <!-- Botón Dar de Alta en Inventario -->
-                                                <button class="btn btn-sm btn-outline-success" onclick="DarAltaInventarioDevolucion(<?php echo $row['IdEntE']; ?>)" title="Dar Alta en Inventario">
+                                                <button class="btn btn-sm btn-outline-success" onclick="DarAltaInventarioDevolucion(<?php echo $row['IdDevolucionE']; ?>)" title="Dar Alta en Inventario">
                                                     <i class="fas fa-check-circle"></i> Dar de Alta en Inventario
                                                 </button>
                                             <?php endif; ?>
@@ -375,5 +377,6 @@
 
 <!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Devolucion.js"></script>
+<script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Dar_Allta_Devolucion.js"></script>
 
 <?php include('footer.php'); ?>
