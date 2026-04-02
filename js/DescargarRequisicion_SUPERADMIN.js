@@ -1,46 +1,82 @@
-// Selecciona todos los botones con la clase BtnDescargarRequisicion
+// Selecciona todos los botones con la clase BtnDescargarRequisicion_SUPERADMIN
 document.querySelectorAll('.BtnDescargarRequisicion_SUPERADMIN').forEach(button => {
-    // Una vez que lo encuentre, simular un clic y realizar la funcion
     button.addEventListener('click', function () {
-        // Obtiene el ID de la requisición desde el atributo `data-id` del botón clickeado.
+        // 1. Obtener el ID de la requisición
         var idRequisicion = this.dataset.id;
 
-        // Va ir al direccionamiento donde genera el PDF
-        fetch(`../../Controlador/Reportes/Descargar_Requisicion_SUPERADMIN.php?nocache=${Date.now()}`, {
-            // Define el método HTTP como POST.
+        // 2. Mostrar SweetAlert de carga inmediatamente
+        Swal.fire({
+            title: 'Generando PDF',
+            text: `Preparando el reporte #${idRequisicion}, por favor espere...`,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const urlScript = `../../Controlador/Reportes/Descargar_Requisicion_SUPERADMIN.php?nocache=${Date.now()}`;
+
+        // 3. Definir el tiempo mínimo de espera (2 segundos) para una UX consistente
+        const timer = new Promise(resolve => setTimeout(resolve, 2000));
+
+        // 4. Iniciar la petición fetch
+        const peticion = fetch(urlScript, {
             method: 'POST',
             headers: {
-                // Especifica que el contenido enviado será en formato JSON.
                 'Content-Type': 'application/json',
             },
-            // Convierte el objeto con el ID de la solicitud en una cadena JSON y lo envía como cuerpo de la solicitud.
             body: JSON.stringify({ Id_Solicitud: idRequisicion }),
         })
         .then(response => {
             if (!response.ok) {
-                // Lanza un error si la respuesta del servidor no es satisfactoria.
-                throw new Error('Error al generar el PDF');
+                throw new Error('Error al generar el PDF en el servidor');
             }
-            // Convierte la respuesta en un objeto Blob (para manejar archivos binarios como el PDF).
             return response.blob();
-        })
-        .then(blob => {
-            // Crea una URL temporal para el archivo PDF generado.
-            const url = window.URL.createObjectURL(blob);
-            // Crea un elemento <a> dinámicamente.
+        });
+
+        // 5. Esperar a que AMBAS terminen (Petición + Timer)
+        Promise.all([peticion, timer])
+        .then(([blob]) => {
+            // Validar que el archivo no esté vacío
+            if (blob.size === 0) {
+                throw new Error('El archivo PDF se generó vacío.');
+            }
+
+            // Cerramos la alerta de carga
+            Swal.close();
+
+            // Gestión de la descarga
+            const urlBlob = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            // Asigna la URL del Blob como el atributo href del enlace.
-            link.href = url;
-            // Especifica el nombre del archivo que se descargará.
+            link.href = urlBlob;
             link.download = `Reporte_Requisicion_${idRequisicion}.pdf`;
-            // Añade temporalmente el enlace al DOM para que sea clickeable.
+            
             document.body.appendChild(link);
-            // Simula un clic en el enlace para iniciar la descarga.
             link.click();
-            // Elimina el enlace del DOM después de completar la descarga.
             document.body.removeChild(link);
+            
+            // Liberar memoria
+            window.URL.revokeObjectURL(urlBlob);
+
+            // 6. Notificación de éxito (opcional, se cierra sola en 1.5s)
+            Swal.fire({
+                icon: 'success',
+                title: 'PDF Listo',
+                text: 'La descarga ha comenzado.',
+                timer: 1500,
+                showConfirmButton: false
+            });
         })
-        // Maneja cualquier error ocurrido durante el proceso y lo muestra en la consola.
-        .catch(error => console.error(error));
+        .catch(error => {
+            // Cerrar carga y mostrar error detallado
+            Swal.close();
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Reporte',
+                text: 'No se pudo generar el PDF: ' + error.message,
+                confirmButtonText: 'Entendido'
+            });
+        });
     });
 });

@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.BtnDescargarRequisicion').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
-            // Tu lógica actual para descargar
-            alert('Descargando requisición #' + id);
         });
     });
     

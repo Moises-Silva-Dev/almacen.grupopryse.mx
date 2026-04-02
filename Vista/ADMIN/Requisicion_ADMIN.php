@@ -235,7 +235,7 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editRequisicionProduct(<?php echo $row['IDRequisicionE']; ?>)" title="Editar productos de la requisición">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarRequisicionModal(<?php echo $row['IDRequisicionE']; ?>)" title="Editar productos de la requisición">
                                                 <i class="fas fa-edit"></i> Editar
                                             </button>
                                         </div>
@@ -354,6 +354,14 @@
         </div>
     </div>
 </div>
+
+<?php include('Update/Update_Requisicion_ADMIN.php'); ?>
+
+<!-- JS para validar el formulario -->
+<script>
+    // Pasar el correo del usuario desde PHP a JavaScript
+    const usuarioCorreo = '<?php echo $_SESSION['usuario']; ?>';
+</script>
 
 <script src="../../js/Tablas/Tabla_Requisicion.js"></script>
 

@@ -1,3 +1,6 @@
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
+
 <!-- Modal para Modificar Requisición -->
 <div class="modal fade" id="modificarRequisicionModal" tabindex="-1" aria-labelledby="modificarRequisicionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">

@@ -142,12 +142,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="Prestamo_SUPERADMIN.php" class="menu-item">
-                            <i class="fas fa-clipboard-list menu-icon"></i>
-                            <span class="menu-text">Prestamos</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="Ver_SUPERADMIN.php" class="menu-item">
                             <i class="fas fa-eye menu-icon"></i>
                             <span class="menu-text">Ver Requisiciones</span>

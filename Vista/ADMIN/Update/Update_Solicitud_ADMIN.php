@@ -1,3 +1,6 @@
+<!-- CSS Personalizado -->
+<link rel="stylesheet" href="../../css/formulario_registro_usuario.css">
+
 <!-- Modal para Modificar Borrador de Requisición -->
 <div class="modal fade" id="modificarBorradorModal" tabindex="-1" aria-labelledby="modificarBorradorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">

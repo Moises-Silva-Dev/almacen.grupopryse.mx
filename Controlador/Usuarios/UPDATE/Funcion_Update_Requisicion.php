@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $urls = [
             1 => "../../../Vista/DEV/index_DEV.php", // URL para el tipo de usuario 1
             2 => "../../../Vista/SUPERADMIN/Solicitud_SUPERADMIN.php", // URL para el tipo de usuario 2
-            3 => "../../../Vista/ADMIN/Solicitud_ADMIN.php", // URL para el tipo de usuario 3
+            3 => "../../../Vista/ADMIN/Requisicion_ADMIN.php", // URL para el tipo de usuario 3
             4 => "../../../Vista/USER/Solicitud_USER.php", // URL para el tipo de usuario 4
             5 => "../../../Vista/ALMACENISTA/index_ALMACENISTA.php" // URL para el tipo de usuario 5
         ];

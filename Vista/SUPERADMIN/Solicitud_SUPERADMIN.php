@@ -254,18 +254,18 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Autorizar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="abrirModal(<?php echo $row['IDRequisicionE']; ?>)" title="Autorizar">
-                                                <i class="fas fa-check"></i>
+                                            <button class="btn btn-sm btn-outline-success" onclick="abrirModal(<?php echo $row['IDRequisicionE']; ?>)" title="Autorizar">
+                                                <i class="fas fa-circle-check"></i> Autorizar
                                             </button>
                                             
                                             <!-- Botón Cambiar Modificicación -->
-                                            <button class="btn btn-sm btn-outline-turquoise" href="javascript:void(0);" onclick="SolicitarModificacionRequisicion(<?php echo $row['IDRequisicionE']; ?>)" title="Solicitar Modificación">
-                                                <i class="fas fa-edit"></i>
+                                            <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="SolicitarModificacionRequisicion(<?php echo $row['IDRequisicionE']; ?>)" title="Solicitar Modificación">
+                                                <i class="fas fa-edit"></i> Regresar a Modificación
                                             </button>
                                             
                                             <!-- Botón Descargar -->
-                                            <button class="btn btn-sm btn-outline-danger BtnDescargarRequisicion_SUPERADMIN" data-id="<?php echo $row['IDRequisicionE']; ?>">
-                                                <i class="fas fa-download"></i>
+                                            <button class="btn btn-sm btn-outline-navy BtnDescargarRequisicion_SUPERADMIN" data-id="<?php echo $row['IDRequisicionE']; ?>">
+                                                <i class="fas fa-download"></i> Descargar
                                             </button>
                                         </div>
                                     </td>
