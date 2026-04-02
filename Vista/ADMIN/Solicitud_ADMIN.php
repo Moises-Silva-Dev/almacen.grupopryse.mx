@@ -91,7 +91,7 @@
                                         <i class="fas fa-id-card me-2"></i>ID
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-envelope me-2"></i>Fecha
+                                        <i class="fas fa-calendar me-2"></i>Fecha
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
                                         <i class="fas fa-user-tag me-2"></i>Estatus
@@ -200,7 +200,7 @@
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-user me-1"></i>
+                                            <i class="fas fa-calendar me-1"></i>
                                             <?php echo htmlspecialchars($row['Fecha']); ?>
                                         </span>
                                     </td>
@@ -217,20 +217,20 @@
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-building me-1"></i>
+                                            <i class="fas fa-file-alt me-1"></i>
                                             <?php echo htmlspecialchars($row['BJustificacion']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-building me-1"></i>
+                                            <i class="fas fa-comment me-1"></i>
                                             <?php echo htmlspecialchars($row['BComentariosMod']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editBorradorUser(<?php echo $row['BIDRequisicionE']; ?>)" title="Editar Borrador">
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarBorradorModal(<?php echo $row['BIDRequisicionE']; ?>)" title="Editar Borrador">
                                                 <i class="fas fa-edit"></i> Editar
                                             </button>
                                             <!-- Boton Enviar -->
@@ -376,6 +376,14 @@
         </button>
     </div>
 </div>
+
+<?php include('Update/Update_Solicitud_ADMIN.php'); ?>
+
+<!-- JS para validar el formulario -->
+<script>
+    // Pasar el correo del usuario desde PHP a JavaScript
+    const usuarioCorreo = '<?php echo $_SESSION['usuario']; ?>';
+</script>
 
 <script src="../../js/Tablas/Tabla_Borrador.js"></script>
 <script src="../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Enviar_Requisicion.js"></script>

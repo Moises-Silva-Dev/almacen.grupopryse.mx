@@ -1,8 +1,8 @@
 // Importar diccionarios desde archivos externos
 import { diccionarioTallas } from './DiccionarioTallasRestriccion.js';
-console.log(diccionarioTallas);
+// console.log(diccionarioTallas);
 import { productosExcluidos } from './DiccionarioProductosBaja.js';
-console.log(productosExcluidos);
+// console.log(productosExcluidos);
 
 // ==================== MODAL DE REGISTRO DE BORRADOR - JS COMPLETO ====================
 
@@ -800,7 +800,7 @@ async function cargarCuentasBorr() {
         cuentaSelect.innerHTML = '<option value="" selected disabled>⏳ Cargando cuentas...</option>';
         cuentaSelect.disabled = true;
         
-        const response = await fetch('../../../Controlador/GET/Formulario/getSelectCuentaAdmin.php');
+        const response = await fetch(`../../../Controlador/GET/Formulario/getSelectCuentaAdmin.php?correo_electronico=${usuarioCorreo}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

@@ -598,9 +598,4 @@
 }
 </style>
 
-<!-- JS para validar el formulario -->
-<script>
-    // Pasar el correo del usuario desde PHP a JavaScript
-    const usuarioCorreo = '<?php echo $_SESSION['usuario']; ?>';
-</script>
 <script type="module" src="../../../js/Formularios/Formulario_Insertar_Borrador.js" defer></script>

@@ -1,514 +1,599 @@
-<?php include('head.php'); ?>
-
-<?php
-include('../../../Modelo/Conexion.php'); // Conectar a la base de datos
-
-// Verifica si la variable $_GET['id'] está definida y no es nula
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $ID_Solicitud = $_GET['id'];
-
-    // Realiza la consulta para obtener la información del empleado
-    $conexion = (new Conectar())->conexion();
-
-    //Setencia SQL
-    $consulta = $conexion->prepare("SELECT * 
-                FROM 
-                    Borrador_RequisicionE BRE 
-                INNER JOIN 
-                    Usuario U on BRE.BIdUsuario = U.ID_Usuario
-                INNER JOIN 
-                    Cuenta C on BRE.BIdCuenta = C.ID
-                INNER JOIN
-                    Regiones R on BRE.BIdRegion = R.ID_Region
-                INNER JOIN 
-                    Estados E on BRE.BIdEstado = E.Id_Estado
-                WHERE 
-                    BRE.BIDRequisicionE = ?");
-
-    //Parametros
-    $consulta->bind_param("i", $ID_Solicitud);
-    $consulta->execute();
-    $resultado = $consulta->get_result();
-
-    // Verifica si se encontraron resultados
-    if ($row = $resultado->fetch_assoc()) {
-        // Ahora, $row contiene la información del empleado que puedes usar en el formulario
-        $query = "SELECT RE.BIDRequisicionE, RD.BIdCProd, RD.BIdTalla, RD.BCantidad, P.Descripcion,
-                    P.Especificacion, P.IMG, CE.Nombre_Empresa, CT.Talla, CC.Descrp
-                    FROM Borrador_RequisicionD RD
-                    INNER JOIN Borrador_RequisicionE RE on RD.BIdReqE = RE.BIDRequisicionE
-                    INNER JOIN Producto P on RD.BIdCProd = P.IdCProducto
-                    INNER JOIN CTallas CT on RD.BIdTalla = CT.IdCTallas
-                    INNER JOIN CCategorias CC on P.IdCCat = CC.IdCCate
-                    INNER JOIN CTipoTallas CTT on CT.IdCTipTal = CTT.IdCTipTall
-                    INNER JOIN CEmpresas CE on P.IdCEmp = CE.IdCEmpresa
-                    WHERE RE.BIDRequisicionE = ?";
-                    
-                    $stmt = $conexion->prepare($query);
-                    $stmt->bind_param("i", $ID_Solicitud);
-                    $stmt->execute();
+<!-- Modal para Modificar Borrador de Requisición -->
+<div class="modal fade" id="modificarBorradorModal" tabindex="-1" aria-labelledby="modificarBorradorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="modificarBorradorModalLabel">
+                    <i class="fas fa-edit me-2"></i>
+                    Modificar Borrador de Requisición
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             
-                    $resultadoConsulta = $stmt->get_result();
-    } else {
-        // No se encontró ningún empleado con la ID proporcionada, puedes manejar esto según tus necesidades
-        echo "No se encontró ningún registro con la ID proporcionada.";
-        exit; // Puedes salir del script o redirigir a otra página
-    }
-} else {
-    // La variable $_GET['id'] no está definida o es nula, puedes manejar esto según tus necesidades
-    echo "ID de empleado no proporcionada.";
-    exit; // Puedes salir del script o redirigir a otra página
-}
-?>
-
-<div class="container mt-5">
-    <center><h2>Modificación Borrador Requisición</h2></center>
-    <!-- Formulario -->
-    <form id="FormUpdateBorradorRequisicion" class="needs-validation" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Borrador_Requision.php" method="POST" enctype="multipart/form-data" novalidate>
-
-    <input type="hidden" name="ID_RequisicionE" id="ID_RequisicionE" value="<?php echo $row['BIDRequisicionE']; ?>">
-    <input type="hidden" id="datosTabla" name="datosTabla">
-
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header " id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Información General
-            </button>
-            </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <div class="mb-3">
-                            <label for="Supervisor" class="form-label">Supervisor:</label>
-                            <input type="text" class="form-control" id="Supervisor" name="Supervisor" value="<?php echo $row['BSupervisor']  ?>" placeholder="Ingresa el Nombre del Supervisor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el nombre del Supervisor.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="ID_Cuenta" class="form-label">Cuenta:</label>
-                            <select class="form-select mb-3" id="ID_Cuenta" name="ID_Cuenta" required>
-                                <option value="" selected disabled>-- Seleccionar Cuenta --</option>
-                                    <?php
-                                        // Llamo el correo del usuario
-                                        $usuario = $_SESSION['usuario'];
-                
-                                        // Preparar la consulta
-                                        $stmt = $conexion->prepare("SELECT C.ID, C.NombreCuenta 
-                                                    FROM 
-                                                        Usuario U
-                                                    INNER JOIN 
-                                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
-                                                    INNER JOIN
-                                                        Cuenta C ON UC.ID_Cuenta = C.ID
-                                                    WHERE 
-                                                        U.Correo_Electronico = ?");
-                                            
-                                        // Vincular parámetros
-                                        $stmt->bind_param("s", $usuario);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                
-                                        while ($resultado = $result->fetch_assoc()) {
-                                            $selected = ($row['BIdCuenta'] == $resultado['ID']) ? 'selected' : '';
-                                            echo "<option value='" . htmlspecialchars($resultado['ID']) . "' $selected>" . htmlspecialchars($resultado['NombreCuenta']) . "</option>";
-                                        }
-                
-                                        // Cerrar la declaración
-                                        $stmt->close();
-                                    ?>
-                            </select>
-                            <div class="invalid-feedback">
-                                Por favor, selecciona una opción.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Region" class="form-label">Región:</label>
-                            <select class="form-select mb-3" id="Region" name="Region" required>
-                                <option value="" selected disabled>-- Seleccionar Región --</option>
-                                    <?php
-                                        // Preparar la consulta
-                                        $stmt1 = $conexion->prepare("SELECT R.ID_Region, R.Nombre_Region 
-                                                    FROM 
-                                                        Usuario U
-                                                    INNER JOIN 
-                                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
-                                                    INNER JOIN
-                                                        Cuenta C ON UC.ID_Cuenta = C.ID
-                                                    INNER JOIN 
-                                                        Cuenta_Region CR ON C.ID = CR.ID_Cuentas
-                                                    INNER JOIN 
-                                                        Regiones R ON CR.ID_Regiones = R.ID_Region
-                                                    WHERE 
-                                                        U.Correo_Electronico = ?");
-                                                        
-                                        // Vincular parámetros
-                                        $stmt1->bind_param("s", $usuario);
-                                        $stmt1->execute();
-                                        $result1 = $stmt1->get_result();
-
-                                        while ($resultado1 = $result1->fetch_assoc()) {
-                                            $selected1 = ($row['BIdRegion'] == $resultado1['ID_Region']) ? 'selected' : '';
-                                            echo "<option value='" . htmlspecialchars($resultado1['ID_Region']) . "' $selected1>" . htmlspecialchars($resultado1['Nombre_Region']) . "</option>";
-                                        }
-
-                                        // Cerrar la declaración
-                                        $stmt1->close();
-                                    ?>
-                            </select>
-                            <div class="invalid-feedback">
-                                Por favor, selecciona una opción.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="CentroTrabajo" class="form-label">Centro de Trabajo:</label>
-                            <input type="text" class="form-control" id="CentroTrabajo" name="CentroTrabajo" value="<?php echo $row['BCentroTrabajo']  ?>" placeholder="Ingresa el Nombre del Centro de Trabajo">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el nombre del Centro de Trabajo.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="NroElementos" class="form-label">Numero de Elementos:</label>
-                            <input type="text" class="form-control" id="NroElementos" name="NroElementos" value="<?php echo $row['BNroElementos']  ?>" placeholder="Ingresa el Numero de Elementos" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el numero de Elementos.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Estado" class="form-label">Estado:</label>
-                            <select class="form-select mb-3" id="Estado" name="Estado" required>
-                                <option value="" selected disabled>-- Seleccionar Estado --</option>
-                                    <?php
-                                        // Preparar la consulta
-                                        $stmt2 = $conexion->prepare("SELECT E.Id_Estado, E.Nombre_estado 
-                                                    FROM 
-                                                        Usuario U
-                                                    INNER JOIN 
-                                                        Usuario_Cuenta UC ON U.ID_Usuario = UC.ID_Usuarios
-                                                    INNER JOIN
-                                                        Cuenta C ON UC.ID_Cuenta = C.ID
-                                                    INNER JOIN 
-                                                        Cuenta_Region CR ON C.ID = CR.ID_Cuentas
-                                                    INNER JOIN 
-                                                        Regiones R ON CR.ID_Regiones = R.ID_Region
-                                                    INNER JOIN 
-                                                        Estado_Region ER ON R.ID_Region = ER.ID_Regiones
-                                                    INNER JOIN 
-                                                        Estados E ON ER.ID_Estados = E.Id_Estado
-                                                    WHERE
-                                                        U.Correo_Electronico = ?");
-                                                        
-                                        // Vincular parámetros
-                                        $stmt2->bind_param("s", $usuario);
-                                        $stmt2->execute();
-                                        $result2 = $stmt2->get_result();
-
-                                        while ($resultado2 = $result2->fetch_assoc()) {
-                                            $selected2 = ($row['BIdEstado'] == $resultado2['Id_Estado']) ? 'selected' : '';
-                                            echo "<option value='" . htmlspecialchars($resultado2['Id_Estado']) . "' $selected2>" . htmlspecialchars($resultado2['Nombre_estado']) . "</option>";
-                                        }
-
-                                        // Cerrar la declaración
-                                        $stmt2->close();
-                                    ?>
-                            </select>
-                            <div class="invalid-feedback">
-                                Por favor, selecciona una opción.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Receptor" class="form-label">Nombre del Receptor:</label>
-                            <input type="text" class="form-control" id="Receptor" name="Receptor" value="<?php echo $row['BReceptor']  ?>" placeholder="Ingresa el Nombre del Receptor" onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32)" required>
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el Nombre del Receptor.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="num_tel" class="form-label">Número de Teléfono del Receptor:</label>
-                            <input type="tel" class="form-control" id="num_tel" name="TelReceptor" value="<?php echo $row['BTelReceptor']  ?>" placeholder="Ingresa el Numero de Telefono del Receptor" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" required>
-                            <div class="invalid-feedback">
-                                Por favor, ingresa tu Numero de Telefono.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="RFC" class="form-label">RFC del Receptor:</label>
-                            <input type="text" class="form-control" id="RFC" name="RfcReceptor" value="<?php echo $row['BRfcReceptor']  ?>" maxlength="13" placeholder="Ingresa el RFC del Receptor">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa tu RFC.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Justificacion" class="form-label">Justificación:</label>
-                            <textarea name="Justificacion" id="Justificacion" class="form-control" placeholder="Ingresa la Justificación" required><?php echo $row['BJustificacion'];  ?></textarea>
-                            <div class="invalid-feedback">
-                                Por favor, ingresa la Justificación.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Opcion" class="form-label">¿Enviar a Domicilio?</label>
-                            <select class="form-select mb-3" id="Opcion" name="Opcion" required>
-                                <option value="" selected disabled>-- Seleccionar Opción --</option>
-                                <option value="SI">Si</option>
-                                <option value="NO">No</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Por favor, selecciona una opción.
-                            </div>
-                        </div>       
-                        <div id="Envio" class="mb-3" style="display: none;">
-                            <label for="Mpio" class="form-label">Municipio:</label>
-                            <input type="text" class="form-control" id="Mpio" name="Mpio" value="<?php echo $row['BMpio']  ?>" placeholder="Ingresa el Municipio">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el Municipio.
-                            </div>
-                        <br>
-                            <label for="Colonia" class="form-label">Colonia:</label>
-                            <input type="text" class="form-control" id="Colonia" name="Colonia" value="<?php echo $row['BColonia']  ?>" placeholder="Ingresa la Colonia">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa la colonia.
-                            </div>
-                        <br>
-                            <label for="Calle" class="form-label">Calle:</label>
-                            <input type="text" class="form-control" id="Calle" name="Calle" value="<?php echo $row['BCalle']  ?>" placeholder="Ingresa el Nombre de la Calle">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el nombre de la calle.
-                            </div>
-                        <br>            
-                            <label for="Nro" class="form-label">Numero de Casa:</label>
-                            <input type="text" class="form-control" id="Nro" name="Nro" value="<?php echo $row['BNro']  ?>" placeholder="Ingresa el Numero de Casa">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el numero de casa.
-                            </div>
-                        <br>
-                            <label for="CP" class="form-label">Codigo Postal:</label>
-                            <input type="text" class="form-control" id="CP" name="CP" value="<?php echo $row['BCP']  ?>" placeholder="Ingresa el Codigo Postal" maxlength="5" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;">
-                            <div class="invalid-feedback">
-                                Por favor, ingresa el codigo postal.
-                            </div>
-                        </div>
+            <div class="modal-body">
+                <div id="loadingModificarBorradorData" class="text-center py-5">
+                    <div class="spinner-border text-turquoise" role="status">
+                        <span class="visually-hidden">Cargando...</span>
                     </div>
+                    <p class="mt-3 text-muted">Cargando datos del borrador...</p>
                 </div>
-        </div>
-
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Productos
-            </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                <center>
-                    <div class="mb-2">
-                        <button type="button" class="btn btn-info" id="BtnMostrarTablaProductos">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="44" height="44" stroke-width="1.5"> 
-                                <path d="M15 15m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path> 
-                                <path d="M18.5 18.5l2.5 2.5"></path> 
-                                <path d="M4 6h16"></path> 
-                                <path d="M4 12h4"></path> 
-                                <path d="M4 18h4"></path> 
-                            </svg>Catalogo</button>
-                    </div>
-                </center>
-                    <table class="table table-responsive bg-info" id="tabla">
-                        <tbody>
-                            <tr class="fila-fija" data-id="1">
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="ID_Producto" class="form-label">Codigo:</label>
-                                        <select class="form-select mb-3" id="ID_Producto" name="ID_Producto[]">
-                                            <option value="" selected disabled>-- Seleccionar ID de Producto --</option>
-                                                <?php
-                                                    $sql = $conexion->query("SELECT * FROM Producto;");
-                                                    while ($resultado4 = $sql->fetch_assoc()) {
-                                                        echo "<option value='" . $resultado4['IdCProducto'] . "'>" . $resultado4['IdCProducto'] . "</option>";
-                                                    }
-                                                ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Por favor, selecciona una opción.
+                
+                <div id="modificarBorradorFormContainer" style="display: none;">
+                    <form id="FormUpdateBorradorRequisicion" action="../../../Controlador/Usuarios/UPDATE/Funcion_Update_Borrador_Requision.php" method="POST" novalidate>
+                        <input type="hidden" name="ID_RequisicionE" id="edit_borrador_id">
+                        <input type="hidden" id="datosTablaUpdateBorrador" name="datosTabla">
+                        
+                        <!-- Sistema de navegación por círculos -->
+                        <div class="step-indicator-container">
+                            <div class="step-indicator">
+                                <div class="step-circle" id="edit_borr_stepCircle1">
+                                    <span class="step-number">1</span>
+                                    <i class="fas fa-check step-check"></i>
+                                </div>
+                                <div class="step-line" id="edit_borr_stepLine1-2"></div>
+                                <div class="step-circle" id="edit_borr_stepCircle2">
+                                    <span class="step-number">2</span>
+                                    <i class="fas fa-check step-check"></i>
+                                </div>
+                                <div class="step-line" id="edit_borr_stepLine2-3"></div>
+                                <div class="step-circle" id="edit_borr_stepCircle3">
+                                    <span class="step-number">3</span>
+                                    <i class="fas fa-check step-check"></i>
+                                </div>
+                            </div>
+                            <div class="step-labels">
+                                <div class="step-label" id="edit_borr_stepLabel1">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Información General</span>
+                                </div>
+                                <div class="step-label" id="edit_borr_stepLabel2">
+                                    <i class="fas fa-boxes"></i>
+                                    <span>Seleccionar Producto</span>
+                                </div>
+                                <div class="step-label" id="edit_borr_stepLabel3">
+                                    <i class="fas fa-list"></i>
+                                    <span>Confirmar Productos</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PASO 1: Información General -->
+                        <div id="edit_borr_step1" class="form-step">
+                            <div class="card border-navy mb-4">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-info-circle me-2 text-turquoise"></i>
+                                    Datos de la Requisición
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_Supervisor" class="form-label text-navy">
+                                                <i class="fas fa-user-tie me-1 text-turquoise"></i>
+                                                Supervisor *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_borr_Supervisor" name="Supervisor" 
+                                                   placeholder="Ingresa el nombre del supervisor"
+                                                   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 209 || event.charCode == 241 || event.charCode == 32)" 
+                                                   required>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa el nombre del supervisor.
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td colspan="2">                        
-                                    <div class="mb-2">
-                                        <label for="ID_Talla" class="form-label">Talla:</label>
-                                            <select class="form-select mb-3" id="ID_Talla" name="ID_Talla[]">
-                                                <option value="" selected disabled>-- Seleccionar una Talla --</option>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_ID_Cuenta" class="form-label text-navy">
+                                                <i class="fas fa-building me-1 text-turquoise"></i>
+                                                Cuenta *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_borr_ID_Cuenta" name="ID_Cuenta" required>
+                                                <option value="" selected disabled>-- Cargando cuentas... --</option>
                                             </select>
                                             <div class="invalid-feedback">
-                                                Por favor, Selecciona una Opción.
+                                                Por favor, selecciona una cuenta.
                                             </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td colspan="2">                        
-                                    <div class="mb-2">
-                                        <label for="Cantidad" class="form-label">Cantidad:</label>
-                                        <input type="text" class="form-control" id="Cantidad" name="Cantidad[]" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" placeholder="Ingresa la Cantidad">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_Region" class="form-label text-navy">
+                                                <i class="fas fa-map-marker-alt me-1 text-turquoise"></i>
+                                                Región *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_borr_Region" name="Region" required>
+                                                <option value="" selected disabled>-- Seleccionar Región --</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona una región.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_CentroTrabajo" class="form-label text-navy">
+                                                <i class="fas fa-briefcase me-1 text-turquoise"></i>
+                                                Centro de Trabajo
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_borr_CentroTrabajo" name="CentroTrabajo" 
+                                                   placeholder="Ingresa el centro de trabajo">
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa el centro de trabajo.
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td rowspan="2">
-                                    <div class="mb-2">
-                                        <img src="../../../img/Armar_Requicision.png" alt="Imagen del Producto" id="IMG" width="250" height="350">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_NroElementos" class="form-label text-navy">
+                                                <i class="fas fa-hashtag me-1 text-turquoise"></i>
+                                                Número de Elementos *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_borr_NroElementos" name="NroElementos" 
+                                                   placeholder="Ingresa el número de elementos" 
+                                                   onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" 
+                                                   required>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa el número de elementos.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_Estado" class="form-label text-navy">
+                                                <i class="fas fa-city me-1 text-turquoise"></i>
+                                                Estado *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_borr_Estado" name="Estado" required>
+                                                <option value="" selected disabled>-- Seleccionar Estado --</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona un estado.
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr class="fila-fija2" data-id="1">
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="Empresa" class="form-label">Empresa:</label>
-                                        <input type="text" class="form-control" id="Empresa" name="Empresa[]" placeholder="Ingresa la Empresa" disabled>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_Receptor" class="form-label text-navy">
+                                                <i class="fas fa-user-check me-1 text-turquoise"></i>
+                                                Nombre del Receptor *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_borr_Receptor" name="Receptor" 
+                                                   placeholder="Ingresa el nombre del receptor"
+                                                   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 209 || event.charCode == 241 || event.charCode == 32)" 
+                                                   required>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa el nombre del receptor.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_num_tel" class="form-label text-navy">
+                                                <i class="fas fa-phone me-1 text-turquoise"></i>
+                                                Teléfono del Receptor *
+                                            </label>
+                                            <input type="tel" class="form-control border-navy" id="edit_borr_num_tel" name="TelReceptor" 
+                                                   placeholder="Ingresa el teléfono" maxlength="10"
+                                                   onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" 
+                                                   required>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa un teléfono válido (10 dígitos).
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="Categoria" class="form-label">Categoría:</label>
-                                        <input type="text" class="form-control" id="Categoria" name="Categoria[]" placeholder="Ingresa la Categoría" disabled>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_RFC" class="form-label text-navy">
+                                                <i class="fas fa-id-card me-1 text-turquoise"></i>
+                                                RFC del Receptor
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_borr_RFC" name="RfcReceptor" 
+                                                   placeholder="Ingresa el RFC" maxlength="13">
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa el RFC.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="edit_borr_Opcion" class="form-label text-navy">
+                                                <i class="fas fa-truck me-1 text-turquoise"></i>
+                                                ¿Enviar a Domicilio? *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_borr_Opcion" name="Opcion" required>
+                                                <option value="" selected disabled>-- Seleccionar Opción --</option>
+                                                <option value="SI">Sí</option>
+                                                <option value="NO">No</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona una opción.
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="mb-2">
-                                        <label for="Descripcion" class="form-label">Descripción:</label>
-                                        <input type="text" class="form-control" id="Descripcion" name="Descripcion[]" placeholder="Ingresa la Descripción" disabled>
+                                    
+                                    <div class="row" id="edit_borr_DireccionDiv" style="display: none;">
+                                        <div class="col-md-12">
+                                            <div class="card border-navy">
+                                                <div class="card-header bg-light text-navy">
+                                                    <i class="fas fa-location-dot me-2 text-turquoise"></i>
+                                                    Dirección de Envío
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="edit_borr_Mpio" class="form-label text-navy">Municipio</label>
+                                                            <input type="text" class="form-control border-navy" id="edit_borr_Mpio" name="Mpio" placeholder="Ingresa el municipio">
+                                                        </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="edit_borr_Colonia" class="form-label text-navy">Colonia</label>
+                                                            <input type="text" class="form-control border-navy" id="edit_borr_Colonia" name="Colonia" placeholder="Ingresa la colonia">
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
+                                                            <label for="edit_borr_Calle" class="form-label text-navy">Calle</label>
+                                                            <input type="text" class="form-control border-navy" id="edit_borr_Calle" name="Calle" placeholder="Ingresa la calle">
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
+                                                            <label for="edit_borr_Nro" class="form-label text-navy">Número</label>
+                                                            <input type="text" class="form-control border-navy" id="edit_borr_Nro" name="Nro" placeholder="Ingresa el número">
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
+                                                            <label for="edit_borr_CP" class="form-label text-navy">Código Postal</label>
+                                                            <input type="text" class="form-control border-navy" id="edit_borr_CP" name="CP" placeholder="Código postal" maxlength="5">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td colspan="2">
-                                    <div class="mb-2">
-                                        <label for="Especificacion" class="form-label">Especificación:</label>
-                                        <input type="text" class="form-control" id="Especificacion" name="Especificacion[]" placeholder="Ingresa la Especificación" disabled>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="edit_borr_Justificacion" class="form-label text-navy">
+                                                <i class="fas fa-comment me-1 text-turquoise"></i>
+                                                Justificación *
+                                            </label>
+                                            <textarea class="form-control border-navy" id="edit_borr_Justificacion" name="Justificacion" 
+                                                      rows="3" placeholder="Ingresa la justificación de la requisición" required></textarea>
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa la justificación.
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>    
-    <!-- Botones -->
-    <div class="mb-3">
-        <button id="btn_Agregar" type="button" class="btn btn-success">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-text-wrap" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M4 6l16 0" />
-                <path d="M4 18l5 0" />
-                <path d="M4 12h13a3 3 0 0 1 0 6h-4l2 -2m0 4l-2 -2" />
-            </svg>Agregar Producto
-        </button>        
-        <button type="submit" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                <path d="M16 19h6" />
-                <path d="M19 16v6" />
-                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-            </svg>Guardar
-        </button>
-        <a href="../Solicitud_ADMIN.php" class="btn btn-danger">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M4 7l16 0" />
-                <path d="M10 11l0 6" />
-                <path d="M14 11l0 6" />
-                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-            </svg>Cancelar
-        </a>
-    </div>
-    </form>
-
-    <div class="container mt-5">
-        <div class="table-responsive">
-            <table class="table table-sm table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">Codigo</th>
-                        <th scope="col">Empresa</th>
-                        <th scope="col">Categoría</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Especificación</th>
-                        <th scope="col">Talla</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Cancelar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        // Comprobar si hay resultados antes de continuar
-                        if ($resultadoConsulta->num_rows > 0) {
-                            // Iterar sobre cada fila de resultados
-                            while ($row1 = $resultadoConsulta->fetch_assoc()) {
-                    ?>
-                        <tr>
-                            <!-- Llamamos información de la consulta -->
-                            <td><?php echo $row1['BIdCProd']; ?></td>
-                            <td><?php echo $row1['Nombre_Empresa']; ?></td>
-                            <td><?php echo $row1['Descrp']; ?></td>
-                            <td><?php echo $row1['Descripcion']; ?></td>
-                            <td><?php echo $row1['Especificacion']; ?></td>
-                            <td data-id="<?php echo $row1['BIdTalla']; ?>"><?php echo $row1['Talla']; ?></td>
-                            <td><?php echo $row1['BCantidad']; ?></td>
-                            <td>
-                                <button type="button" class="btn btn-warning btn-anular">
-                                Eliminar
-                                </button> 
-                            </td>
-                        </tr>
-                    <?php
-                            }
-                        } else {
-                            // Mostrar un mensaje si no hay resultados
-                            echo "<tr><td colspan='8'>No se encontraron productos.</td></tr>";
-                        }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="tablaModal" tabindex="-1" aria-labelledby="tablaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tablaModalLabel">Lista de Productos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Buscador -->
-                    <input type="text" id="buscador" class="form-control mb-3" placeholder="Buscar producto...">
-                    
-                    <!-- Tabla -->
-                    <table class="table table-responsive table-hover table-striped">
-                        <thead>
-                            <tr class="table-primary">
-                                <th scope="col">Identificador</th>
-                                <th scope="col">Nombre de Empresa</th>
-                                <th scope="col">Categoría</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Especificación</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaCuerpo">
-                            <!-- Datos generados dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PASO 2: Seleccionar Producto -->
+                        <div id="edit_borr_step2" class="form-step" style="display: none;">
+                            <div class="card border-navy mb-4">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-box-open me-2 text-turquoise"></i>
+                                    Datos del Producto
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-5 mb-3">
+                                            <label for="edit_borr_ID_Producto" class="form-label text-navy">
+                                                <i class="fas fa-barcode me-1 text-turquoise"></i>
+                                                Producto *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_borr_ID_Producto" name="ID_Producto[]">
+                                                <option value="" selected disabled>-- Cargando productos... --</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona un producto.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3 mb-3">
+                                            <label for="edit_borr_ID_Talla" class="form-label text-navy">
+                                                <i class="fas fa-ruler me-1 text-turquoise"></i>
+                                                Talla *
+                                            </label>
+                                            <select class="form-select border-navy" id="edit_borr_ID_Talla" name="ID_Talla[]" disabled>
+                                                <option value="" selected disabled>-- Selecciona una talla --</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecciona una talla.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-2 mb-3">
+                                            <label for="edit_borr_Cantidad" class="form-label text-navy">
+                                                <i class="fas fa-hashtag me-1 text-turquoise"></i>
+                                                Cantidad *
+                                            </label>
+                                            <input type="text" class="form-control border-navy" id="edit_borr_Cantidad" name="Cantidad[]" 
+                                                   placeholder="0" pattern="[0-9]*" inputmode="numeric">
+                                            <div class="invalid-feedback">
+                                                Por favor, ingresa una cantidad válida.
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-2 mb-3 d-flex align-items-end">
+                                            <button type="button" class="btn btn-turquoise w-100" id="edit_borr_btn_AgregarProducto">
+                                                <i class="fas fa-plus me-1"></i> Agregar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Información del Producto Seleccionado -->
+                                    <div id="edit_borr_infoProductoCard" class="mt-4" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-md-3 text-center">
+                                                <div class="product-image-container">
+                                                    <img id="edit_borr_productoImagen" src="../../../img/Armar_Requicision.png" 
+                                                         alt="Imagen del producto" class="img-fluid rounded" style="max-width: 150px; max-height: 150px;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="text-muted small">Empresa</label>
+                                                        <p class="fw-bold text-navy" id="edit_borr_infoEmpresa">--</p>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="text-muted small">Categoría</label>
+                                                        <p class="fw-bold text-navy" id="edit_borr_infoCategoria">--</p>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <label class="text-muted small">Descripción</label>
+                                                        <p class="fw-bold text-navy" id="edit_borr_infoDescripcion">--</p>
+                                                    </div>
+                                                    <div class="col-md-12 mb-2">
+                                                        <label class="text-muted small">Especificación</label>
+                                                        <p class="fw-bold text-navy" id="edit_borr_infoEspecificacion">--</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PASO 3: Confirmar Productos -->
+                        <div id="edit_borr_step3" class="form-step" style="display: none;">
+                            <div class="card border-navy mb-4">
+                                <div class="card-header bg-light text-navy">
+                                    <i class="fas fa-list me-2 text-turquoise"></i>
+                                    Productos a Solicitar
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="edit_borr_tablaProductos">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th width="50">#</th>
+                                                    <th>Código</th>
+                                                    <th>Empresa</th>
+                                                    <th>Categoría</th>
+                                                    <th>Descripción</th>
+                                                    <th>Especificación</th>
+                                                    <th>Talla</th>
+                                                    <th>Cantidad</th>
+                                                    <th width="80">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="edit_borr_tablaProductosBody">
+                                                <!-- Productos se cargarán dinámicamente -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-center mt-3" id="edit_borr_productosCount">
+                                        <i class="fas fa-info-circle me-1 text-muted"></i>
+                                        <span class="text-muted">No hay productos agregados</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de navegación -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-secondary" id="edit_borr_prevBtn" style="display: none;">
+                                <i class="fas fa-arrow-left me-1"></i> Anterior
+                            </button>
+                            <div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-1"></i> Cancelar
+                                </button>
+                                <button type="button" class="btn btn-navy" id="edit_borr_nextBtn">
+                                    Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                                <button type="button" class="btn btn-primary" id="edit_borr_submitBtn" style="display: none;">
+                                    <i class="fas fa-save me-1"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="../../../js/Form_Envio.js"></script>
-<script src="../../../js/Solicitud_Carga_CueRegEst.js" defer></script>
-<script type="module" src="../../../js/Busqueda_Requision_Productos.js" defer></script>
-<script src="../../../js/Update_Producto_datosTabla.js"></script>
-<script src="../../../js/SweetAlertNotificaciones/Notificacion_SweetAlert_Update_Borrador_Requisicion.js"></script>
-<script src="../../../js/VistaTablaProductos.js"></script>
+<style>
+/* Estilos para el indicador de pasos */
+.step-indicator-container {
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+}
 
-<?php include('footer.php'); ?>
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.step-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    border: 3px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.step-circle.active {
+    border-color: var(--color-turquoise);
+    background-color: var(--color-turquoise);
+    box-shadow: 0 0 0 5px rgba(64, 224, 208, 0.2);
+}
+
+.step-circle.completed {
+    border-color: #28a745;
+    background-color: #28a745;
+}
+
+.step-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step-circle.active .step-number {
+    color: var(--color-navy);
+}
+
+.step-circle.completed .step-number {
+    display: none;
+}
+
+.step-check {
+    font-size: 1.2rem;
+    color: white;
+    display: none;
+}
+
+.step-circle.completed .step-check {
+    display: block;
+}
+
+.step-line {
+    flex: 1;
+    height: 3px;
+    background-color: #dee2e6;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.step-line.active {
+    background-color: var(--color-turquoise);
+}
+
+.step-line.completed {
+    background-color: #28a745;
+}
+
+.step-labels {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.step-label {
+    text-align: center;
+    flex: 1;
+    font-size: 0.85rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step-label i {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.step-label.active {
+    color: var(--color-turquoise);
+    font-weight: 600;
+}
+
+.step-label.completed {
+    color: #28a745;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(64, 224, 208, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(64, 224, 208, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(64, 224, 208, 0);
+    }
+}
+
+.step-circle.active {
+    animation: pulse 1.5s infinite;
+}
+
+.form-step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.product-image-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .step-circle {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .step-number, .step-check {
+        font-size: 1rem;
+    }
+    
+    .step-label {
+        font-size: 0.7rem;
+    }
+    
+    .step-label i {
+        font-size: 1rem;
+    }
+    
+    .step-line {
+        margin: 0 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .step-label span {
+        display: none;
+    }
+    
+    .step-label i {
+        font-size: 1.2rem;
+        margin-bottom: 0;
+    }
+}
+</style>
+
+<script type="module" src="../../../js/Formularios/Formulario_Actualizar_Borrador.js" defer></script>
