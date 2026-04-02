@@ -236,7 +236,7 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
                                             <button class="btn btn-sm btn-outline-navy" onclick="editRequisicionProduct(<?php echo $row['IDRequisicionE']; ?>)" title="Editar productos de la requisición">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i> Editar
                                             </button>
                                         </div>
                                     </td>

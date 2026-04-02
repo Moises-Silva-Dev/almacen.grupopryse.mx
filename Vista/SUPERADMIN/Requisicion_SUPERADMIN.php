@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Requisicion_SUPERADMIN.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -14,10 +15,9 @@
                         Requisiciones
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Requisicion_SUPERADMIN.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nueva Requisición
-                </a>
-                </div>
+                <button type="button" class="btn btn-primary" onclick="openRequisicionModal()">
+                    <i class="fas fa-pen-alt me-1"></i> Nueva Requisición
+                </button>
             </div>
         </div>
     </div>
@@ -235,13 +235,13 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editRequisicionUser(<?php echo $row['IDRequisicionE']; ?>)" title="Editar producto">
-                                                <i class="fas fa-edit"></i>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="openModificarRequisicionModal(<?php echo $row['IDRequisicionE']; ?>)" title="Editar requisicion">
+                                                <i class="fas fa-edit"></i> Editar
                                             </button>
 
                                             <!-- Botón Eliminar -->
                                             <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="eliminarRegistroRequisicion(<?php echo $row['IDRequisicionE']; ?>)">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt"></i> Eliminar
                                             </button>
                                         </div>
                                     </td>
@@ -359,6 +359,14 @@
         </div>
     </div>
 </div>
+
+<?php include('Update/Update_Requisicion_SUPERADMIN.php'); ?>
+
+<!-- JS para validar el formulario -->
+<script>
+    // Pasar el correo del usuario desde PHP a JavaScript
+    const usuarioCorreo = '<?php echo $_SESSION['usuario']; ?>';
+</script>
 
 <script src="../../js/Tablas/Tabla_Requisicion.js"></script>
 

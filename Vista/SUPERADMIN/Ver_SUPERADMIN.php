@@ -297,12 +297,12 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Ver Detalles -->
                                             <button class="btn btn-sm btn-outline-navy" onclick="mostrarInfoRequisicion(<?php echo $IDRequisicionE; ?>)" title="Ver detalles">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fas fa-eye"></i> Visualizar
                                             </button>
                                             
                                             <!-- Botón Descargar -->
                                             <button type="button" class="btn btn-sm btn-outline-danger BtnDescargarRequisicion" data-id="<?php echo $IDRequisicionE; ?>" title="Descargar requisición">
-                                                <i class="fas fa-download"></i>
+                                                <i class="fas fa-download"></i> Descargar
                                             </button>
                                         </div>
                                     </td>
