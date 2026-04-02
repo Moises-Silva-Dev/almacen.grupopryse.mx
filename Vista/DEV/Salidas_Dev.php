@@ -233,7 +233,7 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
                                             <button class="btn btn-sm btn-outline-navy" onclick="openSalidaModal(<?php echo $row['IDRequisicionE']; ?>)" title="Registrar Salida">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i> Registrar Salida
                                             </button>
                                         </div>
                                     </td>

@@ -255,17 +255,17 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
                                             <button class="btn btn-sm btn-outline-navy" onclick="openModificarProductoModal(<?php echo $row['IdCProducto']; ?>)" title="Editar producto">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i> Editar
                                             </button>
                                             
-                                            <!-- Botón Cambiar Rol -->
+                                            <!-- Botón Visualizar -->
                                             <button class="btn btn-sm btn-outline-turquoise" href="javascript:void(0);" onclick="mostrarProducto(<?php echo $row['IdCProducto']; ?>)" title="Mostrar Imagen">
-                                                <i class="fas fa-image"></i>
+                                                <i class="fas fa-image"></i> Visualizar
                                             </button>
                                             
                                             <!-- Botón Eliminar -->
                                             <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="eliminarRegistroProducto(<?php echo $row['IdCProducto']; ?>)">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt"></i> Eliminar
                                             </button>
                                         </div>
                                     </td>

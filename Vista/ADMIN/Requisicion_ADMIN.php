@@ -131,7 +131,7 @@
                                             $sql .= " AND (RE.IDRequisicionE LIKE ?) AND (RE.Estatus = 'Pendiente' OR RE.Estatus = 'Autorizado') AND (U.Correo_Electronico = ?)";
                                         }
 
-                                        $sql .= " GROUP BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY RE.IDRequisicionE ORDER BY RE.IDRequisicionE DESC LIMIT ? OFFSET ?";
                                         
                                         // Consulta para obtener las requisiciones
                                         $sql_total = "SELECT COUNT(*) AS Total

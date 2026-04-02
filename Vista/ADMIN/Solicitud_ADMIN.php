@@ -230,16 +230,16 @@
                                     <td class="py-3 px-4">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Botón Editar -->
-                                            <button class="btn btn-sm btn-outline-navy" onclick="editBorradorUser(<?php echo $row['BIDRequisicionE']; ?>)" title="Editar producto">
-                                                <i class="fas fa-edit"></i>
+                                            <button class="btn btn-sm btn-outline-navy" onclick="editBorradorUser(<?php echo $row['BIDRequisicionE']; ?>)" title="Editar Borrador">
+                                                <i class="fas fa-edit"></i> Editar
                                             </button>
                                             <!-- Boton Enviar -->
                                             <button class="btn btn-sm btn-outline-success" onclick="abrirModal(<?php echo $row['BIDRequisicionE']; ?>)" title="Ver detalles">
-                                                <i class="fas fa-circle-check"></i>
+                                                <i class="fas fa-circle-check"></i> Enviar
                                             </button>
                                             <!-- Botón Eliminar -->
                                             <button class="btn btn-sm btn-outline-danger" href="javascript:void(0);" onclick="eliminarRegistroBorradorRequisicion(<?php echo $row['BIDRequisicionE']; ?>)">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i class="fas fa-trash-alt"></i> Eliminar
                                             </button>
                                         </div>
                                     </td>
