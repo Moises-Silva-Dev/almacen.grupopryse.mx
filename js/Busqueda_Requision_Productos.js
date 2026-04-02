@@ -1,9 +1,9 @@
 // Importar el diccionario de datos para la restricciones de tallas
-import { diccionarioTallas } from './DiccionarioTallasRestriccion.js';
+import { diccionarioTallas } from './Formularios/DiccionarioTallasRestriccion.js';
 console.log(diccionarioTallas);
 
 // Importar el diccionario de datos para la Baja de productos
-import { productosExcluidos } from './DiccionarioProductosBaja.js';
+import { productosExcluidos } from './Formularios/DiccionarioProductosBaja.js';
 console.log(productosExcluidos);
 
 // Función que se ejecuta cuando el documento está listo

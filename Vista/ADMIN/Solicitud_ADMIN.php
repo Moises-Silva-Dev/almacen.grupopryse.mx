@@ -1,4 +1,5 @@
 <?php include('head.php'); ?>
+<?php include('INSERT/Insert_Solicitud_ADMIN.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -14,10 +15,9 @@
                         Borradores 
                     </h1>
                 </div>
-                <a href="INSERT/Insert_Solicitud_ADMIN.php" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-1"></i> Nuevo Borrador
-                </a>
-                </div>
+                <button type="button" class="btn btn-primary" onclick="openBorradorModal()">
+                    <i class="fas fa-pen-alt me-1"></i> Nuevo Borrador
+                </button>
             </div>
         </div>
     </div>
@@ -136,7 +136,7 @@
                                             $sql .= " AND (BRE.BIDRequisicionE LIKE ?) AND (U.Correo_Electronico = ?)";
                                         }
 
-                                        $sql .= " GROUP BY BRE.BIDRequisicionE DESC LIMIT ? OFFSET ?";
+                                        $sql .= " GROUP BY BRE.BIDRequisicionE ORDER BY BRE.BIDRequisicionE DESC LIMIT ? OFFSET ?";
 
                                         // Consulta para obtener las requisiciones
                                         $sql_total = "SELECT COUNT(*) AS Total

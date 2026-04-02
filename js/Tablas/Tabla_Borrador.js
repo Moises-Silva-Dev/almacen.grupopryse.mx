@@ -23,11 +23,6 @@ document.getElementById('selectAll').addEventListener('change', function(e) {
     });
 });
 
-// Funciones para acciones de región
-function editBorradorUser(id) {
-    window.location.href = `Update/Update_Solicitud_ADMIN.php?id=${id}`;
-}
-
 // Esta función se utiliza cuando se elimina una cuenta mediante el identificador en la base de datos.
 function eliminarRegistroBorradorRequisicion(id) { 
     // Confirmación de SweetAlert
