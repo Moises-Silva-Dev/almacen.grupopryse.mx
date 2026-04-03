@@ -19,15 +19,15 @@ function InsertarNuevaEntradaE($conexion, $registro, $id_Usuario, $Proveedor, $R
     }
 }
 
-function ActualizarEstatusEntradaE($conexion, $id_EntradaE) {
+function ActualizarEstatusEntradaE($conexion, $fecha_alta, $id_EntradaE) {
     // Prepara la consulta SQL para cambiar el estatus a inventariado
-    $SetenciaActualizarEstatusEntradaE = "UPDATE EntradaE SET Estatus = 'Inventariado' WHERE IdEntE = ?";
+    $SetenciaActualizarEstatusEntradaE = "UPDATE EntradaE SET Estatus = 'Inventariado', Fecha_Alta_Inventario = ? WHERE IdEntE = ?";
 
     // Prepara la sentencia
     $StmtActualizarEstatusEntradaE = $conexion->prepare($SetenciaActualizarEstatusEntradaE);
 
     // Vincula parámetros
-    $StmtActualizarEstatusEntradaE->bind_param("i", $id_EntradaE);
+    $StmtActualizarEstatusEntradaE->bind_param("si", $fecha_alta, $id_EntradaE);
 
     // Ejecuta la consulta
     if ($StmtActualizarEstatusEntradaE->execute()) {

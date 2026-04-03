@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id']) && is_numeric($_GE
             }
         }
 
-        if (ActualizarEstatusEntradaE($conexion, $idSolicitud)) { // Verificar si se ha insertado correctamente la región
+        if (ActualizarEstatusEntradaE($conexion, $fecha_alta, $idSolicitud)) { // Verificar si se ha insertado correctamente la región
             // Si todo fue bien, hacer commit de la transacción
             $conexion->commit();
 

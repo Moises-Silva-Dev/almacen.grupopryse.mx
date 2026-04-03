@@ -65,15 +65,15 @@ function ActualizarDevolucionE($conexion, $Nombre_Devuelve, $Telefono_Devuelve, 
     }
 }
 
-function ActualizarEstatusDevolucionE($conexion, $id_EntradaE) {
+function ActualizarEstatusDevolucionE($conexion, $fecha_alta, $id_DevolucionE) {
     // Prepara la consulta SQL para cambiar el estatus a inventariado
-    $SetenciaActualizarEstatusEntradaE = "UPDATE DevolucionE SET Estatus = 'Inventariado' WHERE IdDevolucionE = ?";
+    $SetenciaActualizarEstatusEntradaE = "UPDATE DevolucionE SET Estatus = 'Inventariado', Fecha_Alta_Inventario = ? WHERE IdDevolucionE = ?";
 
     // Prepara la sentencia
     $StmtActualizarEstatusEntradaE = $conexion->prepare($SetenciaActualizarEstatusEntradaE);
 
     // Vincula parámetros
-    $StmtActualizarEstatusEntradaE->bind_param("i", $id_EntradaE);
+    $StmtActualizarEstatusEntradaE->bind_param("si", $fecha_alta, $id_DevolucionE);
 
     // Ejecuta la consulta
     if ($StmtActualizarEstatusEntradaE->execute()) {
