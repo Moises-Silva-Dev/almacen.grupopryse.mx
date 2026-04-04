@@ -245,7 +245,7 @@ async function cargarProductosEditBorr() {
                                                 data-descripcion="${escapeHtmlEditBorr(producto.Descripcion)}"
                                                 data-especificacion="${escapeHtmlEditBorr(producto.Especificacion)}"
                                                 data-imagen="${producto.IMG || '../../../img/Armar_Requicision.png'}">
-                                                ${producto.IdCProducto} - ${producto.Descripcion.substring(0, 50)}...
+                                                ${producto.IdCProducto} - ${producto.Descripcion}, ${producto.Especificacion}...
                                             </option>`;
             });
             productoSelect.disabled = false;

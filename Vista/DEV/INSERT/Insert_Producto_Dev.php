@@ -44,7 +44,7 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="Nombre_Empresa" class="form-label text-navy">
                                         <i class="fas fa-building me-1 text-turquoise"></i>
-                                        Nombre de la Empresa *
+                                        Nombre de la Empresa 
                                     </label>
                                     <input type="text" class="form-control border-navy" id="Nombre_Empresa" name="Nombre_Empresa" 
                                         placeholder="Ej: Distribuidora del Norte"

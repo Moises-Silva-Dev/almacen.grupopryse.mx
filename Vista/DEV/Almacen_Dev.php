@@ -1,6 +1,6 @@
 <?php include('head.php'); ?>
 
-<?php include('INSERT/Insert_Entrada_Almacen_ALMACENISTA.php'); ?>
+<?php include('INSERT/Insert_Entrada_Almacen_Dev.php'); ?>
 
 <!-- CSS Personalizado -->
 <link rel="stylesheet" href="../../css/diseno_tablas_general.css">
@@ -357,7 +357,7 @@
     </div>
 </div>
 
-<?php include('Update/Update_Entrada_Almacen_ALMACENISTA.php'); ?>
+<?php include('Update/Update_Entrada_Almacen_Dev.php'); ?>
 
 <!-- JS Personalizado -->
 <script src="../../js/Tablas/Tabla_Entrada_Producto.js"></script>

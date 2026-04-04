@@ -71,7 +71,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_Supervisor" class="form-label text-navy">
                                                 <i class="fas fa-user-tie me-1 text-turquoise"></i>
-                                                Supervisor *
+                                                Supervisor <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="Req_Supervisor" name="Supervisor" 
                                                    placeholder="Ingresa el nombre del supervisor"
@@ -85,7 +85,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_ID_Cuenta" class="form-label text-navy">
                                                 <i class="fas fa-building me-1 text-turquoise"></i>
-                                                Cuenta *
+                                                Cuenta <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="Req_ID_Cuenta" name="ID_Cuenta" required>
                                                 <option value="" selected disabled>-- Cargando cuentas... --</option>
@@ -100,7 +100,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_Region" class="form-label text-navy">
                                                 <i class="fas fa-map-marker-alt me-1 text-turquoise"></i>
-                                                Región *
+                                                Región <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="Req_Region" name="Region" required>
                                                 <option value="" selected disabled>-- Seleccionar Región --</option>
@@ -127,7 +127,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_NroElementos" class="form-label text-navy">
                                                 <i class="fas fa-hashtag me-1 text-turquoise"></i>
-                                                Número de Elementos *
+                                                Número de Elementos <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="Req_NroElementos" name="NroElementos" 
                                                    placeholder="Ingresa el número de elementos" 
@@ -141,7 +141,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_Estado" class="form-label text-navy">
                                                 <i class="fas fa-city me-1 text-turquoise"></i>
-                                                Estado *
+                                                Estado <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="Req_Estado" name="Estado" required>
                                                 <option value="" selected disabled>-- Seleccionar Estado --</option>
@@ -156,7 +156,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_Receptor" class="form-label text-navy">
                                                 <i class="fas fa-user-check me-1 text-turquoise"></i>
-                                                Nombre del Receptor *
+                                                Nombre del Receptor <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="Req_Receptor" name="Receptor" 
                                                    placeholder="Ingresa el nombre del receptor"
@@ -170,7 +170,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_num_tel" class="form-label text-navy">
                                                 <i class="fas fa-phone me-1 text-turquoise"></i>
-                                                Teléfono del Receptor *
+                                                Teléfono del Receptor <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="tel" class="form-control border-navy" id="Req_num_tel" name="num_tel" 
                                                    placeholder="Ingresa el teléfono" maxlength="10"
@@ -198,7 +198,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="Req_Opcion" class="form-label text-navy">
                                                 <i class="fas fa-truck me-1 text-turquoise"></i>
-                                                ¿Enviar a Domicilio? *
+                                                ¿Enviar a Domicilio? <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="Req_Opcion" name="Opcion" required>
                                                 <option value="" selected disabled>-- Seleccionar Opción --</option>
@@ -250,7 +250,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="Req_Justificacion" class="form-label text-navy">
                                                 <i class="fas fa-comment me-1 text-turquoise"></i>
-                                                Justificación *
+                                                Justificación <strong style="color: red;">*</strong>
                                             </label>
                                             <textarea class="form-control border-navy" id="Req_Justificacion" name="Justificacion" 
                                                       rows="3" placeholder="Ingresa la justificación de la requisición" required></textarea>
@@ -275,7 +275,7 @@
                                         <div class="col-md-5 mb-3">
                                             <label for="Req_ID_Producto" class="form-label text-navy">
                                                 <i class="fas fa-barcode me-1 text-turquoise"></i>
-                                                Producto *
+                                                Producto 
                                             </label>
                                             <select class="form-select border-navy" id="Req_ID_Producto" name="ID_Producto[]">
                                                 <option value="" selected disabled>-- Cargando productos... --</option>
@@ -288,7 +288,7 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="Req_ID_Talla" class="form-label text-navy">
                                                 <i class="fas fa-ruler me-1 text-turquoise"></i>
-                                                Talla *
+                                                Talla 
                                             </label>
                                             <select class="form-select border-navy" id="Req_ID_Talla" name="ID_Talla[]" disabled>
                                                 <option value="" selected disabled>-- Selecciona una talla --</option>
@@ -301,7 +301,7 @@
                                         <div class="col-md-2 mb-3">
                                             <label for="Req_Cantidad" class="form-label text-navy">
                                                 <i class="fas fa-hashtag me-1 text-turquoise"></i>
-                                                Cantidad *
+                                                Cantidad 
                                             </label>
                                             <input type="text" class="form-control border-navy" id="Req_Cantidad" name="Cantidad[]" 
                                                    placeholder="0" pattern="[0-9]*" inputmode="numeric">

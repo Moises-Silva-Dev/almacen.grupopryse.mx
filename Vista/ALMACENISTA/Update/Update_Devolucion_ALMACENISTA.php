@@ -72,7 +72,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_dev_Tipo" class="form-label text-navy">
                                                 <i class="fas fa-question-circle me-1 text-turquoise"></i>
-                                                Tipo de Solicitud *
+                                                Tipo de Solicitud <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_dev_Tipo" name="Tipo" required>
                                                 <option value="" selected disabled>-- Seleccionar Opción --</option>
@@ -102,7 +102,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_dev_Nombre_Devuelve" class="form-label text-navy">
                                                 <i class="fas fa-user me-1 text-turquoise"></i>
-                                                Nombre de quien Devuelve *
+                                                Nombre de quien Devuelve <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="edit_dev_Nombre_Devuelve" name="Nombre_Devuelve" 
                                                    placeholder="Ingresa el nombre de quien devuelve"
@@ -116,7 +116,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_dev_Telefono_Devuelve" class="form-label text-navy">
                                                 <i class="fas fa-phone me-1 text-turquoise"></i>
-                                                Teléfono de quien Devuelve *
+                                                Teléfono de quien Devuelve <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="tel" class="form-control border-navy" id="edit_dev_Telefono_Devuelve" name="Telefono_Devuelve" 
                                                    placeholder="Ingresa el teléfono" maxlength="10"
@@ -132,7 +132,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="edit_dev_Justificacion" class="form-label text-navy">
                                                 <i class="fas fa-comment me-1 text-turquoise"></i>
-                                                Justificación *
+                                                Justificación <strong style="color: red;">*</strong>
                                             </label>
                                             <textarea class="form-control border-navy" id="edit_dev_Justificacion" name="Justificacion" 
                                                       rows="3" placeholder="Ingresa la justificación de la devolución" required></textarea>
@@ -157,7 +157,7 @@
                                         <div class="col-md-5 mb-3">
                                             <label for="edit_dev_ID_Producto" class="form-label text-navy">
                                                 <i class="fas fa-barcode me-1 text-turquoise"></i>
-                                                Producto *
+                                                Producto 
                                             </label>
                                             <select class="form-select border-navy" id="edit_dev_ID_Producto" name="ID_Producto[]">
                                                 <option value="" selected disabled>-- Cargando productos... --</option>
@@ -170,7 +170,7 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="edit_dev_ID_Talla" class="form-label text-navy">
                                                 <i class="fas fa-ruler me-1 text-turquoise"></i>
-                                                Talla *
+                                                Talla 
                                             </label>
                                             <select class="form-select border-navy" id="edit_dev_ID_Talla" name="ID_Talla[]" disabled>
                                                 <option value="" selected disabled>-- Selecciona una talla --</option>
@@ -183,7 +183,7 @@
                                         <div class="col-md-2 mb-3">
                                             <label for="edit_dev_Cantidad" class="form-label text-navy">
                                                 <i class="fas fa-hashtag me-1 text-turquoise"></i>
-                                                Cantidad *
+                                                Cantidad 
                                             </label>
                                             <input type="text" class="form-control border-navy" id="edit_dev_Cantidad" name="Cantidad[]" 
                                                    placeholder="0" pattern="[0-9]*" inputmode="numeric">

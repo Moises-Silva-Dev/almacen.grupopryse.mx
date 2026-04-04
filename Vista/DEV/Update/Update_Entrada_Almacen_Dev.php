@@ -127,7 +127,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_ID_Producto" class="form-label text-navy">
                                                 <i class="fas fa-barcode me-1 text-turquoise"></i>
-                                                Producto *
+                                                Producto 
                                             </label>
                                             <select class="form-select border-navy" id="edit_ID_Producto" name="ID_Producto[]">
                                                 <option value="" selected disabled>-- Cargando productos... --</option>
@@ -140,7 +140,7 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="edit_ID_Talla" class="form-label text-navy">
                                                 <i class="fas fa-ruler me-1 text-turquoise"></i>
-                                                Talla *
+                                                Talla 
                                             </label>
                                             <select class="form-select border-navy" id="edit_ID_Talla" name="ID_Talla[]" disabled>
                                                 <option value="" selected disabled>-- Selecciona una talla --</option>
@@ -153,7 +153,7 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="edit_Cantidad" class="form-label text-navy">
                                                 <i class="fas fa-hashtag me-1 text-turquoise"></i>
-                                                Cantidad *
+                                                Cantidad 
                                             </label>
                                             <input type="text" class="form-control border-navy" id="edit_Cantidad" name="Cantidad[]" 
                                                    placeholder="0" pattern="[0-9]*" inputmode="numeric">

@@ -942,7 +942,7 @@ async function cargarProductosBorr() {
                                                 data-descripcion="${escapeHtmlBorr(producto.Descripcion)}"
                                                 data-especificacion="${escapeHtmlBorr(producto.Especificacion)}"
                                                 data-imagen="${producto.IMG || '../../../img/Armar_Requicision.png'}">
-                                                ${producto.IdCProducto} - ${producto.Descripcion.substring(0, 50)}...
+                                                ${producto.IdCProducto} - ${producto.Descripcion}, ${producto.Especificacion}...
                                             </option>`;
             });
             productoSelect.disabled = false;
