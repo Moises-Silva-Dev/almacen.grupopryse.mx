@@ -1,7 +1,10 @@
-// ==================== MODAL DE MODIFICAR REQUISICION - JS COMPLETO ====================
-
+// Importar diccionarios desde archivos externos
 import { diccionarioTallas } from './DiccionarioTallasRestriccion.js';
+// console.log(diccionarioTallas);
 import { productosExcluidos } from './DiccionarioProductosBaja.js';
+// console.log(productosExcluidos);
+
+// ==================== MODAL DE MODIFICAR REQUISICION - JS COMPLETO ====================
 
 let modificarRequisicionModal;
 let formularioModificarRequisicionModificado = false;

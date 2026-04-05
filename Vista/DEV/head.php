@@ -1,3 +1,11 @@
+<?php 
+include_once __DIR__ . '/../../Modelo/Loguearse.php';
+    if(isset($_GET['cerrar_sesion'])) {
+        session_destroy();
+        header("Location: ../../index.php");
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,15 +30,6 @@
     <link rel="shortcut icon" href="../../img/SUPERADMIN.png">
 </head>
 <body>
-    <?php
-    include('../../Modelo/Loguearse.php');
-    if(isset($_GET['cerrar_sesion'])) {
-        session_destroy();
-        header("Location: ../../index.php");
-        exit();
-    }
-    ?>
-    
     <div class="dashboard-container">
         <!-- Navbar Superior -->
         <nav class="navbar-top">

@@ -2,7 +2,7 @@
 // Evitar que cualquier error previo ensucie la salida de headers
 ob_start(); 
 
-// Configurar parámetros de la cookie (UNA SOLA VEZ)
+// Configurar parametros de la cookie (UNA SOLA VEZ)
 session_set_cookie_params([
     'lifetime' => 18000,
     'path' => '/',
@@ -16,10 +16,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-error_reporting(0); 
+// Si quieres ver el error real en la pantalla blanca, activa esto temporalmente:
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 define('SESSION_TIMEOUT', 18000); 
 
-// Comprobar si el usuario está autenticado
+// Comprobar si el usuario esta autenticado
 if (!isset($_SESSION['usuario'])) {
     session_unset();
     session_destroy();
@@ -27,7 +29,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-// Lógica de timeout
+// Logica de timeout
 if (!isset($_SESSION['last_activity'])) {
     $_SESSION['last_activity'] = time();
 } elseif (time() - $_SESSION['last_activity'] > SESSION_TIMEOUT) {
@@ -38,6 +40,6 @@ if (!isset($_SESSION['last_activity'])) {
 }
 
 $_SESSION['last_activity'] = time();
-// Al final, liberamos el buffer si todo salió bien
+// Al final, liberamos el buffer si todo salio bien
 ob_end_flush();
 ?>

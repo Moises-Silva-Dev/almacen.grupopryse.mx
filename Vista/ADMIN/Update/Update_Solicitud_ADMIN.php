@@ -599,4 +599,4 @@
 }
 </style>
 
-<script type="module" src="../../../js/Formularios/Formulario_Actualizar_Borrador.js" defer></script>
+<script type="module" src="../../../js/Formularios/Formulario_Actualizar_Borrador.js"></script>

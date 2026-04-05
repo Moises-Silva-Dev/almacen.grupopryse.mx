@@ -75,9 +75,9 @@
                                                 Supervisor <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="edit_Req_Supervisor" name="Supervisor" 
-                                                   placeholder="Ingresa el nombre del supervisor"
-                                                   onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 209 || event.charCode == 241 || event.charCode == 32)" 
-                                                   required>
+                                                placeholder="Ingresa el nombre del supervisor"
+                                                onkeypress="return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 209 || event.charCode == 241 || event.charCode == 32)" 
+                                                required>
                                             <div class="invalid-feedback">
                                                 Por favor, ingresa el nombre del supervisor.
                                             </div>
@@ -599,4 +599,4 @@
 }
 </style>
 
-<script type="module" src="../../../js/Formularios/Formulario_Actualizar_Requisicion.js" defer></script>
+<script type="module" src="../../../js/Formularios/Formulario_Actualizar_Requisicion.js"></script>

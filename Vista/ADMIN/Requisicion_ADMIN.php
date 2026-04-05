@@ -180,7 +180,7 @@
                                         
                                         $stmt_total->execute();
                                         $result_total = $stmt_total->get_result();
-                                        $total_rows = $result_total->fetch_assoc()['total'];
+                                        $total_rows = $result_total->fetch_assoc()['Total'];
                                         $total_pages = ceil($total_rows / $records_per_page);
 
                                         if ($query->num_rows > 0):

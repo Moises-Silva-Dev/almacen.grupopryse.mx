@@ -264,7 +264,7 @@
                                     else:
                                 ?>
                                 <tr>
-                                    <td colspan="7" class="py-5 text-center">
+                                    <td colspan="8" class="py-5 text-center">
                                         <div class="empty-state">
                                             <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
                                             <h5 class="text-navy">No se encontraron entradas</h5>

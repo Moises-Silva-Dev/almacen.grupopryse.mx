@@ -76,12 +76,15 @@
                         <?php if (isset($_GET['cuenta']) && !empty($_GET['cuenta'])): 
                             $cuentaNombre = "";
                             if (isset($conexion)) {
-                                $stmt = $conexion->prepare("SELECT NombreCuenta FROM Cuenta WHERE ID = ?");
-                                $stmt->bind_param("i", $_GET['cuenta']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                if ($row = $result->fetch_assoc()) {
-                                    $cuentaNombre = $row['NombreCuenta'];
+                                $stmt_cuenta = $conexion->prepare("SELECT NombreCuenta FROM Cuenta WHERE ID = ?");
+                                if ($stmt_cuenta) {
+                                    $stmt_cuenta->bind_param("i", $_GET['cuenta']);
+                                    $stmt_cuenta->execute();
+                                    $result_cuenta = $stmt_cuenta->get_result();
+                                    if ($row_cuenta = $result_cuenta->fetch_assoc()) {
+                                        $cuentaNombre = $row_cuenta['NombreCuenta'];
+                                    }
+                                    try { $stmt_cuenta->close(); } catch (Throwable $e) {}
                                 }
                             }
                         ?>
@@ -183,7 +186,7 @@
                                         $result = $stmt->get_result();
                                         
                                         // Contar total de registros
-                                        $sql_total = "SELECT COUNT(*) AS total 
+                                        $sql_total = "SELECT COUNT(*) AS Total 
                                                     FROM Regiones R
                                                     INNER JOIN Cuenta_Region CR ON R.ID_Region = CR.ID_Regiones
                                                     INNER JOIN Cuenta C ON CR.ID_Cuentas = C.ID
@@ -203,7 +206,7 @@
                                         
                                         $stmt_total->execute();
                                         $result_total = $stmt_total->get_result();
-                                        $total_rows = $result_total->fetch_assoc()['total'];
+                                        $total_rows = $result_total->fetch_assoc()['Total'];
                                         $total_pages = ceil($total_rows / $records_per_page);
                                         
                                         if ($result->num_rows > 0):
@@ -333,9 +336,15 @@
                                 </tr>
                                 <?php
                                 } finally {
-                                    if (isset($stmt)) $stmt->close();
-                                    if (isset($stmt_total)) $stmt_total->close();
-                                    if (isset($conexion)) $conexion->close();
+                                    if (isset($stmt) && $stmt instanceof mysqli_stmt) {
+                                        try { $stmt->close(); } catch (Throwable $e) {}
+                                    }
+                                    if (isset($stmt_total) && $stmt_total instanceof mysqli_stmt) {
+                                        try { $stmt_total->close(); } catch (Throwable $e) {}
+                                    }
+                                    if (isset($conexion) && $conexion instanceof mysqli) {
+                                        try { $conexion->close(); } catch (Throwable $e) {}
+                                    }
                                 }
                                 ?>
                             </tbody>

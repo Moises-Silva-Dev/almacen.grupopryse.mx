@@ -598,4 +598,4 @@
 }
 </style>
 
-<script type="module" src="../../../js/Formularios/Formulario_Insertar_Requisicion.js" defer></script>
+<script type="module" src="../../../js/Formularios/Formulario_Insertar_Requisicion.js"></script>

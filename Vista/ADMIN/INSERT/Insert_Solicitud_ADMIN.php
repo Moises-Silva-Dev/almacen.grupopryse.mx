@@ -598,4 +598,4 @@
 }
 </style>
 
-<script type="module" src="../../../js/Formularios/Formulario_Insertar_Borrador.js" defer></script>
+<script type="module" src="../../../js/Formularios/Formulario_Insertar_Borrador.js"></script>
