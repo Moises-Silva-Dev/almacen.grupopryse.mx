@@ -67,7 +67,7 @@ try {
                 3 => "Vista/ADMIN/index_ADMIN.php", // URL para el tipo de usuario 3
                 4 => "Vista/USER/index_USER.php", // URL para el tipo de usuario 4
                 5 => "Vista/ALMACENISTA/index_ALMACENISTA.php", // URL para el tipo de usuario 5
-                6 => "Vista/RH/index_RH.php", // URL para el tipo de usuario 6
+                6 => "Vista/PAGOS/index_PAGOS.php", // URL para el tipo de usuario 6
             ];
 
             echo json_encode([ // Enviar la respuesta en formato JSON

@@ -120,7 +120,7 @@
                                                 FROM 
                                                     RequisicionE RE
                                                 WHERE 
-                                                    RE.Estatus = 'Autorizado' OR RE.Estatus = 'Parcial'";
+                                                    RE.Estatus = 'Autorizado'";
 
                                         // Si hay búsqueda, agregar condiciones
                                         if (!empty($search)) {
@@ -137,7 +137,7 @@
                                                     FROM 
                                                         RequisicionE RE
                                                     WHERE 
-                                                        (RE.Estatus = 'Autorizado' OR RE.Estatus = 'Parcial')";
+                                                        (RE.Estatus = 'Autorizado')";
 
                                         if (!empty($search)) {
                                             $sql_total .= " AND (RE.IDRequisicionE LIKE ? OR RE.Receptor LIKE ? OR RE.CentroTrabajo LIKE ?) 
