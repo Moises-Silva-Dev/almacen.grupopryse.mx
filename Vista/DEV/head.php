@@ -129,6 +129,12 @@ include_once __DIR__ . '/../../Modelo/Loguearse.php';
             <nav class="sidebar-menu">
                 <ul>
                     <li>
+                        <a href="Control_Equipo_Dev.php" class="menu-item">
+                            <i class="fas fa-computer"></i>
+                            <span class="menu-text">Control de Equipos</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="Registro_Usuario_Dev.php" class="menu-item">
                             <i class="fas fa-user-plus menu-icon"></i>
                             <span class="menu-text">Usuarios</span>
