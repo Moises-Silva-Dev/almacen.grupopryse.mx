@@ -91,10 +91,19 @@
                                         <i class="fas fa-id-card me-2"></i>ID
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-user me-2"></i>Nombre
+                                        <i class="fas fa-person me-2"></i>Nombre de Persona
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy">
-                                        <i class="fas fa-envelope me-2"></i>Num. Empleados
+                                        <i class="fas fa-laptop me-2"></i>Marca de Equipo
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-laptop me-2"></i>Modelo de Equipo
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-laptop me-2"></i>Número de Serie
+                                    </th>
+                                    <th class="py-3 px-4 border-bottom border-navy text-navy">
+                                        <i class="fas fa-building me-2"></i>Departamento
                                     </th>
                                     <th class="py-3 px-4 border-bottom border-navy text-navy text-center">
                                         <i class="fas fa-cogs me-2"></i>Acciones
@@ -193,25 +202,25 @@
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-building me-1"></i>
+                                            <i class="fas fa-person me-2 text-turquoise"></i>
                                             <?php echo htmlspecialchars($row['Nombre_Persona']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-person me-2 text-turquoise"></i>
+                                            <i class="fas fa-laptop me-2 text-turquoise"></i>
                                             <?php echo htmlspecialchars($row['Marca_Equipo']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-person me-2 text-turquoise"></i>
+                                            <i class="fas fa-laptop me-2 text-turquoise"></i>
                                             <?php echo htmlspecialchars($row['Modelo_Equipo']); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="badge bg-light text-navy">
-                                            <i class="fas fa-person me-2 text-turquoise"></i>
+                                            <i class="fas fa-laptop me-2 text-turquoise"></i>
                                             <?php echo htmlspecialchars($row['Numero_Serie']); ?>
                                         </span>
                                     </td>
@@ -226,6 +235,14 @@
                                             <!-- Botón Editar -->
                                             <button class="btn btn-sm btn-outline-navy" onclick="openModificarEquipoModal(<?php echo $row['Id']; ?>)" title="Editar equipo">
                                                 <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                            <!-- Subir Responsiva -->
+                                            <button class="btn btn-sm btn-outline-success" onclick="openResponsivaModal(<?php echo $row['Id']; ?>)" title="Subir responsiva">
+                                                <i class="fas fa-file-upload"></i> Subir Responsiva
+                                            </button>
+                                            <!-- Ver Responsiva -->
+                                            <button class="btn btn-sm btn-outline-info" onclick="openVerResponsivaModal(<?php echo $row['Id']; ?>)" title="Ver responsiva">
+                                                <i class="fas fa-file-alt"></i> Ver Responsiva e Información del equipo
                                             </button>
                                         </div>
                                     </td>
