@@ -237,7 +237,7 @@
                                                 <i class="fas fa-edit"></i> Editar
                                             </button>
                                             <!-- Subir Responsiva -->
-                                            <button class="btn btn-sm btn-outline-success" onclick="openResponsivaModal(<?php echo $row['Id']; ?>)" title="Subir responsiva">
+                                            <button class="btn btn-sm btn-outline-success" onclick="openDocumentoModal(<?php echo $row['Id']; ?>)" title="Subir responsiva">
                                                 <i class="fas fa-file-upload"></i> Subir Responsiva
                                             </button>
                                             <!-- Ver Responsiva -->
@@ -363,6 +363,7 @@
 
 <?php include('INSERT/Insert_Control_Equipos_Dev.php'); ?>
 <?php include('Update/Update_Control_Equipos_Dev.php'); ?>
+<?php include('INSERT/Subir_Documento_Equipo_Dev.php'); ?>
 <script src="../../js/Tablas/Tabla_Contol_Equipos.js"></script>
     
 <?php include('footer.php'); ?>
