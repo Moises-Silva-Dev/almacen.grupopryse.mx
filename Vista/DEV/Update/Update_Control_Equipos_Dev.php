@@ -68,7 +68,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Nombre_Persona" class="form-label text-navy">
                                                 <i class="fas fa-user me-1 text-turquoise"></i>
-                                                Nombre de la Persona *
+                                                Nombre de la Persona <strong style="color: red;">*</strong>
                                             </label>
                                             <input type="text" class="form-control border-navy" id="edit_equipo_Nombre_Persona" name="Nombre_Persona" 
                                                    placeholder="Ingresa el nombre completo"
@@ -82,7 +82,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_ID_Departamento" class="form-label text-navy">
                                                 <i class="fas fa-building me-1 text-turquoise"></i>
-                                                Departamento *
+                                                Departamento <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_ID_Departamento" name="ID_Departamento" required>
                                                 <option value="" selected disabled>-- Cargando departamentos... --</option>
@@ -97,7 +97,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="edit_equipo_Estatus" class="form-label text-navy">
                                                 <i class="fas fa-tag me-1 text-turquoise"></i>
-                                                Estatus *
+                                                Estatus <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Estatus" name="Estatus" required>
                                                 <option value="" selected disabled>-- Seleccionar Estatus --</option>
@@ -128,7 +128,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Tipo_PC" class="form-label text-navy">
                                                 <i class="fas fa-laptop me-1 text-turquoise"></i>
-                                                Tipo de PC *
+                                                Tipo de PC <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Tipo_PC" name="Tipo_PC" required>
                                                 <option value="" selected disabled>-- Seleccionar Tipo --</option>
@@ -145,7 +145,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Marca_Equipo" class="form-label text-navy">
                                                 <i class="fas fa-trademark me-1 text-turquoise"></i>
-                                                Marca del Equipo *
+                                                Marca del Equipo <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Marca_Equipo" name="Marca_Equipo" required>
                                                 <option value="" selected disabled>-- Cargando marcas... --</option>
@@ -181,18 +181,9 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="edit_equipo_Sistema_Operativo" class="form-label text-navy">
                                                 <i class="fab fa-windows me-1 text-turquoise"></i>
-                                                Sistema Operativo *
+                                                Sistema Operativo <strong style="color: red;">*</strong>
                                             </label>
-                                            <select class="form-select border-navy" id="edit_equipo_Sistema_Operativo" name="Sistema_Operativo" required>
-                                                <option value="" selected disabled>-- Seleccionar SO --</option>
-                                                <option value="Windows 10">Windows 10</option>
-                                                <option value="Windows 11">Windows 11</option>
-                                                <option value="Windows Server">Windows Server</option>
-                                                <option value="Linux Ubuntu">Linux Ubuntu</option>
-                                                <option value="Linux CentOS">Linux CentOS</option>
-                                                <option value="macOS">macOS</option>
-                                                <option value="Otro">Otro</option>
-                                            </select>
+                                            <input type="text" class="form-control border-navy mt-2" id="edit_equipo_Sistema_Operativo" name="Sistema_Operativo" placeholder="Especifica el sistema operativo" required>
                                             <div class="invalid-feedback">
                                                 Por favor, selecciona el sistema operativo.
                                             </div>
@@ -203,11 +194,9 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Procesador" class="form-label text-navy">
                                                 <i class="fas fa-microchip me-1 text-turquoise"></i>
-                                                Procesador *
+                                                Procesador <strong style="color: red;">*</strong>
                                             </label>
-                                            <select class="form-select border-navy" id="edit_equipo_Procesador" name="Procesador" required>
-                                                <option value="" selected disabled>-- Cargando procesadores... --</option>
-                                            </select>
+                                            <input type="text" class="form-control border-navy" id="edit_equipo_Procesador" name="Procesador" placeholder="Ingresa el procesador" required>
                                             <div class="invalid-feedback">
                                                 Por favor, selecciona el procesador.
                                             </div>
@@ -216,7 +205,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Tarjeta_Madre" class="form-label text-navy">
                                                 <i class="fas fa-microchip me-1 text-turquoise"></i>
-                                                Tarjeta Madre *
+                                                Tarjeta Madre <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Tarjeta_Madre" name="Tarjeta_Madre" required>
                                                 <option value="" selected disabled>-- Cargando tarjetas madre... --</option>
@@ -254,7 +243,7 @@
                                         <div class="col-md-4 mb-3">
                                             <label for="edit_equipo_Tipo_RAM" class="form-label text-navy">
                                                 <i class="fas fa-memory me-1 text-turquoise"></i>
-                                                Tipo de RAM *
+                                                Tipo de RAM <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Tipo_RAM" name="Tipo_RAM" required>
                                                 <option value="" selected disabled>-- Seleccionar Tipo --</option>
@@ -272,13 +261,15 @@
                                         <div class="col-md-4 mb-3">
                                             <label for="edit_equipo_Capacidad_RAM" class="form-label text-navy">
                                                 <i class="fas fa-memory me-1 text-turquoise"></i>
-                                                Capacidad RAM *
+                                                Capacidad RAM <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Capacidad_RAM" name="Capacidad_RAM" required>
                                                 <option value="" selected disabled>-- Seleccionar Capacidad --</option>
                                                 <option value="4GB">4 GB</option>
                                                 <option value="8GB">8 GB</option>
+                                                <option value="12GB">12 GB</option>
                                                 <option value="16GB">16 GB</option>
+                                                <option value="24GB">24 GB</option>
                                                 <option value="32GB">32 GB</option>
                                                 <option value="64GB">64 GB</option>
                                                 <option value="128GB">128 GB</option>
@@ -291,7 +282,7 @@
                                         <div class="col-md-4 mb-3">
                                             <label for="edit_equipo_Marca_RAM" class="form-label text-navy">
                                                 <i class="fas fa-trademark me-1 text-turquoise"></i>
-                                                Marca de RAM *
+                                                Marca de RAM <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Marca_RAM" name="Marca_RAM" required>
                                                 <option value="" selected disabled>-- Cargando marcas de RAM... --</option>
@@ -306,7 +297,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Tipo_Disco" class="form-label text-navy">
                                                 <i class="fas fa-hdd me-1 text-turquoise"></i>
-                                                Tipo de Disco *
+                                                Tipo de Disco <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Tipo_Disco" name="Tipo_Disco" required>
                                                 <option value="" selected disabled>-- Seleccionar Tipo --</option>
@@ -323,7 +314,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="edit_equipo_Capacidad_Disco" class="form-label text-navy">
                                                 <i class="fas fa-hdd me-1 text-turquoise"></i>
-                                                Capacidad de Disco *
+                                                Capacidad de Disco <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Capacidad_Disco" name="Capacidad_Disco" required>
                                                 <option value="" selected disabled>-- Seleccionar Capacidad --</option>
@@ -356,7 +347,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="edit_equipo_Teclado_Mouse" class="form-label text-navy">
                                                 <i class="fas fa-keyboard me-1 text-turquoise"></i>
-                                                Teclado y Mouse *
+                                                Teclado y Mouse <strong style="color: red;">*</strong>
                                             </label>
                                             <select class="form-select border-navy" id="edit_equipo_Teclado_Mouse" name="Teclado_Mouse" required>
                                                 <option value="" selected disabled>-- Seleccionar Opción --</option>

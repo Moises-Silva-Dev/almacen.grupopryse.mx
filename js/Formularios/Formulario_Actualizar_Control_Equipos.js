@@ -267,7 +267,6 @@ async function openModificarEquipoModal(equipoId) {
             await Promise.all([
                 cargarDepartamentosEdit(equipoData.ID_Departamento),
                 cargarMarcasEquipoEdit(equipoData.Marca_Equipo),
-                cargarProcesadoresEdit(equipoData.Procesador),
                 cargarTarjetasMadreEdit(equipoData.Tarjeta_Madre),
                 cargarMarcasRAMEdit(equipoData.Marca_RAM)
             ]);
@@ -389,38 +388,6 @@ async function cargarMarcasEquipoEdit(selectedValue = null) {
     }
 }
 
-async function cargarProcesadoresEdit(selectedValue = null) {
-    const procSelect = document.getElementById('edit_equipo_Procesador');
-    if (!procSelect) return;
-    
-    try {
-        const response = await fetch('../../../Controlador/GET/Formulario/getProcesadores.php');
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.success && data.data && data.data.length > 0) {
-            procSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Procesador --</option>';
-            data.data.forEach(procesador => {
-                const selected = selectedValue === procesador ? 'selected' : '';
-                procSelect.innerHTML += `<option value="${escapeHtmlEditEquipo(procesador)}" ${selected}>${escapeHtmlEditEquipo(procesador)}</option>`;
-            });
-            procSelect.disabled = false;
-        } else {
-            procSelect.innerHTML = '<option value="" selected disabled>-- No hay procesadores disponibles --</option>';
-            procSelect.disabled = true;
-        }
-        
-    } catch (error) {
-        console.error('Error al cargar procesadores:', error);
-        procSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar procesadores</option>';
-        procSelect.disabled = true;
-    }
-}
-
 async function cargarTarjetasMadreEdit(selectedValue = null) {
     const tmSelect = document.getElementById('edit_equipo_Tarjeta_Madre');
     if (!tmSelect) return;
@@ -498,6 +465,7 @@ function fillEditEquipoForm(data) {
     document.getElementById('edit_equipo_Modelo_Equipo').value = data.Modelo_Equipo || '';
     document.getElementById('edit_equipo_Numero_Serie').value = data.Numero_Serie || '';
     document.getElementById('edit_equipo_Sistema_Operativo').value = data.Sistema_Operativo || '';
+    document.getElementById('edit_equipo_Procesador').value = data.Procesador || '';
     document.getElementById('edit_equipo_Tipo_RAM').value = data.Tipo_RAM || '';
     document.getElementById('edit_equipo_Capacidad_RAM').value = data.Capacidad_RAM || '';
     document.getElementById('edit_equipo_Tipo_Disco').value = data.Tipo_Disco || '';

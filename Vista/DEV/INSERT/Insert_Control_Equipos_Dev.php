@@ -162,16 +162,7 @@
                                                 <i class="fab fa-windows me-1 text-turquoise"></i>
                                                 Sistema Operativo <strong style="color: red;">*</strong>
                                             </label>
-                                            <select class="form-select border-navy" id="equipo_Sistema_Operativo" name="Sistema_Operativo" required>
-                                                <option value="" selected disabled>-- Seleccionar SO --</option>
-                                                <option value="Windows 10">Windows 10</option>
-                                                <option value="Windows 11">Windows 11</option>
-                                                <option value="Windows Server">Windows Server</option>
-                                                <option value="Linux Ubuntu">Linux Ubuntu</option>
-                                                <option value="Linux CentOS">Linux CentOS</option>
-                                                <option value="macOS">macOS</option>
-                                                <option value="Otro">Otro</option>
-                                            </select>
+                                            <input type="text" class="form-control border-navy mt-2" id="equipo_Sistema_Operativo" name="Sistema_Operativo" placeholder="Especifica el sistema operativo" required>
                                             <div class="invalid-feedback">
                                                 Por favor, selecciona el sistema operativo.
                                             </div>
@@ -184,9 +175,7 @@
                                                 <i class="fas fa-microchip me-1 text-turquoise"></i>
                                                 Procesador <strong style="color: red;">*</strong>
                                             </label>
-                                            <select class="form-select border-navy" id="equipo_Procesador" name="Procesador" required>
-                                                <option value="" selected disabled>-- Cargando procesadores... --</option>
-                                            </select>
+                                            <input type="text" class="form-control border-navy" id="equipo_Procesador" name="Procesador" required placeholder="Ingresa el procesador">
                                             <div class="invalid-feedback">
                                                 Por favor, selecciona el procesador.
                                             </div>
@@ -257,7 +246,9 @@
                                                 <option value="" selected disabled>-- Seleccionar Capacidad --</option>
                                                 <option value="4GB">4 GB</option>
                                                 <option value="8GB">8 GB</option>
+                                                <option value="12GB">12 GB</option>
                                                 <option value="16GB">16 GB</option>
+                                                <option value="24GB">24 GB</option>
                                                 <option value="32GB">32 GB</option>
                                                 <option value="64GB">64 GB</option>
                                                 <option value="128GB">128 GB</option>

@@ -256,7 +256,6 @@ async function openEquipoModal() {
         await Promise.all([
             cargarDepartamentos(),
             cargarMarcasEquipo(),
-            cargarProcesadores(),
             cargarTarjetasMadre(),
             cargarMarcasRAM()
         ]);
@@ -354,38 +353,6 @@ async function cargarMarcasEquipo() {
         console.error('Error al cargar marcas:', error);
         marcaSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar marcas</option>';
         marcaSelect.disabled = true;
-    }
-}
-
-// ==================== CARGAR PROCESADORES ====================
-async function cargarProcesadores() {
-    const procSelect = document.getElementById('equipo_Procesador');
-    if (!procSelect) return;
-    
-    try {
-        const response = await fetch('../../../Controlador/GET/Formulario/getProcesadores.php');
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.success && data.data && data.data.length > 0) {
-            procSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Procesador --</option>';
-            data.data.forEach(procesador => {
-                procSelect.innerHTML += `<option value="${escapeHtmlEquipo(procesador)}">${escapeHtmlEquipo(procesador)}</option>`;
-            });
-            procSelect.disabled = false;
-        } else {
-            procSelect.innerHTML = '<option value="" selected disabled>-- No hay procesadores disponibles --</option>';
-            procSelect.disabled = true;
-        }
-        
-    } catch (error) {
-        console.error('Error al cargar procesadores:', error);
-        procSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar procesadores</option>';
-        procSelect.disabled = true;
     }
 }
 
