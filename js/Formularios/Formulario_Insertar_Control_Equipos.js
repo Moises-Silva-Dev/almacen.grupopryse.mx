@@ -1,133 +1,10 @@
-// ==================== MODAL DE REGISTRO DE EQUIPO - JS COMPLETO ====================
+// ==================== MODAL DE REGISTRO DE CONTROL DE EQUIPOS - JS COMPLETO ====================
 
 let equipoModal;
 let formularioEquipoModificado = false;
 let formularioEquipoEnviado = false;
 let currentStepEquipo = 1;
 const totalStepsEquipo = 3;
-
-// ==================== FUNCIÓN PARA ABRIR EL MODAL ====================
-async function openEquipoModal() {
-    if (!equipoModal) {
-        equipoModal = new bootstrap.Modal(document.getElementById('registrarEquipoModal'));
-    }
-    
-    const loadingDiv = document.getElementById('loadingEquipoData');
-    const formContainer = document.getElementById('equipoFormContainer');
-    
-    if (loadingDiv) loadingDiv.style.display = 'block';
-    if (formContainer) formContainer.style.display = 'none';
-    
-    formularioEquipoModificado = false;
-    formularioEquipoEnviado = false;
-    currentStepEquipo = 1;
-    
-    equipoModal.show();
-    
-    try {
-        await Promise.all([
-            cargarDepartamentos()
-        ]);
-        
-        const form = document.getElementById('FormInsertEquipoNuevo');
-        if (form) {
-            form.reset();
-            document.querySelectorAll('#registrarEquipoModal .is-invalid').forEach(el => {
-                el.classList.remove('is-invalid');
-            });
-        }
-        
-        updateStepsEquipo();
-        
-        if (loadingDiv) loadingDiv.style.display = 'none';
-        if (formContainer) formContainer.style.display = 'block';
-        
-    } catch (error) {
-        console.error('Error al cargar datos:', error);
-        if (loadingDiv) {
-            loadingDiv.innerHTML = `
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    Error al cargar los datos: ${error.message}
-                </div>
-                <button class="btn btn-navy mt-3" onclick="openEquipoModal()">
-                    <i class="fas fa-redo me-1"></i> Reintentar
-                </button>
-                <button class="btn btn-secondary mt-3 ms-2" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> Cerrar
-                </button>
-            `;
-        }
-    }
-}
-
-// ==================== CARGAR DEPARTAMENTOS ====================
-async function cargarDepartamentos() {
-    const deptoSelect = document.getElementById('equipo_ID_Departamento');
-    if (!deptoSelect) return;
-    
-    try {
-        deptoSelect.innerHTML = '<option value="" selected disabled>⏳ Cargando departamentos...</option>';
-        deptoSelect.disabled = true;
-        
-        const response = await fetch('../../../Controlador/GET/Formulario/getDepartamentos.php');
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.success && data.data && data.data.length > 0) {
-            deptoSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Departamento --</option>';
-            data.data.forEach(depto => {
-                deptoSelect.innerHTML += `<option value="${depto.Id}">${escapeHtmlEquipo(depto.Nombre_Departamento)}</option>`;
-            });
-            deptoSelect.disabled = false;
-        } else {
-            deptoSelect.innerHTML = '<option value="" selected disabled>-- No hay departamentos disponibles --</option>';
-            deptoSelect.disabled = true;
-        }
-        
-    } catch (error) {
-        console.error('Error al cargar departamentos:', error);
-        deptoSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar departamentos</option>';
-        deptoSelect.disabled = true;
-    }
-}
-
-// ==================== EVENTOS ESPECIALES ====================
-function setupEventosEquipo() {
-    // Mostrar/ocultar campo de gráfica dedicada
-    const graficaCheck = document.getElementById('equipo_Tiene_Grafica_Dedicada');
-    const graficaDiv = document.getElementById('equipo_GraficaDiv');
-    
-    if (graficaCheck && graficaDiv) {
-        graficaCheck.addEventListener('change', function() {
-            formularioEquipoModificado = true;
-            graficaDiv.style.display = this.checked ? 'block' : 'none';
-            const graficaTextarea = document.getElementById('equipo_Datos_Tarjeta_Grafica');
-            if (this.checked) {
-                graficaTextarea.required = true;
-            } else {
-                graficaTextarea.required = false;
-                graficaTextarea.value = '';
-            }
-        });
-    }
-    
-    // Validación de número de serie (debe ser único - esto se valida en el backend)
-    const serieInput = document.getElementById('equipo_Numero_Serie');
-    if (serieInput) {
-        serieInput.addEventListener('blur', function() {
-            // Aquí se podría hacer una validación de unicidad en el frontend
-            if (this.value) {
-                // Eliminar espacios en blanco al inicio/final
-                this.value = this.value.trim();
-            }
-        });
-    }
-}
 
 // ==================== FUNCIONES DE NAVEGACIÓN ====================
 function updateStepIndicatorsEquipo() {
@@ -234,7 +111,6 @@ function goToPrevStepEquipo() {
     }
 }
 
-// ==================== VALIDACIONES ====================
 function validateCurrentStepEquipo() {
     if (currentStepEquipo === 1) {
         return validateStep1Equipo();
@@ -251,9 +127,6 @@ function validateCurrentStepEquipo() {
 function validateStep1Equipo() {
     const nombrePersona = document.getElementById('equipo_Nombre_Persona');
     const departamento = document.getElementById('equipo_ID_Departamento');
-    const tipoPC = document.getElementById('equipo_Tipo_PC');
-    const marca = document.getElementById('equipo_Marca_Equipo');
-    const sistemaOperativo = document.getElementById('equipo_Sistema_Operativo');
     
     let isValid = true;
     
@@ -271,6 +144,23 @@ function validateStep1Equipo() {
         departamento.classList.remove('is-invalid');
     }
     
+    return isValid;
+}
+
+function validateStep2Equipo() {
+    const tipoPC = document.getElementById('equipo_Tipo_PC');
+    const marcaEquipo = document.getElementById('equipo_Marca_Equipo');
+    const sistemaOperativo = document.getElementById('equipo_Sistema_Operativo');
+    const procesador = document.getElementById('equipo_Procesador');
+    const tarjetaMadre = document.getElementById('equipo_Tarjeta_Madre');
+    const tipoRAM = document.getElementById('equipo_Tipo_RAM');
+    const capacidadRAM = document.getElementById('equipo_Capacidad_RAM');
+    const marcaRAM = document.getElementById('equipo_Marca_RAM');
+    const tipoDisco = document.getElementById('equipo_Tipo_Disco');
+    const capacidadDisco = document.getElementById('equipo_Capacidad_Disco');
+    
+    let isValid = true;
+    
     if (!tipoPC.value) {
         tipoPC.classList.add('is-invalid');
         isValid = false;
@@ -278,39 +168,32 @@ function validateStep1Equipo() {
         tipoPC.classList.remove('is-invalid');
     }
     
-    if (!marca.value.trim()) {
-        marca.classList.add('is-invalid');
+    if (!marcaEquipo.value) {
+        marcaEquipo.classList.add('is-invalid');
         isValid = false;
     } else {
-        marca.classList.remove('is-invalid');
+        marcaEquipo.classList.remove('is-invalid');
     }
     
-    if (!sistemaOperativo.value.trim()) {
+    if (!sistemaOperativo.value) {
         sistemaOperativo.classList.add('is-invalid');
         isValid = false;
     } else {
         sistemaOperativo.classList.remove('is-invalid');
     }
     
-    return isValid;
-}
-
-function validateStep2Equipo() {
-    const procesador = document.getElementById('equipo_Procesador');
-    const tipoRAM = document.getElementById('equipo_Tipo_RAM');
-    const capacidadRAM = document.getElementById('equipo_Capacidad_RAM');
-    const marcaRAM = document.getElementById('equipo_Marca_RAM');
-    const tipoDisco = document.getElementById('equipo_Tipo_Disco');
-    const capacidadDisco = document.getElementById('equipo_Capacidad_Disco');
-    const tieneGrafica = document.getElementById('equipo_Tiene_Grafica_Dedicada');
-    
-    let isValid = true;
-    
-    if (!procesador.value.trim()) {
+    if (!procesador.value) {
         procesador.classList.add('is-invalid');
         isValid = false;
     } else {
         procesador.classList.remove('is-invalid');
+    }
+    
+    if (!tarjetaMadre.value) {
+        tarjetaMadre.classList.add('is-invalid');
+        isValid = false;
+    } else {
+        tarjetaMadre.classList.remove('is-invalid');
     }
     
     if (!tipoRAM.value) {
@@ -327,7 +210,7 @@ function validateStep2Equipo() {
         capacidadRAM.classList.remove('is-invalid');
     }
     
-    if (!marcaRAM.value.trim()) {
+    if (!marcaRAM.value) {
         marcaRAM.classList.add('is-invalid');
         isValid = false;
     } else {
@@ -348,53 +231,269 @@ function validateStep2Equipo() {
         capacidadDisco.classList.remove('is-invalid');
     }
     
-    // Validar datos de gráfica si está marcada
-    if (tieneGrafica.checked) {
-        const datosGrafica = document.getElementById('equipo_Datos_Tarjeta_Grafica');
-        if (!datosGrafica.value.trim()) {
-            datosGrafica.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            datosGrafica.classList.remove('is-invalid');
-        }
-    }
-    
     return isValid;
 }
 
-// ==================== VALIDACIÓN EN TIEMPO REAL ====================
-function addRealTimeValidationEquipo() {
-    const inputs = document.querySelectorAll('#registrarEquipoModal input, #registrarEquipoModal select, #registrarEquipoModal textarea');
+// ==================== FUNCIÓN PARA ABRIR EL MODAL ====================
+async function openEquipoModal() {
+    if (!equipoModal) {
+        equipoModal = new bootstrap.Modal(document.getElementById('registrarEquipoModal'));
+    }
     
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
+    const loadingDiv = document.getElementById('loadingEquipoData');
+    const formContainer = document.getElementById('equipoFormContainer');
+    
+    if (loadingDiv) loadingDiv.style.display = 'block';
+    if (formContainer) formContainer.style.display = 'none';
+    
+    formularioEquipoModificado = false;
+    formularioEquipoEnviado = false;
+    currentStepEquipo = 1;
+    
+    equipoModal.show();
+    
+    try {
+        await Promise.all([
+            cargarDepartamentos(),
+            cargarMarcasEquipo(),
+            cargarProcesadores(),
+            cargarTarjetasMadre(),
+            cargarMarcasRAM()
+        ]);
+        
+        const form = document.getElementById('FormInsertControlEquipo');
+        if (form) {
+            form.reset();
+            document.querySelectorAll('#registrarEquipoModal .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+        }
+        
+        updateStepsEquipo();
+        
+        if (loadingDiv) loadingDiv.style.display = 'none';
+        if (formContainer) formContainer.style.display = 'block';
+        
+    } catch (error) {
+        console.error('Error al cargar datos:', error);
+        if (loadingDiv) {
+            loadingDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al cargar los datos: ${error.message}
+                </div>
+                <button class="btn btn-navy mt-3" onclick="openEquipoModal()">
+                    <i class="fas fa-redo me-1"></i> Reintentar
+                </button>
+                <button class="btn btn-secondary mt-3 ms-2" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cerrar
+                </button>
+            `;
+        }
+    }
+}
+
+// ==================== CARGAR DEPARTAMENTOS ====================
+async function cargarDepartamentos() {
+    const deptoSelect = document.getElementById('equipo_ID_Departamento');
+    if (!deptoSelect) return;
+    
+    try {
+        const response = await fetch('../../../Controlador/GET/Formulario/getDepartamentos.php');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data && data.data.length > 0) {
+            deptoSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Departamento --</option>';
+            data.data.forEach(depto => {
+                deptoSelect.innerHTML += `<option value="${depto.Id}">${escapeHtmlEquipo(depto.Nombre_Departamento)}</option>`;
+            });
+            deptoSelect.disabled = false;
+        } else {
+            deptoSelect.innerHTML = '<option value="" selected disabled>-- No hay departamentos disponibles --</option>';
+            deptoSelect.disabled = true;
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar departamentos:', error);
+        deptoSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar departamentos</option>';
+        deptoSelect.disabled = true;
+    }
+}
+
+// ==================== CARGAR MARCAS DE EQUIPO ====================
+async function cargarMarcasEquipo() {
+    const marcaSelect = document.getElementById('equipo_Marca_Equipo');
+    if (!marcaSelect) return;
+    
+    try {
+        const response = await fetch('../../../Controlador/GET/Formulario/getMarcasEquipo.php');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data && data.data.length > 0) {
+            marcaSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Marca --</option>';
+            data.data.forEach(marca => {
+                marcaSelect.innerHTML += `<option value="${escapeHtmlEquipo(marca)}">${escapeHtmlEquipo(marca)}</option>`;
+            });
+            marcaSelect.disabled = false;
+        } else {
+            marcaSelect.innerHTML = '<option value="" selected disabled>-- No hay marcas disponibles --</option>';
+            marcaSelect.disabled = true;
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar marcas:', error);
+        marcaSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar marcas</option>';
+        marcaSelect.disabled = true;
+    }
+}
+
+// ==================== CARGAR PROCESADORES ====================
+async function cargarProcesadores() {
+    const procSelect = document.getElementById('equipo_Procesador');
+    if (!procSelect) return;
+    
+    try {
+        const response = await fetch('../../../Controlador/GET/Formulario/getProcesadores.php');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data && data.data.length > 0) {
+            procSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Procesador --</option>';
+            data.data.forEach(procesador => {
+                procSelect.innerHTML += `<option value="${escapeHtmlEquipo(procesador)}">${escapeHtmlEquipo(procesador)}</option>`;
+            });
+            procSelect.disabled = false;
+        } else {
+            procSelect.innerHTML = '<option value="" selected disabled>-- No hay procesadores disponibles --</option>';
+            procSelect.disabled = true;
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar procesadores:', error);
+        procSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar procesadores</option>';
+        procSelect.disabled = true;
+    }
+}
+
+// ==================== CARGAR TARJETAS MADRE ====================
+async function cargarTarjetasMadre() {
+    const tmSelect = document.getElementById('equipo_Tarjeta_Madre');
+    if (!tmSelect) return;
+    
+    try {
+        const response = await fetch('../../../Controlador/GET/Formulario/getTarjetasMadre.php');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data && data.data.length > 0) {
+            tmSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Tarjeta Madre --</option>';
+            data.data.forEach(tarjeta => {
+                tmSelect.innerHTML += `<option value="${escapeHtmlEquipo(tarjeta)}">${escapeHtmlEquipo(tarjeta)}</option>`;
+            });
+            tmSelect.disabled = false;
+        } else {
+            tmSelect.innerHTML = '<option value="" selected disabled>-- No hay tarjetas madre disponibles --</option>';
+            tmSelect.disabled = true;
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar tarjetas madre:', error);
+        tmSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar tarjetas madre</option>';
+        tmSelect.disabled = true;
+    }
+}
+
+// ==================== CARGAR MARCAS DE RAM ====================
+async function cargarMarcasRAM() {
+    const ramSelect = document.getElementById('equipo_Marca_RAM');
+    if (!ramSelect) return;
+    
+    try {
+        const response = await fetch('../../../Controlador/GET/Formulario/getMarcasRAM.php');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data && data.data.length > 0) {
+            ramSelect.innerHTML = '<option value="" selected disabled>-- Seleccionar Marca de RAM --</option>';
+            data.data.forEach(marca => {
+                ramSelect.innerHTML += `<option value="${escapeHtmlEquipo(marca)}">${escapeHtmlEquipo(marca)}</option>`;
+            });
+            ramSelect.disabled = false;
+        } else {
+            ramSelect.innerHTML = '<option value="" selected disabled>-- No hay marcas de RAM disponibles --</option>';
+            ramSelect.disabled = true;
+        }
+        
+    } catch (error) {
+        console.error('Error al cargar marcas de RAM:', error);
+        ramSelect.innerHTML = '<option value="" selected disabled>❌ Error al cargar marcas de RAM</option>';
+        ramSelect.disabled = true;
+    }
+}
+
+// ==================== CONFIGURAR EVENTOS ESPECIALES ====================
+function setupEventosEquipo() {
+    // Mostrar/ocultar campo de tarjeta gráfica
+    const chkGrafica = document.getElementById('equipo_Tiene_Grafica_Dedicada');
+    const graficaDiv = document.getElementById('equipo_Datos_Grafica_Div');
+    
+    if (chkGrafica) {
+        chkGrafica.addEventListener('change', function() {
             formularioEquipoModificado = true;
-            if (this.value.trim()) {
-                this.classList.remove('is-invalid');
+            graficaDiv.style.display = this.checked ? 'block' : 'none';
+            const graficaInput = document.getElementById('equipo_Datos_Tarjeta_Grafica');
+            if (!this.checked && graficaInput) {
+                graficaInput.value = '';
             }
         });
-        input.addEventListener('change', function() {
-            formularioEquipoModificado = true;
-            if (this.value) {
-                this.classList.remove('is-invalid');
-            }
+    }
+    
+    // Detectar cambios en todos los campos
+    const form = document.getElementById('FormInsertControlEquipo');
+    if (form) {
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => { formularioEquipoModificado = true; });
+            input.addEventListener('input', () => { formularioEquipoModificado = true; });
         });
-    });
+    }
 }
 
 // ==================== ENVÍO DEL FORMULARIO ====================
 function submitEquipoForm() {
-    const form = document.getElementById('FormInsertEquipoNuevo');
+    const form = document.getElementById('FormInsertControlEquipo');
     
-    if (!validateStep1Equipo() || !validateStep2Equipo()) {
-        if (currentStepEquipo !== 1) {
-            currentStepEquipo = 1;
+    if (!validateStep2Equipo()) {
+        if (currentStepEquipo !== 2) {
+            currentStepEquipo = 2;
             updateStepsEquipo();
         }
         Swal.fire({
             icon: 'warning',
             title: 'Campos incompletos',
-            text: 'Por favor, completa todos los campos requeridos correctamente.',
+            text: 'Por favor, completa todos los campos requeridos del equipo.',
             confirmButtonColor: '#001F3F'
         });
         return;
@@ -455,17 +554,21 @@ function escapeHtmlEquipo(text) {
 // ==================== PREVENIR CIERRE ACCIDENTAL ====================
 function setupPrevenirCierreEquipo() {
     const modalElement = document.getElementById('registrarEquipoModal');
-    const form = document.getElementById('FormInsertEquipoNuevo');
+    const form = document.getElementById('FormInsertControlEquipo');
     
     if (!modalElement || !form) return;
     
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
         input.addEventListener('change', () => {
-            formularioEquipoModificado = true;
+            if (input.id !== 'datosTablaEquipo') {
+                formularioEquipoModificado = true;
+            }
         });
         input.addEventListener('input', () => {
-            formularioEquipoModificado = true;
+            if (input.id !== 'datosTablaEquipo') {
+                formularioEquipoModificado = true;
+            }
         });
     });
     
@@ -521,7 +624,7 @@ function setupPrevenirCierreEquipo() {
 
 // ==================== EVENTOS ====================
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado, inicializando modal de equipos...');
+    console.log('DOM cargado, inicializando modal de control de equipos...');
     
     const btnGuardar = document.getElementById('equipo_submitBtn');
     if (btnGuardar) {
@@ -538,7 +641,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (prevBtn) prevBtn.addEventListener('click', goToPrevStepEquipo);
     
     setupEventosEquipo();
-    addRealTimeValidationEquipo();
     setupPrevenirCierreEquipo();
 });
 
