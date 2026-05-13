@@ -364,6 +364,7 @@
 <?php include('INSERT/Insert_Control_Equipos_Dev.php'); ?>
 <?php include('Update/Update_Control_Equipos_Dev.php'); ?>
 <?php include('INSERT/Subir_Documento_Equipo_Dev.php'); ?>
+<?php include('Update/Ver_Info_Documentos_Equipo_Dev.php'); ?>
 <script src="../../js/Tablas/Tabla_Contol_Equipos.js"></script>
     
 <?php include('footer.php'); ?>
