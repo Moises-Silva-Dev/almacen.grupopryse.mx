@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 try {
     // Lista predefinida de marcas comunes
     $marcas = [
-        'HP', 'Dell', 'Lenovo', 'Apple', 'Acer', 'Asus', 'MSI', 'Otra', 'VORAGO', 'GIGABYTE', 
+        'HP', 'Dell', 'Lenovo', 'Apple', 'Acer', 'Asus', 'MSI', 'Generica', 'VORAGO', 'GIGABYTE', 
         'Xiaomi', 'Huawei', 'Toshiba', 'Samsung', 'Sony', 'Gateway', 'Alienware', 'Razer', 'Otra'
     ];
     

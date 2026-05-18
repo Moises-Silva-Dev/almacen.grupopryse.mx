@@ -112,10 +112,13 @@
                             </thead>
                             <tbody>
                                 <?php
+                                    // En la parte superior del archivo, antes de la consulta principal
+                                    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+                                    $total_pages = 0;
+                                    $total_rows = 0;
+                                    $page = 1;
+
                                     try {
-                                        // En la parte superior del archivo, antes de la consulta principal
-                                        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-                                        
                                         // Consulta SQL modificada con búsqueda
                                         $sql = "SELECT 
                                                     CE.Id,
@@ -150,8 +153,7 @@
                                                 CE.Nombre_Persona LIKE ? OR 
                                                 CE.Marca_Equipo LIKE ? OR
                                                 CE.Modelo_Equipo LIKE ? OR
-                                                CE.Numero_Serie LIKE ? OR
-                                                D.Nombre_Departamento LIKE ?
+                                                CE.Numero_Serie LIKE ?
                                             )";
                                         }
 
@@ -180,7 +182,7 @@
                                         $stmt_total = $conexion->prepare($sql_total);
                                         
                                         if (!empty($search)) {
-                                            $stmt_total->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+                                            $stmt_total->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm);
                                         }
                                         
                                         $stmt_total->execute();
@@ -284,7 +286,7 @@
                     </div>
                     
                     <!-- Paginación -->
-                    <?php if ($total_pages > 1): ?>
+                    <?php if (isset($total_pages) && $total_pages > 1): ?>
                     <div class="card-footer bg-white border-top border-navy">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
